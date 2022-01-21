@@ -5,21 +5,33 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
+import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
+import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
 	TextView TVMainExpense,TVMainIncome,TVMainTotal;
 	FloatingActionButton FABAdd;
+	RecyclerView recyclerView;
+	TransactionAdapter transactionAdapter;
+	TransactionViewModel transactionViewModel;
+
 
 	long income, expense, total;
 	@Override
@@ -31,6 +43,19 @@ public class MainActivity extends AppCompatActivity {
 		TVMainExpense=findViewById(R.id.TVExpenseAmt);
 		TVMainTotal=findViewById(R.id.TVTotalAmt);
 		FABAdd=findViewById(R.id.FABAdd);
+		recyclerView=findViewById(R.id.RecyclerViewID);
+		recyclerView.setLayoutManager(new LinearLayoutManager(this));
+		transactionAdapter=new TransactionAdapter(this);
+		recyclerView.setAdapter(transactionAdapter);
+
+		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
+		transactionViewModel.getAllData().observe(this, new Observer<List<Transaction>>() {
+			@Override
+			public void onChanged(List<Transaction> transactions) {
+				transactionAdapter.setTransactions(transactions);
+				transactionAdapter.notifyDataSetChanged();
+			}
+		});
 
 
 
@@ -45,9 +70,14 @@ public class MainActivity extends AppCompatActivity {
 						  	Transaction transaction=new Transaction("",1,"1",
 									  "","","","",100000);
 
+						  	transactionViewModel.Insert(transaction);
+						  }
+						  else if(result.getResultCode() == Activity.RESULT_CANCELED)
+						  {
+
 						  }
 					  }
-				  })
+				  });
 
 		FABAdd.setOnClickListener(v->{
 			Intent intent=new Intent(MainActivity.this, TransactionActivity.class);
