@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 	RecyclerView recyclerView;
 	TransactionAdapter transactionAdapter;
 	TransactionViewModel transactionViewModel;
+	Toast toast;
 
 
 	long income, expense, total;
@@ -72,9 +74,16 @@ public class MainActivity extends AppCompatActivity {
 
 						  	transactionViewModel.Insert(transaction);
 						  }
-						  else if(result.getResultCode() == Activity.RESULT_CANCELED)
+						  else if(result.getResultCode() == -2)
 						  {
 
+						  }
+						  else if(result.getResultCode() == Activity.RESULT_CANCELED)
+						  {
+						     if(toast!=null)
+						        toast.cancel();
+						     toast=Toast.makeText(MainActivity.this,"Cancelled",Toast.LENGTH_SHORT);
+						     toast.show();
 						  }
 					  }
 				  });
@@ -85,11 +94,15 @@ public class MainActivity extends AppCompatActivity {
 			intent.putExtra("note","");
 			intent.putExtra("description","");
 			Calendar calendar=Calendar.getInstance();
-			intent.putExtra("date",calendar);
+			Bundle bundle=new Bundle();
+			bundle.putSerializable("date",calendar);
+			intent.putExtra("bundle",bundle);
 			intent.putExtra("account",-1);
 			intent.putExtra("cat",-1);
 			intent.putExtra("subCat",-1);
 			intent.putExtra("IET",2);
+
+			arl.launch(intent);
 		});
 
 

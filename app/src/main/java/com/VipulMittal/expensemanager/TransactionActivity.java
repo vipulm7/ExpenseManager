@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -13,7 +14,8 @@ import java.util.Calendar;
 
 public class TransactionActivity extends AppCompatActivity {
 
-	TextView TVDate, TVTime;
+   private static final String TAG = "Vipul_tag";
+   TextView TVDate, TVTime;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,16 +24,27 @@ public class TransactionActivity extends AppCompatActivity {
 		TVDate=findViewById(R.id.TVDate);
 		TVTime=findViewById(R.id.TVTime);
 
-		setDateAndTime();
+
 
 
 		Intent intent=getIntent();
+	   Log.d(TAG, "onCreate: intent received");
+		int amount = intent.getIntExtra("amount",0);
+	    String note = intent.getStringExtra("note");
+	    String description = intent.getStringExtra("description");
+	    Bundle bundle=intent.getBundleExtra("bundle");
+	   Calendar calendar = (Calendar) bundle.getSerializable("date");
+//	    Calendar calendar = (Calendar) intent.getSerializableExtra("bundle");
+	    int account = intent.getIntExtra("account",-1);
+	   	int cat = intent.getIntExtra("cat",-1);
+	   	int subCat = intent.getIntExtra("subCat",-1);
+	   	int IET = intent.getIntExtra("IET",2);
 
+	   setDateAndTime(calendar);
 
 	}
 
-	private void setDateAndTime() {
-		Calendar calendar=Calendar.getInstance();
+	private void setDateAndTime(Calendar calendar) {
 		int date=calendar.get(Calendar.DATE);
 		int month=calendar.get(Calendar.MONTH)+1;
 		int year=calendar.get(Calendar.YEAR);
