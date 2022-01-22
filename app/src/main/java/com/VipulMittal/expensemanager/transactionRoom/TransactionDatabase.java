@@ -52,7 +52,7 @@ public abstract class TransactionDatabase extends RoomDatabase {
 
 //            transactionDAO.Insert(new Transaction("Grofers",1032));
             transactionDAO.Insert(new Transaction("Sample",100, "100", "Cash", "Food", "Grofers",
-                    "Desciption", getDate(Calendar.getInstance())));
+                    "Desciption", getDate(Calendar.getInstance()), 2));
             return null;
         }
     }

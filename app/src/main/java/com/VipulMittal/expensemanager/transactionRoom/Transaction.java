@@ -15,6 +15,7 @@ public class Transaction {
     public String cat;
     public String subCat;
     public String description;
+    public int type;
     public long date;
 
 
@@ -22,7 +23,7 @@ public class Transaction {
         return id;
     }
 
-    public Transaction(String note, int amount, String amountDisplay, String account, String cat, String subCat, String description, long date) {
+    public Transaction(String note, int amount, String amountDisplay, String account, String cat, String subCat, String description, long date, int type) {
         this.note = note;
         this.amount = amount;
         this.amountDisplay = amountDisplay;
@@ -31,5 +32,6 @@ public class Transaction {
         this.subCat = subCat;
         this.description = description;
         this.date = date;
+        this.type=type;
     }
 }

@@ -1,4 +1,4 @@
-package com.VipulMittal.expensemanager.accountRoom.transactionRoom;
+package com.VipulMittal.expensemanager.categoryRoom;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -9,23 +9,20 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.VipulMittal.expensemanager.transactionRoom.Transaction;
-import com.VipulMittal.expensemanager.transactionRoom.TransactionDAO;
-
 import java.util.Calendar;
 
-@Database(entities = Transaction.class, version = 1)
-public abstract class TransactionDatabase extends RoomDatabase {
+@Database(entities = Category.class, version = 1)
+public abstract class CategoryDatabase extends RoomDatabase {
 
-    private static com.VipulMittal.expensemanager.transactionRoom.TransactionDatabase instance;
+    private static CategoryDatabase instance;
 
-    public abstract TransactionDAO transactionDAO();
+    public abstract CategoryDAO transactionDAO();
 
-    public static synchronized com.VipulMittal.expensemanager.transactionRoom.TransactionDatabase getInstance(Context context)
+    public static synchronized CategoryDatabase getInstance(Context context)
     {
         if(instance==null)
             instance= Room.databaseBuilder(context.getApplicationContext(),
-                    com.VipulMittal.expensemanager.transactionRoom.TransactionDatabase.class, "trans_database")
+                    CategoryDatabase.class, "trans_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback).build();
 
@@ -43,19 +40,16 @@ public abstract class TransactionDatabase extends RoomDatabase {
 
     private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void>
     {
-        TransactionDAO transactionDAO;
+        CategoryDAO categoryDAO;
 
-        private PopulateDBAsyncTask(com.VipulMittal.expensemanager.transactionRoom.TransactionDatabase database)
+        private PopulateDBAsyncTask(CategoryDatabase database)
         {
-            transactionDAO=database.transactionDAO();
+            categoryDAO =database.transactionDAO();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-
-//            transactionDAO.Insert(new Transaction("Grofers",1032));
-            transactionDAO.Insert(new Transaction("Sample",100, "100", "Cash", "Food", "Grofers",
-                    "Desciption", getDate(Calendar.getInstance())));
+            categoryDAO.Insert(new Category("Food",0,0,1));
             return null;
         }
     }
