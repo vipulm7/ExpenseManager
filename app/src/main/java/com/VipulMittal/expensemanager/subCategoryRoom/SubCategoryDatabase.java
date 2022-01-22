@@ -1,4 +1,4 @@
-package com.VipulMittal.expensemanager.categoryRoom;
+package com.VipulMittal.expensemanager.subCategoryRoom;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -11,18 +11,18 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.Calendar;
 
-@Database(entities = Category.class, version = 1)
-public abstract class CategoryDatabase extends RoomDatabase {
+@Database(entities = SubCategory.class, version = 1)
+public abstract class SubCategoryDatabase extends RoomDatabase {
 
-    private static CategoryDatabase instance;
+    private static SubCategoryDatabase instance;
 
-    public abstract CategoryDAO categoryDAO();
+    public abstract SubCategoryDAO subCategoryDAO();
 
-    public static synchronized CategoryDatabase getInstance(Context context)
+    public static synchronized SubCategoryDatabase getInstance(Context context)
     {
         if(instance==null)
             instance= Room.databaseBuilder(context.getApplicationContext(),
-                    CategoryDatabase.class, "category_database")
+                    SubCategoryDatabase.class, "subcategory_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback).build();
 
@@ -40,16 +40,18 @@ public abstract class CategoryDatabase extends RoomDatabase {
 
     private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void>
     {
-        CategoryDAO categoryDAO;
+        SubCategoryDAO subCategoryDAO;
 
-        private PopulateDBAsyncTask(CategoryDatabase database)
+        private PopulateDBAsyncTask(SubCategoryDatabase database)
         {
-            categoryDAO =database.categoryDAO();
+            subCategoryDAO =database.subCategoryDAO();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            categoryDAO.Insert(new Category("Food",0,0,1));
+            subCategoryDAO.Insert(new SubCategory("Lunch",0,0,1,0));
+            subCategoryDAO.Insert(new SubCategory("Dinner",0,0,1,0));
+            subCategoryDAO.Insert(new SubCategory("Grocery",0,0,1,0));
             return null;
         }
     }

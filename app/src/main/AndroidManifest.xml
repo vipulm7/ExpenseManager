@@ -19,7 +19,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <subCategory android:name="android.intent.subCategory.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

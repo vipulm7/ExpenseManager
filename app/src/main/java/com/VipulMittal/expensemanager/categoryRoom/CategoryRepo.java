@@ -10,13 +10,13 @@ import java.util.List;
 public class CategoryRepo
 {
     private CategoryDAO categoryDAO;
-    private LiveData<List<Category>> transactions;
+    private LiveData<List<Category>> categories;
 
     public CategoryRepo(Application application)
     {
         CategoryDatabase categoryDatabase = CategoryDatabase.getInstance(application);
-        categoryDAO = categoryDatabase.transactionDAO();
-        transactions= categoryDAO.getAllData();
+        categoryDAO = categoryDatabase.categoryDAO();
+        categories = categoryDAO.getAllData();
     }
 
     public void Insert (Category category)
@@ -36,7 +36,7 @@ public class CategoryRepo
 
     public LiveData<List<Category>> getAllData()
     {
-        return transactions;
+        return categories;
     }
 
 

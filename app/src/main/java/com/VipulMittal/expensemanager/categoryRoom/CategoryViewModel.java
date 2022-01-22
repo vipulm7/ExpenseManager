@@ -11,12 +11,12 @@ import java.util.List;
 public class CategoryViewModel extends AndroidViewModel {
 
     private CategoryRepo repo;
-    private LiveData<List<Category>> transactions;
+    private LiveData<List<Category>> categories;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);
         repo =new CategoryRepo(application);
-        transactions= repo.getAllData();
+        categories = repo.getAllData();
     }
 
     public void Insert(Category category)
@@ -36,6 +36,6 @@ public class CategoryViewModel extends AndroidViewModel {
 
     public LiveData<List<Category>> getAllData()
     {
-        return transactions;
+        return categories;
     }
 }

@@ -21,7 +21,7 @@ public interface CategoryDAO {
     @Delete
     void Delete(Category category);
 
-    @Query("SELECT * FROM transaction_table ORDER BY date DESC")
+    @Query("SELECT * FROM category_table ORDER BY date DESC")
     LiveData<List<Category>> getAllData();
 
 
