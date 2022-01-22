@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.Calendar;
 
-@Database(entities = Date.class, version = 1)
+@Database(entities = Date.class, version = 2)
 public abstract class DateDatabase extends RoomDatabase {
 
 	private static DateDatabase instance;

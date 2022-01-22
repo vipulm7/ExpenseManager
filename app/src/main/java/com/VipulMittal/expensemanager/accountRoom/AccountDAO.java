@@ -12,17 +12,17 @@ import java.util.List;
 @Dao
 public interface AccountDAO {
 
-   @Insert
-   void Insert(Account account);
+    @Insert
+    void Insert(Account account);
 
-   @Update
-   void Update(Account account);
+    @Update
+    void Update(Account account);
 
-   @Delete
-   void Delete(Account account);
+    @Delete
+    void Delete(Account account);
 
-   @Query("SELECT * FROM account_table")
-   LiveData<List<Account>> getAllData();
+    @Query("SELECT * FROM account_table")
+    LiveData<List<Account>> getAllAccounts();
 
 
 }

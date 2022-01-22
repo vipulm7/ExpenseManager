@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.Calendar;
 
-@Database(entities = Category.class, version = 1)
+@Database(entities = Category.class, version = 2)
 public abstract class CategoryDatabase extends RoomDatabase {
 
     private static CategoryDatabase instance;
@@ -49,14 +49,9 @@ public abstract class CategoryDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            categoryDAO.Insert(new Category("Food",0,0,1));
+
+//            categoryDAO.Insert(new Category());
             return null;
         }
-    }
-
-    public static long getDate(Calendar calendar)
-    {
-        long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000;
-        return a/1000L;
     }
 }

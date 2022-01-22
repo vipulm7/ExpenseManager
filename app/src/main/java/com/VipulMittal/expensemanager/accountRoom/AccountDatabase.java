@@ -11,18 +11,18 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.Calendar;
 
-@Database(entities = Account.class, version = 1)
+@Database(entities = Account.class, version = 2)
 public abstract class AccountDatabase extends RoomDatabase {
 
     private static AccountDatabase instance;
 
-    public abstract AccountDAO AccountDAO();
+    public abstract AccountDAO accountDAO();
 
     public static synchronized AccountDatabase getInstance(Context context)
     {
         if(instance==null)
             instance= Room.databaseBuilder(context.getApplicationContext(),
-                    AccountDatabase.class, "trans_database")
+                    AccountDatabase.class, "account_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback).build();
 
@@ -44,14 +44,13 @@ public abstract class AccountDatabase extends RoomDatabase {
 
         private PopulateDBAsyncTask(AccountDatabase database)
         {
-            accountDAO =database.AccountDAO();
+            accountDAO =database.accountDAO();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            accountDAO.Insert(new Account("Cash"));
-            accountDAO.Insert(new Account("Card"));
-            accountDAO.Insert(new Account("Paytm"));
+
+//            accountDAO.Insert(new Account());
             return null;
         }
     }

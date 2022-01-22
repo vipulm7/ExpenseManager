@@ -21,8 +21,8 @@ public interface SubCategoryDAO {
     @Delete
     void Delete(SubCategory subCategory);
 
-    @Query("SELECT * FROM subcategory_table ORDER BY date DESC")
-    LiveData<List<SubCategory>> getAllData();
+    @Query("SELECT * FROM subcategory_table")
+    LiveData<List<SubCategory>> getAllSubCategories();
 
 
 }

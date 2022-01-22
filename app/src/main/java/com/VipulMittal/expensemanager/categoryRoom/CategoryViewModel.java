@@ -16,7 +16,7 @@ public class CategoryViewModel extends AndroidViewModel {
     public CategoryViewModel(@NonNull Application application) {
         super(application);
         repo =new CategoryRepo(application);
-        categories = repo.getAllData();
+        categories = repo.getAllCategories();
     }
 
     public void Insert(Category category)
@@ -34,7 +34,7 @@ public class CategoryViewModel extends AndroidViewModel {
         repo.Update(category);
     }
 
-    public LiveData<List<Category>> getAllData()
+    public LiveData<List<Category>> getAllCategories()
     {
         return categories;
     }

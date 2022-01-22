@@ -22,7 +22,7 @@ public interface TransactionDAO {
     void Delete(Transaction transaction);
 
     @Query("SELECT * FROM transaction_table ORDER BY date DESC")
-    LiveData<List<Transaction>> getAllData();
+    LiveData<List<Transaction>> getAllTransactions();
 
 
 }

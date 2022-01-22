@@ -10,13 +10,13 @@ import java.util.List;
 public class SubCategoryRepo
 {
     private SubCategoryDAO subCategoryDAO;
-    private LiveData<List<SubCategory>> subcategories;
+    private LiveData<List<SubCategory>> subCategories;
 
     public SubCategoryRepo(Application application)
     {
         SubCategoryDatabase subCategoryDatabase = SubCategoryDatabase.getInstance(application);
         subCategoryDAO = subCategoryDatabase.subCategoryDAO();
-        subcategories = subCategoryDAO.getAllData();
+        subCategories = subCategoryDAO.getAllSubCategories();
     }
 
     public void Insert (SubCategory subCategory)
@@ -34,9 +34,9 @@ public class SubCategoryRepo
         new UpdateNoteASyncTask(subCategoryDAO).execute(subCategory);
     }
 
-    public LiveData<List<SubCategory>> getAllData()
+    public LiveData<List<SubCategory>> getAllSubCategories()
     {
-        return subcategories;
+        return subCategories;
     }
 
 
@@ -49,8 +49,8 @@ public class SubCategoryRepo
             this.subCategoryDAO = subCategoryDAO;
         }
         @Override
-        protected Void doInBackground(SubCategory... categories) {
-            this.subCategoryDAO.Insert(categories[0]);
+        protected Void doInBackground(SubCategory... subCategories) {
+            this.subCategoryDAO.Insert(subCategories[0]);
             return null;
         }
     }
@@ -64,8 +64,8 @@ public class SubCategoryRepo
             this.subCategoryDAO = subCategoryDAO;
         }
         @Override
-        protected Void doInBackground(SubCategory... categories) {
-            this.subCategoryDAO.Delete(categories[0]);
+        protected Void doInBackground(SubCategory... subCategories) {
+            this.subCategoryDAO.Delete(subCategories[0]);
             return null;
         }
     }
@@ -79,8 +79,8 @@ public class SubCategoryRepo
             this.subCategoryDAO = subCategoryDAO;
         }
         @Override
-        protected Void doInBackground(SubCategory... categories) {
-            this.subCategoryDAO.Update(categories[0]);
+        protected Void doInBackground(SubCategory... subCategories) {
+            this.subCategoryDAO.Update(subCategories[0]);
             return null;
         }
     }

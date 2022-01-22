@@ -4,11 +4,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Fts4;
 import androidx.room.PrimaryKey;
-//@Fts4
 @Entity(tableName = "transaction_table")
 public class Transaction {
     @PrimaryKey(autoGenerate = true)
-//    @ColumnInfo(name = "rowid")
     public int id;
 
     public String note;

@@ -1,5 +1,6 @@
 package com.VipulMittal.expensemanager;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -7,15 +8,23 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
 public class TransactionActivity extends AppCompatActivity {
 
    private static final String TAG = "Vipul_tag";
-   TextView TVDate, TVTime;
+   TextView TVDate, TVTime,TVAccountName, TVCategoryName, TVCategory;
+   RadioGroup radioGroup;
+   RadioButton RBIncome, RBExpense, RBTransfer;
+   Toast toast;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,24 +32,89 @@ public class TransactionActivity extends AppCompatActivity {
 
 		TVDate=findViewById(R.id.TVDate);
 		TVTime=findViewById(R.id.TVTime);
+		TVAccountName=findViewById(R.id.TVAccountName);
+		TVCategoryName=findViewById(R.id.TVCategoryName);
+		TVCategory=findViewById(R.id.TVCategory);
+		ActionBar actionBar=getSupportActionBar();
+		radioGroup=findViewById(R.id.RadioGroupType);
+
+		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup radioGroup, int i) {
+				if(i==R.id.radioCatIncome)
+				{
+					TVCategory.setText("Category");
+					TVCategoryName.setHint("Category Name");
+
+				}
+				else if(i==R.id.radioCatExpense)
+				{
+					TVCategory.setText("Category");
+					TVCategoryName.setHint("Category Name");
+
+				}
+				else if(i==R.id.radioCatTransfer)
+				{
+					TVCategory.setText("Account");
+					TVCategoryName.setHint("Account Name");
+
+				}
+			}
+		});
+
+
+
+
 
 
 
 
 		Intent intent=getIntent();
-	   Log.d(TAG, "onCreate: intent received");
+		Log.d(TAG, "onCreate: intent received");
 		int amount = intent.getIntExtra("amount",0);
-	    String note = intent.getStringExtra("note");
-	    String description = intent.getStringExtra("description");
-	    Bundle bundle=intent.getBundleExtra("bundle");
-	   Calendar calendar = (Calendar) bundle.getSerializable("date");
-//	    Calendar calendar = (Calendar) intent.getSerializableExtra("bundle");
-	    int account = intent.getIntExtra("account",-1);
-	   	int cat = intent.getIntExtra("cat",-1);
-	   	int subCat = intent.getIntExtra("subCat",-1);
-	   	int IET = intent.getIntExtra("IET",2);
+		String note = intent.getStringExtra("note");
+		String description = intent.getStringExtra("description");
+		Bundle bundle=intent.getBundleExtra("bundle");
+		Calendar calendar = (Calendar) bundle.getSerializable("date");
+		int account = intent.getIntExtra("account",-1);
+		int cat = intent.getIntExtra("cat",-1);
+		int subCat = intent.getIntExtra("subCat",-1);
+		int request = intent.getIntExtra("request",-1);
+		int type = intent.getIntExtra("type",-1);
 
-	   setDateAndTime(calendar);
+		setDateAndTime(calendar);
+
+	   	if(request == 1)
+	   		actionBar.setTitle("Add Transaction");
+	   	else if(request == 2)
+			actionBar.setTitle("Edit Transaction");
+
+	   	setRadioButton(type);
+
+
+
+
+
+
+	}
+
+	private void setRadioButton(int type) {
+		int id=-1;
+		if(type==1)
+			id=R.id.radioCatIncome;
+		else if(type==2)
+			id=R.id.radioCatExpense;
+		else if(type==3)
+			id=R.id.radioCatTransfer;
+		if(id!=-1)
+			radioGroup.check(id);
+		else
+		{
+			if(toast!=null)
+				toast.cancel();
+			toast=Toast.makeText(TransactionActivity.this, "Error", Toast.LENGTH_SHORT);
+			toast.show();
+		}
 
 	}
 

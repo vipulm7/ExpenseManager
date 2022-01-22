@@ -22,5 +22,5 @@ public interface DateDAO {
 	void Delete(Date date);
 
 	@Query("SELECT * FROM date_table ORDER BY date DESC")
-	LiveData<List<Date>> getDates();
+	LiveData<List<Date>> getAllDates();
 }

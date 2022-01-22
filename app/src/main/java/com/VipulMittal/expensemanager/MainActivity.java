@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 						  	Intent data=result.getData();
 
 						  	Transaction transaction=new Transaction("",1,"1",
-									  "","","","",100000);
+									  "","","","",100000, 2);
 
 						  	transactionViewModel.Insert(transaction);
 						  }
@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
 			intent.putExtra("cat",-1);
 			intent.putExtra("subCat",-1);
 			intent.putExtra("IET",2);
+			intent.putExtra("request",1);
+			intent.putExtra("type",2);
 
 			arl.launch(intent);
 		});

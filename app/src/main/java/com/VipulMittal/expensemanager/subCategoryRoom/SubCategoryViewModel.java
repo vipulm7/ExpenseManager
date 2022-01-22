@@ -11,12 +11,12 @@ import java.util.List;
 public class SubCategoryViewModel extends AndroidViewModel {
 
     private SubCategoryRepo repo;
-    private LiveData<List<SubCategory>> subcategories;
+    private LiveData<List<SubCategory>> subCategories;
 
     public SubCategoryViewModel(@NonNull Application application) {
         super(application);
         repo =new SubCategoryRepo(application);
-        subcategories = repo.getAllData();
+        subCategories= repo.getAllSubCategories();
     }
 
     public void Insert(SubCategory subCategory)
@@ -34,8 +34,8 @@ public class SubCategoryViewModel extends AndroidViewModel {
         repo.Update(subCategory);
     }
 
-    public LiveData<List<SubCategory>> getAllData()
+    public LiveData<List<SubCategory>> getAllSubCategories()
     {
-        return subcategories;
+        return subCategories;
     }
 }

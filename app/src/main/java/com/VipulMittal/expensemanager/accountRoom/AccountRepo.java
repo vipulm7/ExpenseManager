@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+
 import java.util.List;
 
 public class AccountRepo
@@ -14,8 +15,8 @@ public class AccountRepo
     public AccountRepo(Application application)
     {
         AccountDatabase accountDatabase = AccountDatabase.getInstance(application);
-        accountDAO = accountDatabase.AccountDAO();
-        accounts= accountDAO.getAllData();
+        accountDAO = accountDatabase.accountDAO();
+        accounts = accountDAO.getAllAccounts();
     }
 
     public void Insert (Account account)
@@ -33,7 +34,7 @@ public class AccountRepo
         new UpdateNoteASyncTask(accountDAO).execute(account);
     }
 
-    public LiveData<List<Account>> getAllData()
+    public LiveData<List<Account>> getAllAccounts()
     {
         return accounts;
     }

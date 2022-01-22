@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.Calendar;
 
-@Database(entities = SubCategory.class, version = 1)
+@Database(entities = SubCategory.class, version = 2)
 public abstract class SubCategoryDatabase extends RoomDatabase {
 
     private static SubCategoryDatabase instance;
@@ -22,7 +22,7 @@ public abstract class SubCategoryDatabase extends RoomDatabase {
     {
         if(instance==null)
             instance= Room.databaseBuilder(context.getApplicationContext(),
-                    SubCategoryDatabase.class, "subcategory_database")
+                    SubCategoryDatabase.class, "subcat_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback).build();
 
@@ -49,16 +49,9 @@ public abstract class SubCategoryDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            subCategoryDAO.Insert(new SubCategory("Lunch",0,0,1,0));
-            subCategoryDAO.Insert(new SubCategory("Dinner",0,0,1,0));
-            subCategoryDAO.Insert(new SubCategory("Grocery",0,0,1,0));
+
+//            subCategoryDAO.Insert(new SubCategory());
             return null;
         }
-    }
-
-    public static long getDate(Calendar calendar)
-    {
-        long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000;
-        return a/1000L;
     }
 }

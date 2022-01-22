@@ -16,7 +16,7 @@ public class TransactionRepo
     {
         TransactionDatabase transactionDatabase = TransactionDatabase.getInstance(application);
         transactionDAO= transactionDatabase.transactionDAO();
-        transactions=transactionDAO.getAllData();
+        transactions=transactionDAO.getAllTransactions();
     }
 
     public void Insert (Transaction transaction)

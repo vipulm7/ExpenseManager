@@ -15,7 +15,7 @@ public class DateRepo {
 	{
 		DateDatabase dateDatabase=DateDatabase.getInstance(application);
 		dateDAO=dateDatabase.dateDAO();
-		dates=dateDAO.getDates();
+		dates=dateDAO.getAllDates();
 	}
 
 	public void Insert(Date date)
