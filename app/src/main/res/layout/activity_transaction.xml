@@ -29,13 +29,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@null"
-                android:padding="7dp"
+                android:padding="10dp"
                 android:text="Income"
-                android:textSize="18sp" />
+                android:textSize="27sp" />
 
             <TextView
-                android:layout_width="1dp"
+                android:layout_width="2dp"
                 android:layout_height="wrap_content"
+                android:textSize="27dp"
                 android:background="@color/black" />
 
             <RadioButton
@@ -43,13 +44,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@null"
-                android:padding="7dp"
+                android:padding="10dp"
                 android:text="Expense"
-                android:textSize="18sp" />
+                android:textSize="27sp" />
 
             <TextView
-                android:layout_width="1dp"
+                android:layout_width="2dp"
                 android:layout_height="wrap_content"
+                android:textSize="27dp"
                 android:background="@color/black" />
 
             <RadioButton
@@ -57,9 +59,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@null"
-                android:padding="7dp"
+                android:padding="10dp"
                 android:text="Transfer"
-                android:textSize="18sp" />
+                android:textSize="27sp" />
 
         </RadioGroup>
 
@@ -114,16 +116,15 @@
             />
 
         <TextView
+            android:id="@+id/TVAccountName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Account Name"
-            android:id="@+id/TVAccountName"
-            app:layout_constraintStart_toEndOf="@+id/TVAccount"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textSize="18sp"
+            android:hint="Account Name"
             android:padding="5dp"
-            />
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/TVAccount"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:layout_width="0dp"
@@ -137,16 +138,15 @@
             />
 
         <TextView
+            android:id="@+id/TVCategoryName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Category Name"
-            android:id="@+id/TVCategoryName"
-            app:layout_constraintStart_toEndOf="@+id/TVCategory"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TVAccountName"
-            android:textSize="18sp"
+            android:hint="Category Name"
             android:padding="5dp"
-            />
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/TVCategory"
+            app:layout_constraintTop_toBottomOf="@+id/TVAccountName" />
 
 
 
@@ -198,20 +198,20 @@
         android:id="@+id/constraintNoteDes"
 
         >
+
         <EditText
+            android:id="@+id/ETNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ETNote"
-            android:hint="Enter subCategory title"
+            android:hint="Enter title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/ETDes"
-            android:hint="Enter subCategory description"
+            android:hint="Enter description"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ETNote"
             />
@@ -220,7 +220,7 @@
             android:id="@+id/ETAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter subCategory amount"
+            android:hint="Enter amount"
             android:inputType="numberDecimal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

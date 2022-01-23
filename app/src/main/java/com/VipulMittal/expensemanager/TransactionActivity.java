@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RadioButton;
@@ -14,15 +16,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import java.util.Calendar;
 
 public class TransactionActivity extends AppCompatActivity {
 
    private static final String TAG = "Vipul_tag";
-   TextView TVDate, TVTime,TVAccountName, TVCategoryName, TVCategory;
+   TextView TVDate, TVTime, TVAccount, TVCategoryName, TVCategory;
    RadioGroup radioGroup;
    RadioButton RBIncome, RBExpense, RBTransfer;
    Toast toast;
+   int account;
 
 
 	@Override
@@ -32,41 +37,17 @@ public class TransactionActivity extends AppCompatActivity {
 
 		TVDate=findViewById(R.id.TVDate);
 		TVTime=findViewById(R.id.TVTime);
-		TVAccountName=findViewById(R.id.TVAccountName);
+		TVAccount =findViewById(R.id.TVAccount);
 		TVCategoryName=findViewById(R.id.TVCategoryName);
 		TVCategory=findViewById(R.id.TVCategory);
 		ActionBar actionBar=getSupportActionBar();
 		radioGroup=findViewById(R.id.RadioGroupType);
-
-		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup radioGroup, int i) {
-				if(i==R.id.radioCatIncome)
-				{
-					TVCategory.setText("Category");
-					TVCategoryName.setHint("Category Name");
-
-				}
-				else if(i==R.id.radioCatExpense)
-				{
-					TVCategory.setText("Category");
-					TVCategoryName.setHint("Category Name");
-
-				}
-				else if(i==R.id.radioCatTransfer)
-				{
-					TVCategory.setText("Account");
-					TVCategoryName.setHint("Account Name");
-
-				}
-			}
-		});
+		RBExpense=findViewById(R.id.radioCatExpense);
+		RBIncome=findViewById(R.id.radioCatIncome);
+		RBTransfer=findViewById(R.id.radioCatTransfer);
 
 
-
-
-
-
+		radioGroupSetListener();
 
 
 		Intent intent=getIntent();
@@ -76,11 +57,15 @@ public class TransactionActivity extends AppCompatActivity {
 		String description = intent.getStringExtra("description");
 		Bundle bundle=intent.getBundleExtra("bundle");
 		Calendar calendar = (Calendar) bundle.getSerializable("date");
-		int account = intent.getIntExtra("account",-1);
+		Log.d(TAG, "onCreate: Adapter just to receive");
+		Log.d(TAG, "onCreate: Adapter received");
+		account = intent.getIntExtra("account",-1);
 		int cat = intent.getIntExtra("cat",-1);
 		int subCat = intent.getIntExtra("subCat",-1);
 		int request = intent.getIntExtra("request",-1);
 		int type = intent.getIntExtra("type",-1);
+
+
 
 		setDateAndTime(calendar);
 
@@ -89,14 +74,73 @@ public class TransactionActivity extends AppCompatActivity {
 	   	else if(request == 2)
 			actionBar.setTitle("Edit Transaction");
 
-	   	setRadioButton(type);
+	   	setRadioButton(type); //sets which button is ticked in radio group
 
 
+
+		TVAccount.setOnClickListener(v->{
+			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account);
+			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Accounts");
+
+		});
 
 
 
 
 	}
+
+	public void saveSelectedAccount(int selected, String name)
+	{
+		account=selected;
+		TVAccount.setText(name);
+	}
+
+
+	private void radioGroupSetListener() {
+		radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+			if(i==R.id.radioCatIncome)
+			{
+				TVCategory.setText("Category");
+				TVCategoryName.setHint("Category Name");
+				rSelected(RBIncome);
+				rNotSelected(RBExpense);
+				rNotSelected(RBTransfer);
+
+
+
+			}
+			else if(i==R.id.radioCatExpense)
+			{
+				TVCategory.setText("Category");
+				TVCategoryName.setHint("Category Name");
+				rSelected(RBExpense);
+				rNotSelected(RBIncome);
+				rNotSelected(RBTransfer);
+
+
+			}
+			else if(i==R.id.radioCatTransfer)
+			{
+				TVCategory.setText("Account");
+				TVCategoryName.setHint("Account Name");
+				rSelected(RBTransfer);
+				rNotSelected(RBExpense);
+				rNotSelected(RBIncome);
+
+			}
+		});
+	}
+
+	private void rSelected(RadioButton selected) {
+		selected.setTextSize(27);
+		selected.setTextColor(Color.parseColor("#a912db"));
+	}
+
+	private void rNotSelected(RadioButton notSelected) {
+		notSelected.setTextSize(20);
+		notSelected.setTextColor(Color.parseColor("#db4002"));
+	}
+
 
 	private void setRadioButton(int type) {
 		int id=-1;
@@ -119,21 +163,23 @@ public class TransactionActivity extends AppCompatActivity {
 	}
 
 	private void setDateAndTime(Calendar calendar) {
-		int date=calendar.get(Calendar.DATE);
-		int month=calendar.get(Calendar.MONTH)+1;
-		int year=calendar.get(Calendar.YEAR);
-		int hour=calendar.get(Calendar.HOUR);
-		int hourOfDay=calendar.get(Calendar.HOUR_OF_DAY);
-		int minute=calendar.get(Calendar.MINUTE);
-		TVDate.setText(datePrint(date,month,year));
-		TVTime.setText(timePrint(hourOfDay,minute));
+		final int[] date = {calendar.get(Calendar.DATE)};
+		final int[] month = {calendar.get(Calendar.MONTH) + 1};
+		final int[] year = {calendar.get(Calendar.YEAR)};
+		final int[] hourOfDay = {calendar.get(Calendar.HOUR_OF_DAY)};
+		final int[] minute = {calendar.get(Calendar.MINUTE)};
+		TVDate.setText(datePrint(date[0], month[0], year[0]));
+		TVTime.setText(timePrint(hourOfDay[0], minute[0]));
 
 		TVDate.setOnClickListener(v->{
 			DatePickerDialog datePickerDialog=new DatePickerDialog(TransactionActivity.this,
 					  (datePicker, i, i1, i2) -> {
 						  i1++;
+						  year[0] =i;
+						  month[0] =i1;
+						  date[0] =i2;
 						  TVDate.setText(datePrint(i2,i1,i));
-					  },year,month-1,date);
+					  }, year[0], month[0] -1, date[0]);
 			datePickerDialog.show();
 		});
 
@@ -143,8 +189,10 @@ public class TransactionActivity extends AppCompatActivity {
 						  @Override
 						  public void onTimeSet(TimePicker timePicker, int i, int i1) {
 								  TVTime.setText(timePrint(i,i1));
+								  hourOfDay[0] =i;
+								  minute[0] =i1;
 						  }
-					  },hourOfDay,minute,false);
+					  }, hourOfDay[0], minute[0],false);
 			timePickerDialog.show();
 		});
 	}

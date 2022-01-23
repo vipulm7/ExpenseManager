@@ -14,26 +14,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.VipulMittal.expensemanager.accountRoom.Account;
+import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
+import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Serializable {
 
+	public static final String TAG="Vipul_tag";
 	TextView TVMainExpense,TVMainIncome,TVMainTotal;
 	FloatingActionButton FABAdd;
-	RecyclerView recyclerView;
+	RecyclerView RVTransactions, RVAccounts;
 	TransactionAdapter transactionAdapter;
 	TransactionViewModel transactionViewModel;
-	Toast toast;
 
+	Toast toast;
 
 	long income, expense, total;
 	@Override
@@ -45,19 +52,24 @@ public class MainActivity extends AppCompatActivity {
 		TVMainExpense=findViewById(R.id.TVExpenseAmt);
 		TVMainTotal=findViewById(R.id.TVTotalAmt);
 		FABAdd=findViewById(R.id.FABAdd);
-		recyclerView=findViewById(R.id.RecyclerViewID);
-		recyclerView.setLayoutManager(new LinearLayoutManager(this));
+		RVTransactions =findViewById(R.id.RecyclerViewID);
+		RVTransactions.setLayoutManager(new LinearLayoutManager(this));
 		transactionAdapter=new TransactionAdapter(this);
-		recyclerView.setAdapter(transactionAdapter);
+		RVTransactions.setAdapter(transactionAdapter);
+		RVTransactions.setNestedScrollingEnabled(false);
+
+
+
 
 		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
-		transactionViewModel.getAllData().observe(this, new Observer<List<Transaction>>() {
-			@Override
-			public void onChanged(List<Transaction> transactions) {
-				transactionAdapter.setTransactions(transactions);
-				transactionAdapter.notifyDataSetChanged();
-			}
+		transactionViewModel.getAllData().observe(this, transactions -> {
+			transactionAdapter.setTransactions(transactions);
+			transactionAdapter.notifyDataSetChanged();
 		});
+
+
+
+
 
 
 
@@ -96,11 +108,12 @@ public class MainActivity extends AppCompatActivity {
 			Calendar calendar=Calendar.getInstance();
 			Bundle bundle=new Bundle();
 			bundle.putSerializable("date",calendar);
+//			bundle.put("main", this);
 			intent.putExtra("bundle",bundle);
+			Log.d(TAG, "onCreate: Adapter passed");
 			intent.putExtra("account",-1);
 			intent.putExtra("cat",-1);
 			intent.putExtra("subCat",-1);
-			intent.putExtra("IET",2);
 			intent.putExtra("request",1);
 			intent.putExtra("type",2);
 

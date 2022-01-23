@@ -36,7 +36,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(@NonNull TransViewHolder holder, int position) {
         Transaction transaction=transactions.get(position);
 
-
+//        holder.TVAccount
     }
 
     @Override

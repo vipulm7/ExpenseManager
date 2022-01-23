@@ -50,7 +50,9 @@ public abstract class AccountDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-//            accountDAO.Insert(new Account());
+            accountDAO.Insert(new Account("Cash"));
+            accountDAO.Insert(new Account("Card"));
+            accountDAO.Insert(new Account("Paytm"));
             return null;
         }
     }
