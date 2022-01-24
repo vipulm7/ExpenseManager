@@ -22,6 +22,4 @@ public interface CategoryDAO {
 
     @Query("SELECT * FROM category_table WHERE type = :type")
     LiveData<List<Category>> getAllCategories(int type);
-
-
 }

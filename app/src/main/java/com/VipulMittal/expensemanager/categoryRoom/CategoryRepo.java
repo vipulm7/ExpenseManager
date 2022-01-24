@@ -11,13 +11,11 @@ public class CategoryRepo
 {
     private CategoryDAO categoryDAO;
     private LiveData<List<Category>> categories;
-    private int type;
 
     public CategoryRepo(Application application)
     {
         CategoryDatabase categoryDatabase = CategoryDatabase.getInstance(application);
         categoryDAO = categoryDatabase.categoryDAO();
-        categories = categoryDAO.getAllCategories(type);
     }
 
     public void Insert (Category category)
@@ -37,9 +35,11 @@ public class CategoryRepo
 
     public LiveData<List<Category>> getAllCategories(int type)
     {
-        this.type=type;
+        categories = categoryDAO.getAllCategories(type);
         return categories;
     }
+
+
 
 
     private static class InsertNoteASyncTask extends AsyncTask<Category,Void,Void>

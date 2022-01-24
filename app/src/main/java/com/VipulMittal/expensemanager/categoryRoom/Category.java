@@ -8,7 +8,6 @@ public class Category {
 	@PrimaryKey(autoGenerate = true)
 	public int id;
 
-
    	public String name;
 	public int amount;
 	public int budget;

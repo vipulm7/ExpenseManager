@@ -32,7 +32,7 @@ public class TransactionActivity extends AppCompatActivity {
    RadioGroup radioGroup;
    RadioButton RBIncome, RBExpense, RBTransfer;
    Toast toast;
-   int account,cat, subCat;
+   int account,cat, subCat, type;
 
 
 	@Override
@@ -67,7 +67,7 @@ public class TransactionActivity extends AppCompatActivity {
 		cat = intent.getIntExtra("cat",-1);
 		subCat = intent.getIntExtra("subCat",-1);
 		int request = intent.getIntExtra("request",-1);
-		int type = intent.getIntExtra("type",2);
+		type = intent.getIntExtra("type",2);
 
 
 
@@ -136,6 +136,7 @@ public class TransactionActivity extends AppCompatActivity {
 				rSelected(RBIncome);
 				rNotSelected(RBExpense);
 				rNotSelected(RBTransfer);
+				type=1;
 
 			}
 			else if(i==R.id.radioCatExpense)
@@ -144,7 +145,7 @@ public class TransactionActivity extends AppCompatActivity {
 				rSelected(RBExpense);
 				rNotSelected(RBIncome);
 				rNotSelected(RBTransfer);
-
+				type=2;
 
 			}
 			else if(i==R.id.radioCatTransfer)
@@ -153,6 +154,7 @@ public class TransactionActivity extends AppCompatActivity {
 				rSelected(RBTransfer);
 				rNotSelected(RBExpense);
 				rNotSelected(RBIncome);
+				type=3;
 
 			}
 		});
