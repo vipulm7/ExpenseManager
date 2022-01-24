@@ -12,11 +12,12 @@ public class CategoryViewModel extends AndroidViewModel {
 
     private CategoryRepo repo;
     private LiveData<List<Category>> categories;
+    private int type;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);
         repo =new CategoryRepo(application);
-        categories = repo.getAllCategories();
+        categories = repo.getAllCategories(type);
     }
 
     public void Insert(Category category)
@@ -34,8 +35,9 @@ public class CategoryViewModel extends AndroidViewModel {
         repo.Update(category);
     }
 
-    public LiveData<List<Category>> getAllCategories()
+    public LiveData<List<Category>> getAllCategories(int type)
     {
+        this.type=type;
         return categories;
     }
 }

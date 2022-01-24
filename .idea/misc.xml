@@ -3,14 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/drawable/item_sel.xml" value="0.22037037037037038" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout-v26/activity_main.xml" value="0.536" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/a.xml" value="0.4" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/abc.xml" value="0.72" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/activity_main.xml" value="0.4" />
-        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/activity_transaction.xml" value="0.4" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/activity_transaction.xml" value="0.1" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/bsd_account.xml" value="0.1" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/bsd_cat_layout_per_item.xml" value="0.259375" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/bsd_layout_per_item.xml" value="0.4" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_bsd_accounts.xml" value="0.4" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_bsd_category.xml" value="0.15217391304347827" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_bsd_sub_category.xml" value="0.15217391304347827" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_category.xml" value="0.1" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_sub_category.xml" value="0.2453125" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/layout_per_item.xml" value="0.72" />
       </map>
     </option>

@@ -2,6 +2,7 @@ package com.VipulMittal.expensemanager;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -10,12 +11,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
+import com.VipulMittal.expensemanager.BSD_Categrory.BsdCategoryFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
@@ -23,11 +28,11 @@ import java.util.Calendar;
 public class TransactionActivity extends AppCompatActivity {
 
    private static final String TAG = "Vipul_tag";
-   TextView TVDate, TVTime, TVAccount, TVCategoryName, TVCategory;
+   TextView TVDate, TVTime, TVAccount, TVCategory;
    RadioGroup radioGroup;
    RadioButton RBIncome, RBExpense, RBTransfer;
    Toast toast;
-   int account;
+   int account,cat, subCat;
 
 
 	@Override
@@ -38,7 +43,6 @@ public class TransactionActivity extends AppCompatActivity {
 		TVDate=findViewById(R.id.TVDate);
 		TVTime=findViewById(R.id.TVTime);
 		TVAccount =findViewById(R.id.TVAccount);
-		TVCategoryName=findViewById(R.id.TVCategoryName);
 		TVCategory=findViewById(R.id.TVCategory);
 		ActionBar actionBar=getSupportActionBar();
 		radioGroup=findViewById(R.id.RadioGroupType);
@@ -60,10 +64,10 @@ public class TransactionActivity extends AppCompatActivity {
 		Log.d(TAG, "onCreate: Adapter just to receive");
 		Log.d(TAG, "onCreate: Adapter received");
 		account = intent.getIntExtra("account",-1);
-		int cat = intent.getIntExtra("cat",-1);
-		int subCat = intent.getIntExtra("subCat",-1);
+		cat = intent.getIntExtra("cat",-1);
+		subCat = intent.getIntExtra("subCat",-1);
 		int request = intent.getIntExtra("request",-1);
-		int type = intent.getIntExtra("type",-1);
+		int type = intent.getIntExtra("type",2);
 
 
 
@@ -74,15 +78,32 @@ public class TransactionActivity extends AppCompatActivity {
 	   	else if(request == 2)
 			actionBar.setTitle("Edit Transaction");
 
-	   	setRadioButton(type); //sets which button is ticked in radio group
+	   	setRadioButton(type); //sets which button is ticked in radio group based on int type
 
 
 
 		TVAccount.setOnClickListener(v->{
 			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account);
 			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Accounts");
-
 		});
+
+		TVCategory.setOnClickListener(v->{
+			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCategoryFragment(cat, type);
+			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Category");
+		});
+
+//		TVCategory.setOnTouchListener(new View.OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View view, MotionEvent motionEvent) {
+//				TVCategory.setBackgroundColor(Color.CYAN);
+//				return false;
+//			}
+//
+//
+//		});
+
+
+
 
 
 
@@ -95,24 +116,31 @@ public class TransactionActivity extends AppCompatActivity {
 		TVAccount.setText(name);
 	}
 
+	public void saveSelectedCategoryWithName(int selected, String name)
+	{
+		cat=selected;
+		TVCategory.setText(name);
+	}
+
+	public void saveSelectedCategoryWithoutName(int selected)
+	{
+		cat=selected;
+	}
+
 
 	private void radioGroupSetListener() {
 		radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
 			if(i==R.id.radioCatIncome)
 			{
 				TVCategory.setText("Category");
-				TVCategoryName.setHint("Category Name");
 				rSelected(RBIncome);
 				rNotSelected(RBExpense);
 				rNotSelected(RBTransfer);
-
-
 
 			}
 			else if(i==R.id.radioCatExpense)
 			{
 				TVCategory.setText("Category");
-				TVCategoryName.setHint("Category Name");
 				rSelected(RBExpense);
 				rNotSelected(RBIncome);
 				rNotSelected(RBTransfer);
@@ -122,7 +150,6 @@ public class TransactionActivity extends AppCompatActivity {
 			else if(i==R.id.radioCatTransfer)
 			{
 				TVCategory.setText("Account");
-				TVCategoryName.setHint("Account Name");
 				rSelected(RBTransfer);
 				rNotSelected(RBExpense);
 				rNotSelected(RBIncome);

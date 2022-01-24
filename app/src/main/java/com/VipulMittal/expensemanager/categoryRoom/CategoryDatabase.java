@@ -50,7 +50,14 @@ public abstract class CategoryDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-//            categoryDAO.Insert(new Category());
+            categoryDAO.Insert(new Category("Salary",0,0,1));
+            categoryDAO.Insert(new Category("Cashback",0,0,1));
+            categoryDAO.Insert(new Category("Interest",0,0,1));
+
+            categoryDAO.Insert(new Category("Food",0,0,2));
+            categoryDAO.Insert(new Category("Transport",0,0,2));
+            categoryDAO.Insert(new Category("Beauty",0,0,2));
+            categoryDAO.Insert(new Category("Health",0,0,2));
             return null;
         }
     }

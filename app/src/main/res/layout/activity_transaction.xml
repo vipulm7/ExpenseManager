@@ -113,18 +113,8 @@
             app:layout_constraintTop_toTopOf="parent"
             android:textSize="18sp"
             android:padding="5dp"
+            android:background="@drawable/item_sel"
             />
-
-        <TextView
-            android:id="@+id/TVAccountName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Account Name"
-            android:padding="5dp"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/TVAccount"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:layout_width="0dp"
@@ -136,18 +126,6 @@
             android:textSize="18sp"
             android:padding="5dp"
             />
-
-        <TextView
-            android:id="@+id/TVCategoryName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Category Name"
-            android:padding="5dp"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/TVCategory"
-            app:layout_constraintTop_toBottomOf="@+id/TVAccountName" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

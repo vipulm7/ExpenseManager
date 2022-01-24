@@ -1,7 +1,6 @@
 package com.VipulMittal.expensemanager.accountRoom;
 
 import android.graphics.Color;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
-import com.VipulMittal.expensemanager.accountRoom.Account;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +30,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 	@NonNull
 	@Override
 	public AccViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bsd_layout_per_item, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bsd_account_layout_per_item, parent, false);
 		return new AccViewHolder(view);
 	}
 

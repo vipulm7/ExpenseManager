@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public static final String TAG="Vipul_tag";
 	TextView TVMainExpense,TVMainIncome,TVMainTotal;
 	FloatingActionButton FABAdd;
-	RecyclerView RVTransactions, RVAccounts;
+	RecyclerView RVTransactions;
 	TransactionAdapter transactionAdapter;
 	TransactionViewModel transactionViewModel;
 

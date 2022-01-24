@@ -1,20 +1,26 @@
-package com.VipulMittal.expensemanager;
+package com.VipulMittal.expensemanager.BSD_Account;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.VipulMittal.expensemanager.R;
+import com.VipulMittal.expensemanager.TransactionActivity;
+import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -64,7 +70,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 		accountViewModel.getAllAccounts().observe(getViewLifecycleOwner(), accounts -> {
 			accountAdapter.setAccounts(accounts);
-			accountAdapter.notifyDataSetChanged();
+			accountAdapter.notifyItemInserted(accounts.size()-1);
 		});
 
 		RVAccounts.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -72,8 +78,48 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		RVAccounts.setNestedScrollingEnabled(false);
 		RVAccounts.setAdapter(accountAdapter);
 
-		addNew.setOnClickListener(v->{
 
+		EditText editText=new EditText(getContext());
+
+		AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+		builder.setTitle("Add New Account")
+				.setNegativeButton("Cancel", (dialog, which) -> {
+
+				})
+				.setView(editText)
+				.setPositiveButton("Add", (dialog, which) -> {
+					accountViewModel.Insert(new Account(editText.getText().toString()));
+				});
+		AlertDialog dialog = builder.create();
+
+		addNew.setOnClickListener(v->{
+			Log.d(TAG, "onCreateView: builder = "+builder);
+//			builder.create();
+
+			editText.setText("");
+			editText.requestFocus();
+			dialog.show();
+
+			Log.d(TAG, "onCreateView: dialog created");
+
+			((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+			editText.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+				}
+
+				@Override
+				public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+					((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
+				}
+
+				@Override
+				public void afterTextChanged(Editable editable) {
+
+				}
+			});
 		});
 
 		return view;
