@@ -6,25 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/BSD_Cat"
+        android:id="@+id/BSD_SubCat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Category Name"
+        android:text="SubCategory Name"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/BSD_Cat_Arrow"
         android:padding="7dp"
         />
-
-    <TextView
-        android:id="@+id/BSD_Cat_Arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="24sp"
-        android:padding="7dp"
-        android:layout_marginEnd="5dp"
-        android:text=">" />
 </androidx.constraintlayout.widget.ConstraintLayout>

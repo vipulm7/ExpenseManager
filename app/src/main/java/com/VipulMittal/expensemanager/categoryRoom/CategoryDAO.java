@@ -20,6 +20,6 @@ public interface CategoryDAO {
     @Delete
     void Delete(Category category);
 
-    @Query("SELECT * FROM category_table WHERE type = :type")
+    @Query("SELECT * FROM category_table WHERE type = :type ORDER BY name ASC")
     LiveData<List<Category>> getAllCategories(int type);
 }

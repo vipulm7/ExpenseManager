@@ -6,17 +6,19 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.VipulMittal.expensemanager.categoryRoom.Category;
+
 import java.util.List;
+import java.util.Map;
 
 public class SubCategoryViewModel extends AndroidViewModel {
 
     private SubCategoryRepo repo;
-    private LiveData<List<SubCategory>> subCategories;
+    private LiveData<Map<Category, List<SubCategory>>> subCategories;
 
     public SubCategoryViewModel(@NonNull Application application) {
         super(application);
         repo =new SubCategoryRepo(application);
-        subCategories= repo.getAllSubCategories();
     }
 
     public void Insert(SubCategory subCategory)
@@ -34,8 +36,9 @@ public class SubCategoryViewModel extends AndroidViewModel {
         repo.Update(subCategory);
     }
 
-    public LiveData<List<SubCategory>> getAllSubCategories()
+    public LiveData<Map<Category, List<SubCategory>>> getAllSubCategories(int type)
     {
+        subCategories= repo.getAllSubCategories(type);
         return subCategories;
     }
 }

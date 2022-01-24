@@ -5,18 +5,20 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.VipulMittal.expensemanager.categoryRoom.Category;
+
 import java.util.List;
+import java.util.Map;
 
 public class SubCategoryRepo
 {
     private SubCategoryDAO subCategoryDAO;
-    private LiveData<List<SubCategory>> subCategories;
+    private LiveData<Map<Category, List<SubCategory>>> subCategories;
 
     public SubCategoryRepo(Application application)
     {
         SubCategoryDatabase subCategoryDatabase = SubCategoryDatabase.getInstance(application);
         subCategoryDAO = subCategoryDatabase.subCategoryDAO();
-        subCategories = subCategoryDAO.getAllSubCategories();
     }
 
     public void Insert (SubCategory subCategory)
@@ -34,8 +36,9 @@ public class SubCategoryRepo
         new UpdateNoteASyncTask(subCategoryDAO).execute(subCategory);
     }
 
-    public LiveData<List<SubCategory>> getAllSubCategories()
+    public LiveData<Map<Category, List<SubCategory>>> getAllSubCategories(int type)
     {
+        subCategories = subCategoryDAO.getAllSubCategories(type);
         return subCategories;
     }
 

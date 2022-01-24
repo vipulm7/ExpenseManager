@@ -2,17 +2,13 @@ package com.VipulMittal.expensemanager;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -20,7 +16,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
-import com.VipulMittal.expensemanager.BSD_Categrory.BsdCategoryFragment;
+import com.VipulMittal.expensemanager.BSD_Cat.BsdCatFragment;
+import com.VipulMittal.expensemanager.BSD_Cat.BsdCategoryFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
@@ -88,43 +85,34 @@ public class TransactionActivity extends AppCompatActivity {
 		});
 
 		TVCategory.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCategoryFragment(cat, type);
+			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCatFragment(cat, type);
 			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Category");
 		});
 
-//		TVCategory.setOnTouchListener(new View.OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View view, MotionEvent motionEvent) {
-//				TVCategory.setBackgroundColor(Color.CYAN);
-//				return false;
-//			}
-//
-//
-//		});
-
-
-
-
-
-
 
 	}
 
-	public void saveSelectedAccount(int selected, String name)
+	public void saveSelectedAccount(int selectedAccount, String name)
 	{
-		account=selected;
+		account=selectedAccount;
 		TVAccount.setText(name);
 	}
 
-	public void saveSelectedCategoryWithName(int selected, String name)
+	public void saveSelectedCategoryWithName(int selectedCat, String name)
 	{
-		cat=selected;
+		cat=selectedCat;
 		TVCategory.setText(name);
 	}
 
-	public void saveSelectedCategoryWithoutName(int selected)
+	public void saveSelectedSubCategory(int selectedSubCat, String name)
 	{
-		cat=selected;
+		subCat=selectedSubCat;
+		TVCategory.setText("");
+	}
+
+	public void saveSelectedCategoryWithoutName(int selectedCat)
+	{
+		cat=selectedCat;
 	}
 
 

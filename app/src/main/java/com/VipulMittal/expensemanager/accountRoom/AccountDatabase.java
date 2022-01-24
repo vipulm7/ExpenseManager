@@ -52,7 +52,7 @@ public abstract class AccountDatabase extends RoomDatabase {
 
             accountDAO.Insert(new Account("Cash"));
             accountDAO.Insert(new Account("Card"));
-            accountDAO.Insert(new Account("Paytm"));
+            accountDAO.Insert(new Account("E-Wallet"));
             return null;
         }
     }
