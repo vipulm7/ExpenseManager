@@ -85,7 +85,7 @@ public class TransactionActivity extends AppCompatActivity {
 		});
 
 		TVCategory.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCatFragment(cat, type);
+			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCatFragment(cat, subCat, type);
 			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Category");
 		});
 
@@ -104,16 +104,18 @@ public class TransactionActivity extends AppCompatActivity {
 		TVCategory.setText(name);
 	}
 
-	public void saveSelectedSubCategory(int selectedSubCat, String name)
-	{
-		subCat=selectedSubCat;
-		TVCategory.setText("");
-	}
-
 	public void saveSelectedCategoryWithoutName(int selectedCat)
 	{
 		cat=selectedCat;
 	}
+
+	public void saveSelectedSubCategory(int selectedSubCat, String name)
+	{
+		subCat=selectedSubCat;
+		TVCategory.setText(name);
+	}
+
+
 
 
 	private void radioGroupSetListener() {

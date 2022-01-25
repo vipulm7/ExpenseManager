@@ -9,9 +9,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.VipulMittal.expensemanager.categoryRoom.Category;
+
 import java.util.Calendar;
 
-@Database(entities = SubCategory.class, version = 2)
+@Database(entities = {SubCategory.class, Category.class}, version = 2)
 public abstract class SubCategoryDatabase extends RoomDatabase {
 
     private static SubCategoryDatabase instance;
@@ -50,23 +52,23 @@ public abstract class SubCategoryDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            subCategoryDAO.Insert(new SubCategory("By amazon",0,0,1));
-            subCategoryDAO.Insert(new SubCategory("By gpay",0,0,1));
-            subCategoryDAO.Insert(new SubCategory("By freecharge",0,0,1));
+            subCategoryDAO.Insert(new SubCategory("By amazon",0,0,1,1));
+            subCategoryDAO.Insert(new SubCategory("By gpay",0,0,1,1));
+            subCategoryDAO.Insert(new SubCategory("By freecharge",0,0,1,1));
 
-            subCategoryDAO.Insert(new SubCategory("By bank",0,0,2));
-            subCategoryDAO.Insert(new SubCategory("By uncle",0,0,2));
+            subCategoryDAO.Insert(new SubCategory("By bank",0,0,2,1));
+            subCategoryDAO.Insert(new SubCategory("By uncle",0,0,2,1));
 
-            subCategoryDAO.Insert(new SubCategory("Lunch",0,0,3));
-            subCategoryDAO.Insert(new SubCategory("BreakFast",0,0,3));
-            subCategoryDAO.Insert(new SubCategory("Dinner",0,0,3));
-            subCategoryDAO.Insert(new SubCategory("Restaurant",0,0,3));
+            subCategoryDAO.Insert(new SubCategory("Lunch",0,0,3,2));
+            subCategoryDAO.Insert(new SubCategory("BreakFast",0,0,3,2));
+            subCategoryDAO.Insert(new SubCategory("Dinner",0,0,3,2));
+            subCategoryDAO.Insert(new SubCategory("Restaurant",0,0,3,2));
 
-            subCategoryDAO.Insert(new SubCategory("Bus",0,0,4));
-            subCategoryDAO.Insert(new SubCategory("Petrol",0,0,4));
+            subCategoryDAO.Insert(new SubCategory("Bus",0,0,4,2));
+            subCategoryDAO.Insert(new SubCategory("Petrol",0,0,4,2));
 
-            subCategoryDAO.Insert(new SubCategory("Medicine",0,0,6));
-            subCategoryDAO.Insert(new SubCategory("Insurance",0,0,6));
+            subCategoryDAO.Insert(new SubCategory("Medicine",0,0,6,2));
+            subCategoryDAO.Insert(new SubCategory("Insurance",0,0,6,2));
             return null;
         }
     }

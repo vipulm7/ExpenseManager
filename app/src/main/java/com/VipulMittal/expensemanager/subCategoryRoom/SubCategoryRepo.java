@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import com.VipulMittal.expensemanager.categoryRoom.Category;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryDAO;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryDatabase;
 
 import java.util.List;
 import java.util.Map;
@@ -13,17 +15,21 @@ import java.util.Map;
 public class SubCategoryRepo
 {
     private SubCategoryDAO subCategoryDAO;
+    private CategoryDAO categoryDAO;
     private LiveData<Map<Category, List<SubCategory>>> subCategories;
 
     public SubCategoryRepo(Application application)
     {
         SubCategoryDatabase subCategoryDatabase = SubCategoryDatabase.getInstance(application);
         subCategoryDAO = subCategoryDatabase.subCategoryDAO();
+        CategoryDatabase categoryDatabase=CategoryDatabase.getInstance(application);
+        categoryDAO=categoryDatabase.categoryDAO();
     }
 
     public void Insert (SubCategory subCategory)
     {
         new InsertNoteASyncTask(subCategoryDAO).execute(subCategory);
+        categoryDAO.catAdded(subCategory.categoryID);
     }
 
     public void Delete(SubCategory subCategory)

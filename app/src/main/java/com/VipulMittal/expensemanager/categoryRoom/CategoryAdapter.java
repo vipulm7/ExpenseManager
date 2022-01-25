@@ -19,7 +19,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 	ClickListener listener;
 	public List<Category> categories;
-	int catSelected;
+	public int catSelected;
 	String TAG="Vipul_tag";
 
 	public CategoryAdapter(int catSelected, ClickListener listener) {
@@ -39,16 +39,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 	public void onBindViewHolder(@NonNull BSDCatViewHolder holder, int position) {
 		holder.name.setText(categories.get(position).name);
 		Log.d(TAG, "onBindViewHolder: "+position);
+		Log.d(TAG, "onBindViewHolder: "+categories.get(position).name+" "+categories.get(position).noOfSubCat);
 		if(position== catSelected)
 			holder.name.setBackgroundColor(Color.CYAN);
+		else
+			holder.name.setBackgroundColor(Color.WHITE);
 		if(categories.get(position).noOfSubCat==0)
 			holder.arrow.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
 	public int getItemCount() {
-		Log.d(TAG, "getItemCount: size = "+categories.size());
-		Log.d(TAG, "getItemCount: categories = "+categories);
+//		Log.d(TAG, "getItemCount: size = "+categories.size());
+//		Log.d(TAG, "getItemCount: categories = "+categories);
 		return categories.size();
 	}
 

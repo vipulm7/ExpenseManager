@@ -14,11 +14,11 @@ public class Category {
 	public int noOfSubCat;
 	public int type;
 
-   public Category(String name, int amount, int budget, int type) {
+   public Category(String name, int amount, int budget, int noOfSubCat, int type) {
 	  this.amount = amount;
 	  this.name = name;
 	  this.budget = budget;
-	  this.noOfSubCat = 0;
+	  this.noOfSubCat = noOfSubCat;
 	  this.type = type;
    }
 

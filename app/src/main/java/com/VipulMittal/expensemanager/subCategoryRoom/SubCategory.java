@@ -14,13 +14,15 @@ public class SubCategory {
 	public int budget;
 	public int noOfSubCat;
 	public int categoryID;
+	public int type;
 
-	public SubCategory(String name, int amount, int budget, int categoryID) {
+	public SubCategory(String name, int amount, int budget, int categoryID, int type) {
 		this.name = name;
 		this.amount = amount;
 		this.budget = budget;
 		this.noOfSubCat = 0;
 		this.categoryID = categoryID;
+		this.type=type;
 	}
 
 	public int getId() {

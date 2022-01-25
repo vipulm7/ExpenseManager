@@ -9,9 +9,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
+
 import java.util.Calendar;
 
-@Database(entities = Category.class, version = 2)
+@Database(entities = {SubCategory.class, Category.class}, version = 2)
 public abstract class CategoryDatabase extends RoomDatabase {
 
     private static CategoryDatabase instance;
@@ -50,14 +52,14 @@ public abstract class CategoryDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            categoryDAO.Insert(new Category("Salary",0,0,1));
-            categoryDAO.Insert(new Category("Cashback",0,0,1));
-            categoryDAO.Insert(new Category("Interest",0,0,1));
+            categoryDAO.Insert(new Category("Salary",0,0,0,1));
+            categoryDAO.Insert(new Category("Cashback",0,0,3,1));
+            categoryDAO.Insert(new Category("Interest",0,0,2,1));
 
-            categoryDAO.Insert(new Category("Food",0,0,2));
-            categoryDAO.Insert(new Category("Transport",0,0,2));
-            categoryDAO.Insert(new Category("Beauty",0,0,2));
-            categoryDAO.Insert(new Category("Health",0,0,2));
+            categoryDAO.Insert(new Category("Food",0,0,4,2));
+            categoryDAO.Insert(new Category("Transport",0,0,2,2));
+            categoryDAO.Insert(new Category("Beauty",0,0,0,2));
+            categoryDAO.Insert(new Category("Health",0,0,2,2));
             return null;
         }
     }

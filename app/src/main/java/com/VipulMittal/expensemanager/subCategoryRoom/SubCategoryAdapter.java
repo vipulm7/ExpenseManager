@@ -14,9 +14,9 @@ import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.BSDSubCatViewHolder> {
 
@@ -29,16 +29,11 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
 	public SubCategoryAdapter(int subCatSelected, ClickListener listener, Category catSelected) {
 		this.listener = listener;
-		subCategories=new AbstractMap<Category, List<SubCategory>>() {
-			@NonNull
-			@Override
-			public Set<Entry<Category, List<SubCategory>>> entrySet() {
-				return null;
-			}
-		};
+		subCategories= new HashMap<Category, List<SubCategory>>();
 		this.subCatSelected = subCatSelected;
 		this.catSelected=catSelected;
 		subCategoriesToPrint=subCategories.get(catSelected);
+		Log.d(TAG, "SubCategoryAdapter: subCategoriesToPrint = "+subCategoriesToPrint);
 	}
 
 	@NonNull
@@ -58,9 +53,12 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
 	@Override
 	public int getItemCount() {
-		Log.d(TAG, "getItemCount: size = "+subCategoriesToPrint.size());
-		Log.d(TAG, "getItemCount: categories = "+subCategoriesToPrint);
-		return subCategoriesToPrint.size();
+//		Log.d(TAG, "getItemCount: subCategoriesToPrint.size() = "+subCategoriesToPrint.size());
+//		Log.d(TAG, "getItemCount: subCategoriesToPrint = "+subCategoriesToPrint);
+		if(subCategoriesToPrint != null)
+			return subCategoriesToPrint.size();
+		else
+			return 0;
 	}
 
 
