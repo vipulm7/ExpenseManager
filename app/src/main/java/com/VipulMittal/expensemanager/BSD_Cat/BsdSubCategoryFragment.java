@@ -26,17 +26,17 @@ import java.util.Map;
 
 public class BsdSubCategoryFragment extends Fragment {
 
-	public BsdSubCategoryFragment(int subCatSelected, int type, Category category) {
+	public BsdSubCategoryFragment(int subCatSelected, int type, Category catSelected) {
 		this.subCatSelected = subCatSelected;
 		this.type=type;
-		this.category=category;
+		this.catSelected = catSelected;
 	}
 
 	private static final String TAG = "Vipul_tag";
 	RecyclerView RVSubCategories;
 	SubCategoryAdapter subCategoryAdapter;
 	SubCategoryViewModel subCategoryViewModel;
-	Category category;
+	Category catSelected;
 	int subCatSelected, type;
 
 	@Override
@@ -55,26 +55,43 @@ public class BsdSubCategoryFragment extends Fragment {
 			TransactionActivity transactionActivity = (TransactionActivity) bsdCatFragment.getActivity();
 			if(transactionActivity!=null)
 			{
-				transactionActivity.saveSelectedSubCategory(subCatSelected, category.name + " / " + subCategoryAdapter.subCategoriesToPrint.get(subCatSelected).name);
+				transactionActivity.saveSelectedSubCategory(subCatSelected, catSelected.name + " / " + subCategoryAdapter.subCategoriesToPrint.get(subCatSelected).name);
 				bsdCatFragment.dismiss();
 			}
 			else {
 				Toast.makeText(getContext(), "Error in selecting subCategory", Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "selectSubCat: transactionActivity of BsdSubCategoryFragment is null");
 			}
-		}, category);
+		}, catSelected);
 
-		Log.d(TAG, "onCreateView: map = "+subCategoryAdapter.subCategories.get(category));
+		Log.d(TAG, "onCreateView: map = "+subCategoryAdapter.subCategories.get(catSelected));
 
 		subCategoryViewModel=new ViewModelProvider(this).get(SubCategoryViewModel.class);
 		subCategoryViewModel.getAllSubCategories(type).observe(getViewLifecycleOwner(), new Observer<Map<Category, List<SubCategory>>>() {
 			@Override
 			public void onChanged(Map<Category, List<SubCategory>> subCategories) {
-				int pos=pos(subCategories.get(category), subCategoryAdapter.subCategoriesToPrint);
+				int pos=pos(subCategories.get(catSelected), subCategoryAdapter.subCategoriesToPrint);
 				subCategoryAdapter.setSubCategories(subCategories);
-				subCategoryAdapter.notifyItemInserted(pos);
+				subCategoryAdapter.setSubCategoriesToPrint(subCategories.get(catSelected));
+//				subCategoryAdapter.notifyItemInserted(pos);
+				subCategoryAdapter.notifyDataSetChanged();
+
+				Log.d(TAG, "onChanged: subCategories="+subCategories);
+//				Log.d(TAG, "onChanged: subCategories.get(catSelected)="+subCategories.get(catSelected));
+//				Log.d(TAG, "onChanged: subCategories.get(catSelected).get(0)="+subCategories.get(catSelected).get(0));
+
 			}
 		});
+
+		subCategoryViewModel.getSubs().observe(getViewLifecycleOwner(), new Observer<List<SubCategory>>() {
+			@Override
+			public void onChanged(List<SubCategory> subCategories) {
+				subCategoryAdapter.subs=subCategories;
+				for(int i=-1;++i<subCategories.size();)
+					Log.d(TAG, "onChanged: "+subCategories.get(i).name+" "+subCategories.get(i).id+" "+subCategories.get(i).categoryID);
+			}
+		});
+
 
 		RVSubCategories.setLayoutManager(new LinearLayoutManager((getContext())));
 		RVSubCategories.setAdapter(subCategoryAdapter);

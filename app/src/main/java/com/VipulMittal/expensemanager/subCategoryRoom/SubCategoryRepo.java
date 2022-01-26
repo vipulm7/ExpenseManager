@@ -17,6 +17,7 @@ public class SubCategoryRepo
     private SubCategoryDAO subCategoryDAO;
     private CategoryDAO categoryDAO;
     private LiveData<Map<Category, List<SubCategory>>> subCategories;
+    private LiveData<List<SubCategory>> subs;
 
     public SubCategoryRepo(Application application)
     {
@@ -35,6 +36,7 @@ public class SubCategoryRepo
     public void Delete(SubCategory subCategory)
     {
         new DeleteNoteASyncTask(subCategoryDAO).execute(subCategory);
+        categoryDAO.catDeleted(subCategory.categoryID);
     }
 
     public void Update(SubCategory subCategory)
@@ -46,6 +48,12 @@ public class SubCategoryRepo
     {
         subCategories = subCategoryDAO.getAllSubCategories(type);
         return subCategories;
+    }
+
+    LiveData<List<SubCategory>> getSubs()
+    {
+        subs= subCategoryDAO.getSubs();
+        return subs;
     }
 
 

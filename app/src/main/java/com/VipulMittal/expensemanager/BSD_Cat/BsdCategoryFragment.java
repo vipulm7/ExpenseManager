@@ -89,6 +89,7 @@ public class BsdCategoryFragment extends Fragment {
 			categoryAdapter.notifyItemChanged(catSelected);
 
 			if(categoryAdapter.categories.get(catSelected).noOfSubCat!=0) {
+				Log.d(TAG, "category sent = "+categoryAdapter.categories.get(catSelected));
 				bsdCatFragment.showSubCatFragment(subCatSelected, type, categoryAdapter.categories.get(catSelected));
 
 //				BsdSubCategoryFragment bsdSubCategoryFragment = new BsdSubCategoryFragment(subCatSelected, type, categoryAdapter.categories.get(catSelected));

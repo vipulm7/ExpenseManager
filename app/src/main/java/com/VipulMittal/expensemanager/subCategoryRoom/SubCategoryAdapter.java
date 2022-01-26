@@ -8,15 +8,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.BSDSubCatViewHolder> {
 
@@ -26,14 +30,19 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 	Category catSelected;
 	String TAG="Vipul_tag";
 	public List<SubCategory> subCategoriesToPrint;
+	public List<SubCategory> subs;
 
 	public SubCategoryAdapter(int subCatSelected, ClickListener listener, Category catSelected) {
 		this.listener = listener;
-		subCategories= new HashMap<Category, List<SubCategory>>();
+		subCategories= new HashMap<>();
+		subs=new ArrayList<>();
+		Category a=new Category("A",0,0,0,2);
+		subCategories.put(a,new ArrayList<>());
 		this.subCatSelected = subCatSelected;
 		this.catSelected=catSelected;
 		subCategoriesToPrint=subCategories.get(catSelected);
 		Log.d(TAG, "SubCategoryAdapter: subCategoriesToPrint = "+subCategoriesToPrint);
+		Log.d(TAG, "SubCategoryAdapter: subCategories = "+subCategories);
 	}
 
 	@NonNull
@@ -55,10 +64,11 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 	public int getItemCount() {
 //		Log.d(TAG, "getItemCount: subCategoriesToPrint.size() = "+subCategoriesToPrint.size());
 //		Log.d(TAG, "getItemCount: subCategoriesToPrint = "+subCategoriesToPrint);
-		if(subCategoriesToPrint != null)
+
+		subCategoriesToPrint=subCategories.get(catSelected);
+		if(subCategoriesToPrint!=null)
 			return subCategoriesToPrint.size();
-		else
-			return 0;
+		return 0;
 	}
 
 
@@ -85,5 +95,9 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 	public void setSubCategories(Map<Category, List<SubCategory>> subCategories)
 	{
 		this.subCategories=subCategories;
+	}
+	public void setSubCategoriesToPrint(List<SubCategory> subCategoriesToPrint)
+	{
+		this.subCategoriesToPrint=subCategoriesToPrint;
 	}
 }
