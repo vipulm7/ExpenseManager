@@ -43,9 +43,9 @@ public class SubCategoryViewModel extends AndroidViewModel {
         return subCategories;
     }
 
-    public LiveData<List<SubCategory>> getSubs(int catID)
-    {
-        subs = repo.getSubs(catID);
-        return subs;
-    }
+//    public LiveData<List<SubCategory>> getSubs(int catID)
+//    {
+//        subs = repo.getSubs(catID);
+//        return subs;
+//    }
 }

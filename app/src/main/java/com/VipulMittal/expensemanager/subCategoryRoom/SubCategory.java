@@ -9,17 +9,19 @@ public class SubCategory {
 	public int id;
 
    	public String name;
-	public int amount;
-	public int budget;
-	public int categoryID;
+	public int subCatAmount;
+	public int subCatBudget;
+	public int categoryID, noOfSubCat;
+
 	public int type;
 
-	public SubCategory(String name, int amount, int budget, int categoryID, int type) {
+	public SubCategory(String name, int subCatAmount, int subCatBudget, int categoryID, int type) {
 		this.name = name;
-		this.amount = amount;
-		this.budget = budget;
+		this.subCatAmount = subCatAmount;
+		this.subCatBudget = subCatBudget;
 		this.categoryID = categoryID;
 		this.type=type;
+		this.noOfSubCat=0;
 	}
 
 	public int getId() {

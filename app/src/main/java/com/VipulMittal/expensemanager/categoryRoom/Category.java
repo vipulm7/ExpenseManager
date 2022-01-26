@@ -8,16 +8,16 @@ public class Category {
 	@PrimaryKey(autoGenerate = true)
 	public int id;
 
-   	public String name;
-	public int amount;
-	public int budget;
+   	public String catName;
+	public int catAmount;
+	public int catBudget;
 	public int noOfSubCat;
 	public int type;
 
-   public Category(String name, int amount, int budget, int noOfSubCat, int type) {
-	  this.amount = amount;
-	  this.name = name;
-	  this.budget = budget;
+   public Category(String catName, int catAmount, int catBudget, int noOfSubCat, int type) {
+	  this.catAmount = catAmount;
+	  this.catName = catName;
+	  this.catBudget = catBudget;
 	  this.noOfSubCat = noOfSubCat;
 	  this.type = type;
    }

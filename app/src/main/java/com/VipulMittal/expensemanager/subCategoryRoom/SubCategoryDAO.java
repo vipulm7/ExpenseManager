@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.MapInfo;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -27,9 +28,10 @@ public interface SubCategoryDAO {
 //    @Query("SELECT * FROM subcategory_table")
 //    LiveData<List<SubCategory>> getAllSubCategories();
 
-    @Query("SELECT * FROM subcategory_table JOIN category_table ON category_table.id = subcategory_table.categoryID WHERE subcategory_table.type==:type")
-    LiveData<Map<Category, List<SubCategory>>> getAllSubCategories(int type);
+    @MapInfo(keyColumn = "id")
+    @Query("SELECT * FROM category_table JOIN subcategory_table ON category_table.id = subcategory_table.categoryID")
+    LiveData<Map<Category, List<SubCategory>>> getAllSubCategories();
 
-    @Query("SELECT * FROM subcategory_table WHERE categoryID=:catID")
-    LiveData<List<SubCategory>> getSubs(int catID);
+//    @Query("SELECT * AS subCat, category_table.* AS cat FROM subcategory_table, category_table WHERE categoryID=:catID")
+//    LiveData<List<SubCategory>> getSubs(int catID);
 }

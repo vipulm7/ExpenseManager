@@ -37,9 +37,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 	@Override
 	public void onBindViewHolder(@NonNull BSDCatViewHolder holder, int position) {
-		holder.name.setText(categories.get(position).name);
+		holder.name.setText(categories.get(position).catName);
 		Log.d(TAG, "onBindViewHolder: ofCat position="+position);
-		Log.d(TAG, "onBindViewHolder: ofCat name="+categories.get(position).name+" noOfSubCat="+categories.get(position).noOfSubCat+" id="+categories.get(position).id);
+		Log.d(TAG, "onBindViewHolder: ofCat name="+categories.get(position).catName +" noOfSubCat="+categories.get(position).noOfSubCat+" id="+categories.get(position).id);
 		if(position== catSelected)
 			holder.name.setBackgroundColor(Color.CYAN);
 		else

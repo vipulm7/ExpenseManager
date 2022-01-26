@@ -55,7 +55,7 @@ public class BsdSubCategoryFragment extends Fragment {
 			TransactionActivity transactionActivity = (TransactionActivity) bsdCatFragment.getActivity();
 			if(transactionActivity!=null)
 			{
-				transactionActivity.saveSelectedSubCategory(subCatSelected, catSelected.name + " / " + subCategoryAdapter.subCategoriesToPrint.get(subCatSelected).name);
+				transactionActivity.saveSelectedSubCategory(subCatSelected, catSelected.catName + " / " + subCategoryAdapter.subCategoriesToPrint.get(subCatSelected).name);
 				bsdCatFragment.dismiss();
 			}
 			else {
@@ -83,14 +83,14 @@ public class BsdSubCategoryFragment extends Fragment {
 			}
 		});
 
-		subCategoryViewModel.getSubs(2).observe(getViewLifecycleOwner(), new Observer<List<SubCategory>>() {
-			@Override
-			public void onChanged(List<SubCategory> subCategories) {
-				subCategoryAdapter.subs=subCategories;
-				for(int i=-1;++i<subCategories.size();)
-					Log.d(TAG, "onChanged: "+subCategories.get(i).name+" "+subCategories.get(i).id+" "+subCategories.get(i).categoryID);
-			}
-		});
+//		subCategoryViewModel.getSubs(2).observe(getViewLifecycleOwner(), new Observer<List<SubCategory>>() {
+//			@Override
+//			public void onChanged(List<SubCategory> subCategories) {
+//				subCategoryAdapter.subs=subCategories;
+//				for(int i=-1;++i<subCategories.size();)
+//					Log.d(TAG, "onChanged: "+subCategories.get(i).name+" "+subCategories.get(i).id+" "+subCategories.get(i).categoryID);
+//			}
+//		});
 
 
 		RVSubCategories.setLayoutManager(new LinearLayoutManager((getContext())));

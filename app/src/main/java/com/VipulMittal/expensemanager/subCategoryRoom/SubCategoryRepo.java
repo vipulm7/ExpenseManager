@@ -46,15 +46,15 @@ public class SubCategoryRepo
 
     public LiveData<Map<Category, List<SubCategory>>> getAllSubCategories(int type)
     {
-        subCategories = subCategoryDAO.getAllSubCategories(type);
+        subCategories = subCategoryDAO.getAllSubCategories();
         return subCategories;
     }
 
-    LiveData<List<SubCategory>> getSubs(int catID)
-    {
-        subs= subCategoryDAO.getSubs(catID);
-        return subs;
-    }
+//    LiveData<List<SubCategory>> getSubs(int catID)
+//    {
+//        subs= subCategoryDAO.getSubs(catID);
+//        return subs;
+//    }
 
 
     private static class InsertNoteASyncTask extends AsyncTask<SubCategory,Void,Void>
