@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.MapInfo;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.VipulMittal.expensemanager.categoryRoom.Category;
@@ -29,9 +30,13 @@ public interface SubCategoryDAO {
 //    LiveData<List<SubCategory>> getAllSubCategories();
 
     @MapInfo(keyColumn = "id")
-    @Query("SELECT * FROM category_table JOIN subcategory_table ON category_table.id = subcategory_table.categoryID")
+    @Query("SELECT * FROM category_table JOIN subcategory_table ON category_table.catId = subcategory_table.categoryID")
     LiveData<Map<Category, List<SubCategory>>> getAllSubCategories();
 
-//    @Query("SELECT * AS subCat, category_table.* AS cat FROM subcategory_table, category_table WHERE categoryID=:catID")
-//    LiveData<List<SubCategory>> getSubs(int catID);
+//    @Transaction
+//    @Query("SELECT * FROM category_table")
+//    LiveData<List<mix>> getSubCats();
+
+    @Query("SELECT * FROM subcategory_table WHERE categoryID=:catID")
+    LiveData<List<SubCategory>> getSubs(int catID);
 }

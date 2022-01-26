@@ -17,6 +17,8 @@ public class SubCategoryRepo
     private SubCategoryDAO subCategoryDAO;
     private CategoryDAO categoryDAO;
     private LiveData<Map<Category, List<SubCategory>>> subCategories;
+//    private LiveData<List<SubCategory>> subs;
+//    private LiveData<List<mix>> subs;
     private LiveData<List<SubCategory>> subs;
 
     public SubCategoryRepo(Application application)
@@ -44,17 +46,23 @@ public class SubCategoryRepo
         new UpdateNoteASyncTask(subCategoryDAO).execute(subCategory);
     }
 
+//    public LiveData<List<mix>> getSubCats()
+//    {
+//        subs = subCategoryDAO.getSubCats();
+//        return subs;
+//    }
+
     public LiveData<Map<Category, List<SubCategory>>> getAllSubCategories(int type)
     {
         subCategories = subCategoryDAO.getAllSubCategories();
         return subCategories;
     }
 
-//    LiveData<List<SubCategory>> getSubs(int catID)
-//    {
-//        subs= subCategoryDAO.getSubs(catID);
-//        return subs;
-//    }
+    LiveData<List<SubCategory>> getSubs(int catID)
+    {
+        subs= subCategoryDAO.getSubs(catID);
+        return subs;
+    }
 
 
     private static class InsertNoteASyncTask extends AsyncTask<SubCategory,Void,Void>

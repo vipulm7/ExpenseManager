@@ -23,9 +23,9 @@ public interface CategoryDAO {
     @Query("SELECT * FROM category_table WHERE type = :type ORDER BY catName ASC")
     LiveData<List<Category>> getAllCategories(int type);
 
-    @Query("UPDATE category_table SET noOfSubCat=noOfSubCat+1 WHERE id=:catID")
+    @Query("UPDATE category_table SET noOfSubCat=noOfSubCat+1 WHERE catId=:catID")
     void catAdded(int catID);
 
-    @Query("UPDATE category_table SET noOfSubCat=noOfSubCat-1 WHERE id=:catID")
+    @Query("UPDATE category_table SET noOfSubCat=noOfSubCat-1 WHERE catId=:catID")
     void catDeleted(int catID);
 }

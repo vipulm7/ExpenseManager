@@ -8,41 +8,37 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.BSDSubCatViewHolder> {
 
 	ClickListener listener;
-	public Map<Category, List<SubCategory>> subCategories;
+//	public Map<Category, List<SubCategory>> subCategories;
 	int subCatSelected;
 	Category catSelected;
 	String TAG="Vipul_tag";
-	public List<SubCategory> subCategoriesToPrint;
-	public List<SubCategory> subs;
+//	public List<SubCategory> subCategoriesToPrint;
+	public List<SubCategory> subCats;
 
 	public SubCategoryAdapter(int subCatSelected, ClickListener listener, Category catSelected) {
 		this.listener = listener;
-		subCategories= new HashMap<>();
-		subs=new ArrayList<>();
-		Category a=new Category("A",0,0,0,2);
-		subCategories.put(a,new ArrayList<>());
+//		subCategories= new HashMap<>();
+		subCats =new ArrayList<>();
+//		Category a=new Category("A",0,0,0,2);
+//		subCategories.put(a,new ArrayList<>());
 		this.subCatSelected = subCatSelected;
 		this.catSelected=catSelected;
-		subCategoriesToPrint=subCategories.get(catSelected);
-		Log.d(TAG, "SubCategoryAdapter: subCategoriesToPrint = "+subCategoriesToPrint);
-		Log.d(TAG, "SubCategoryAdapter: subCategories = "+subCategories);
+//		subCategoriesToPrint=subCategories.get(catSelected);
+//		Log.d(TAG, "SubCategoryAdapter: subCategoriesToPrint = "+subCategoriesToPrint);
+//		Log.d(TAG, "SubCategoryAdapter: subCategories = "+subCategories);
 	}
 
 	@NonNull
@@ -54,10 +50,13 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
 	@Override
 	public void onBindViewHolder(@NonNull BSDSubCatViewHolder holder, int position) {
-		holder.name.setText(subCategoriesToPrint.get(position).name);
-		Log.d(TAG, "onBindViewHolder: "+position);
+//		holder.name.setText(subCategoriesToPrint.get(position).name);
+		Log.d(TAG, "onBindViewHolder: subCat pos = "+position);
+		holder.name.setText(subCats.get(position).name);
 		if(position== subCatSelected)
 			holder.name.setBackgroundColor(Color.CYAN);
+		else
+			holder.name.setBackgroundColor(Color.WHITE);
 	}
 
 	@Override
@@ -65,10 +64,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 //		Log.d(TAG, "getItemCount: subCategoriesToPrint.size() = "+subCategoriesToPrint.size());
 //		Log.d(TAG, "getItemCount: subCategoriesToPrint = "+subCategoriesToPrint);
 
-		subCategoriesToPrint=subCategories.get(catSelected);
-		if(subCategoriesToPrint!=null)
-			return subCategoriesToPrint.size();
-		return 0;
+		return subCats.size();
 	}
 
 
@@ -92,12 +88,18 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 		void onItemClick(BSDSubCatViewHolder viewHolder);
 	}
 
-	public void setSubCategories(Map<Category, List<SubCategory>> subCategories)
+//	public void setSubCategories(Map<Category, List<SubCategory>> subCategories)
+//	{
+//		this.subCategories=subCategories;
+//	}
+//	public void setSubCategoriesToPrint(List<SubCategory> subCategoriesToPrint)
+//	{
+//		this.subCategoriesToPrint=subCategoriesToPrint;
+//	}
+
+
+	public void setSubCats(List<SubCategory> subCats)
 	{
-		this.subCategories=subCategories;
-	}
-	public void setSubCategoriesToPrint(List<SubCategory> subCategoriesToPrint)
-	{
-		this.subCategoriesToPrint=subCategoriesToPrint;
+		this.subCats=subCats;
 	}
 }

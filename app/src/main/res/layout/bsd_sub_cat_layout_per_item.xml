@@ -10,9 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="SubCategory Name"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:padding="7dp"
+        android:maxLines="1"
+        android:singleLine="true"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

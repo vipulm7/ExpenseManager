@@ -15,6 +15,7 @@ public class SubCategoryViewModel extends AndroidViewModel {
 
     private SubCategoryRepo repo;
     private LiveData<Map<Category, List<SubCategory>>> subCategories;
+//    private LiveData<List<mix>> subs;
     private LiveData<List<SubCategory>> subs;
 
     public SubCategoryViewModel(@NonNull Application application) {
@@ -43,9 +44,15 @@ public class SubCategoryViewModel extends AndroidViewModel {
         return subCategories;
     }
 
-//    public LiveData<List<SubCategory>> getSubs(int catID)
+//    public LiveData<List<mix>> getSubCats()
 //    {
-//        subs = repo.getSubs(catID);
+//        subs= repo.getSubCats();
 //        return subs;
 //    }
+
+    public LiveData<List<SubCategory>> getSubs(int catID)
+    {
+        subs = repo.getSubs(catID);
+        return subs;
+    }
 }

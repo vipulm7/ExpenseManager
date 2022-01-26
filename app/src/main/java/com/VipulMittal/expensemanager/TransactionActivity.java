@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
 import com.VipulMittal.expensemanager.BSD_Cat.BsdCatFragment;
 import com.VipulMittal.expensemanager.BSD_Cat.BsdCategoryFragment;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
@@ -30,6 +32,8 @@ public class TransactionActivity extends AppCompatActivity {
    RadioButton RBIncome, RBExpense, RBTransfer;
    Toast toast;
    int account,cat, subCat, type;
+   CategoryViewModel categoryViewModel;
+   CategoryAdapter categoryAdapter;
 
 
 	@Override

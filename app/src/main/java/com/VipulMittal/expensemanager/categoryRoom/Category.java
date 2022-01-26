@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "category_table")
 public class Category {
 	@PrimaryKey(autoGenerate = true)
-	public int id;
+	public int catId;
 
    	public String catName;
 	public int catAmount;
@@ -22,7 +22,7 @@ public class Category {
 	  this.type = type;
    }
 
-   public int getId() {
-	  return id;
+   public int getCatId() {
+	  return catId;
    }
 }

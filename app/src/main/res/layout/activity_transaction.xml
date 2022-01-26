@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintDateTime"
         android:id="@+id/constraintChooseType" >
 
         <RadioGroup
@@ -136,7 +136,7 @@
         android:id="@+id/constraintDateTime"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintChooseCat"
+        app:layout_constraintTop_toTopOf="parent"
         >
 
         <TextView
@@ -163,16 +163,13 @@
             app:layout_constraintStart_toEndOf="@+id/TVDate"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintDateTime"
+        app:layout_constraintTop_toBottomOf="@+id/constraintChooseCat"
         android:id="@+id/constraintNoteDes"
 
         >

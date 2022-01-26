@@ -4,8 +4,11 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,16 +19,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
+import com.VipulMittal.expensemanager.dateRoom.Date;
+import com.VipulMittal.expensemanager.dateRoom.DateViewModel;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -34,12 +46,21 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public static final String TAG="Vipul_tag";
-	TextView TVMainExpense,TVMainIncome,TVMainTotal;
+
 	FloatingActionButton FABAdd;
-	RecyclerView RVTransactions;
+
 	TransactionAdapter transactionAdapter;
 	TransactionViewModel transactionViewModel;
+	AccountAdapter accountAdapter;
+	AccountViewModel accountViewModel;
+	CategoryAdapter categoryAdapter;
+	CategoryViewModel categoryViewModel;
+	SubCategoryAdapter subCategoryAdapter;
+	SubCategoryViewModel subCategoryViewModel;
+	DateViewModel dateViewModel;
 
+	NavigationBarView navigationBarView;
+	ConstraintLayout layoutForFragment;
 	Toast toast;
 
 	long income, expense, total;
@@ -48,15 +69,46 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		TVMainIncome=findViewById(R.id.TVIncomeAmt);
-		TVMainExpense=findViewById(R.id.TVExpenseAmt);
-		TVMainTotal=findViewById(R.id.TVTotalAmt);
+
 		FABAdd=findViewById(R.id.FABAdd);
-		RVTransactions =findViewById(R.id.RecyclerViewID);
-		RVTransactions.setLayoutManager(new LinearLayoutManager(this));
 		transactionAdapter=new TransactionAdapter(this);
-		RVTransactions.setAdapter(transactionAdapter);
-		RVTransactions.setNestedScrollingEnabled(false);
+		navigationBarView=findViewById(R.id.BottomNavigation);
+		layoutForFragment=findViewById(R.id.layoutForFragment);
+
+
+		showFragment(new HomeFragment(),R.id.bn_home);
+
+		navigationBarView.setOnItemSelectedListener(item -> {
+			int id=item.getItemId();
+			showFragment(getFragment(id),id);
+
+			return false;
+		});
+
+		navigationBarView.setOnItemReselectedListener(new NavigationBarView.OnItemReselectedListener() {
+			@Override
+			public void onNavigationItemReselected(@NonNull MenuItem item) {
+				int id=item.getItemId();
+				String print;
+
+				if(id==R.id.bn_home)
+					print="Home";
+				else if(id==R.id.bn_cat)
+					print="Category";
+				else if(id==R.id.bn_accounts)
+					print="Accounts";
+				else
+					print="Analysis";
+
+				if(toast!=null)
+					toast.cancel();
+
+				toast=Toast.makeText(MainActivity.this, print, Toast.LENGTH_SHORT);
+				toast.show();
+			}
+		});
+
+
 
 
 
@@ -125,6 +177,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 
+	}
+
+	private Fragment getFragment(int id) {
+		if(id==R.id.bn_home)
+			return new HomeFragment();
+		else if(id==R.id.bn_cat)
+			return new CategoryFragment();
+		else if(id==R.id.bn_accounts)
+			return new AccountsFragment();
+		else
+			return new AnalysisFragment();
+	}
+
+	public void showFragment(Fragment fragment, int id) {
+		navigationBarView.setSelectedItemId(id);
+
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.layoutForFragment,fragment, fragment.getClass().getSimpleName())
+				.commit();
 	}
 
 	private String moneyToString(long money) {

@@ -40,8 +40,6 @@ public class CategoryRepo
     }
 
 
-
-
     private static class InsertNoteASyncTask extends AsyncTask<Category,Void,Void>
     {
         private CategoryDAO transactionDAO;
