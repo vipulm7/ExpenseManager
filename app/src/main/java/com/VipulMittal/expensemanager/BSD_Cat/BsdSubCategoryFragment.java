@@ -83,7 +83,7 @@ public class BsdSubCategoryFragment extends Fragment {
 			}
 		});
 
-		subCategoryViewModel.getSubs().observe(getViewLifecycleOwner(), new Observer<List<SubCategory>>() {
+		subCategoryViewModel.getSubs(2).observe(getViewLifecycleOwner(), new Observer<List<SubCategory>>() {
 			@Override
 			public void onChanged(List<SubCategory> subCategories) {
 				subCategoryAdapter.subs=subCategories;

@@ -50,9 +50,9 @@ public class SubCategoryRepo
         return subCategories;
     }
 
-    LiveData<List<SubCategory>> getSubs()
+    LiveData<List<SubCategory>> getSubs(int catID)
     {
-        subs= subCategoryDAO.getSubs();
+        subs= subCategoryDAO.getSubs(catID);
         return subs;
     }
 

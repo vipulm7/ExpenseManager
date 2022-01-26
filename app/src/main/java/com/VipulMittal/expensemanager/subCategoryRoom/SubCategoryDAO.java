@@ -30,6 +30,6 @@ public interface SubCategoryDAO {
     @Query("SELECT * FROM subcategory_table JOIN category_table ON category_table.id = subcategory_table.categoryID WHERE subcategory_table.type==:type")
     LiveData<Map<Category, List<SubCategory>>> getAllSubCategories(int type);
 
-    @Query("SELECT * FROM subcategory_table")
-    LiveData<List<SubCategory>> getSubs();
+    @Query("SELECT * FROM subcategory_table WHERE categoryID=:catID")
+    LiveData<List<SubCategory>> getSubs(int catID);
 }
