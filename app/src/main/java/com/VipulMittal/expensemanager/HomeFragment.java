@@ -29,12 +29,12 @@ public class HomeFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_home, container, false);
 
 
-		TVMainIncome=container.findViewById(R.id.TVIncomeAmt);
-		TVMainExpense=container.findViewById(R.id.TVExpenseAmt);
-		TVMainTotal=container.findViewById(R.id.TVTotalAmt);
+		TVMainIncome=view.findViewById(R.id.TVIncomeAmt);
+		TVMainExpense=view.findViewById(R.id.TVExpenseAmt);
+		TVMainTotal=view.findViewById(R.id.TVTotalAmt);
+		TVMainTotal=view.findViewById(R.id.TVTotalAmt);
 
-//		RVTransactions =container.findViewById(R.id.RecyclerViewID);
-		RVTransactions=container.findViewById(R.id.RecyclerViewID);
+		RVTransactions=view.findViewById(R.id.RecyclerViewID);
 		RVTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 //		RVTransactions.setAdapter(transactionAdapter);
 		RVTransactions.setNestedScrollingEnabled(false);

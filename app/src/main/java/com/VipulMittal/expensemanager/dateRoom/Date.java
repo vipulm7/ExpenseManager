@@ -11,13 +11,12 @@ public class Date {
 	public int id;
 
 	public long millies;
-	public Calendar calendar;
 	public int month, date, year, week, day;
 	public int transactionsOnThatDate;
 
 	public Date(long millies) {
 		this.millies = millies;
-		calendar=Calendar.getInstance();
+		Calendar calendar=Calendar.getInstance();
 		calendar.setTimeInMillis(millies);
 		month=calendar.MONTH;
 		date=calendar.DATE;

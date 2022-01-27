@@ -15,8 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.TransactionActivity;
+import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
@@ -36,9 +38,10 @@ public class BsdCategoryFragment extends Fragment {
 	Button BAddNewCat;
 	CategoryAdapter categoryAdapter;
 	CategoryViewModel categoryViewModel;
-	TransactionActivity transactionActivity;
 	BsdCatFragment bsdCatFragment;
+	MainActivity mainActivity;
 	int catSelected, subCatSelected, type;
+	TransactionFragment transactionFragment;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,47 +51,75 @@ public class BsdCategoryFragment extends Fragment {
 		RVCategories=view.findViewById(R.id.bsd_rv_categories);
 		BAddNewCat=view.findViewById(R.id.BAddNewCat);
 		bsdCatFragment= (BsdCatFragment) getParentFragment();
-		transactionActivity=(TransactionActivity) bsdCatFragment.getActivity();
+		mainActivity=(MainActivity)getActivity();
 
 		Log.d(TAG, "onCreateView: subCatSelected = "+subCatSelected);
-
 		Log.d(TAG, "onCreateView: adapter before = "+categoryAdapter);
 
-		Observer observer=new Observer<List<Category>>() {
+
+//
+
+		mainActivity.categoryROOM(type);
+
+//		categoryAdapter=new CategoryAdapter();
+//		categoryAdapter.categories=mainActivity.categoryAdapter.categories;
+		categoryAdapter= mainActivity.categoryAdapter;
+
+		CategoryAdapter.ClickListener listener=new CategoryAdapter.ClickListener() {
 			@Override
-			public void onChanged(List<Category> categories) {
-				int pos1=pos(categories, categoryAdapter.categories);
-				Log.d(TAG, "onCreateView: view model called");
-				Log.d(TAG, "onCreateView: type = "+type);
-				categoryAdapter.setCategories(categories);
-				categoryAdapter.notifyItemInserted(pos1);
+			public void onItemClick(CategoryAdapter.BSDCatViewHolder viewHolder) {
+				final int[] position = {viewHolder.getAdapterPosition()};
+				catSelected = position[0];
+
+				selectSubCat(-1);
+
+//				CategoryAdapter.ClickListener listener1=new CategoryAdapter.ClickListener() {
+//					@Override
+//					public void onItemClick(CategoryAdapter.BSDCatViewHolder viewHolder1) {
+//						int position1=viewHolder1.getAdapterPosition();
+//						if(position[0] == position1)
+//						{
+//							transactionFragment.saveSelectedCategoryWithName(catSelected, categoryAdapter.categories.get(catSelected).catName, true);
+//							bsdCatFragment.dismiss();
+//						}
+//						else
+//							listener.onItemClick(viewHolder1);
+//					}
+//				};
 			}
 		};
+		categoryAdapter.catSelected=catSelected;
+		categoryAdapter.listener=listener;
 
-		categoryAdapter=new CategoryAdapter(catSelected, viewHolder -> {
-			int position=viewHolder.getAdapterPosition();
-			catSelected = position;
+//		categoryViewModel= mainActivity.categoryViewModel;
+//		categoryViewModel.getAllCategories(type).observe(getViewLifecycleOwner(), new Observer<List<Category>>() {
+//			@Override
+//			public void onChanged(List<Category> categories) {
+////				int pos1= posCat(categories, categoryAdapter.categories);
+////				Log.d(TAG, "onCreateView: view model called");
+//				Log.d(TAG, "onCreateView: type = "+type);
+//				categoryAdapter.setCategories(categories);
+////				categoryAdapter.notifyItemInserted(pos1);
+//				categoryAdapter.notifyDataSetChanged();
+//			}
+//		});
 
-			selectSubCat(-1, observer);
-		});
+
+
+
 
 		Log.d(TAG, "onCreateView: adapter after = "+categoryAdapter);
-
-		categoryViewModel= new ViewModelProvider(this).get(CategoryViewModel.class);
-//		categoryAdapter.setCategories(categoryViewModel.getAllCategories(type).getValue());
-//		categoryAdapter.notifyDataSetChanged();
-
-
-		categoryViewModel.getAllCategories(type).observe(getViewLifecycleOwner(), observer);
 
 		RVCategories.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVCategories.setAdapter(categoryAdapter);
 		RVCategories.setNestedScrollingEnabled(false);
 
-		if(subCatSelected!=-1) {
+		if(subCatSelected != -1) {
 			Log.d(TAG, "onCreateView: categoryAdapter.categories.size() = "+categoryAdapter.categories.size());
-			selectSubCat(subCatSelected, observer);
+			selectSubCat(subCatSelected);
 		}
+		else if(catSelected!=-1)
+			selectSubCat(-1);
 
 		BAddNewCat.setOnClickListener(v->{
 
@@ -96,40 +127,27 @@ public class BsdCategoryFragment extends Fragment {
 		return view;
 	}
 
-	private void selectSubCat(int subCatSelected, Observer observer) {
-		if(transactionActivity!=null)
-		{
-			int a=categoryAdapter.catSelected;
-			categoryAdapter.catSelected=catSelected;
-			categoryAdapter.notifyItemChanged(a);
-			categoryAdapter.notifyItemChanged(catSelected);
+	private void selectSubCat(int subCatSelected) {
+		int a=categoryAdapter.catSelected;
+		categoryAdapter.catSelected=catSelected;
+		categoryAdapter.notifyItemChanged(a);
+		categoryAdapter.notifyItemChanged(catSelected);
 
-			Log.d(TAG, "selectSubCat: catSelected = "+catSelected);
-			if(categoryAdapter.categories.get(catSelected).noOfSubCat!=0) {
-				transactionActivity.saveSelectedCategoryWithoutName(catSelected);
-				Log.d(TAG, "category sent = "+categoryAdapter.categories.get(catSelected).catName);
-				bsdCatFragment.showSubCatFragment(subCatSelected, type, categoryAdapter.categories.get(catSelected), categoryViewModel, observer);
-
-//				BsdSubCategoryFragment bsdSubCategoryFragment = new BsdSubCategoryFragment(subCatSelected, type, categoryAdapter.categories.get(catSelected));
-//				bsdCatFragment.fragmentTransaction=getChildFragmentManager().beginTransaction();
-//				bsdCatFragment.fragmentTransaction.replace(R.id.FragmentForSubCategory, bsdSubCategoryFragment).commit();
-			}
-			else
-			{
-				transactionActivity.saveSelectedCategoryWithName(catSelected, categoryAdapter.categories.get(catSelected).catName);
-				categoryAdapter.notifyItemRangeRemoved(0,categoryAdapter.categories.size());
-				categoryViewModel.getAllCategories(type).removeObserver(observer);
-				bsdCatFragment.dismiss();
-			}
-
+		Log.d(TAG, "selectSubCat: catSelected = "+catSelected);
+		transactionFragment = bsdCatFragment.transactionFragment;
+		if(categoryAdapter.categories.get(catSelected).noOfSubCat!=0) {
+			transactionFragment.saveSelectedCategoryWithoutName(catSelected);
+			Log.d(TAG, "category sent = "+categoryAdapter.categories.get(catSelected).catName);
+			bsdCatFragment.showSubCatFragment(subCatSelected, type, categoryAdapter.categories.get(catSelected));
 		}
-		else {
-			Toast.makeText(getContext(), "Error in selecting category", Toast.LENGTH_SHORT).show();
-			Log.d(TAG, "selectCat: transactionActivity of BsdCategoryFragment is null");
+		else
+		{
+			transactionFragment.saveSelectedCategoryWithName(catSelected, categoryAdapter.categories.get(catSelected).catName);
+			bsdCatFragment.dismiss();
 		}
 	}
 
-	private int pos(List<Category> newCategories, List<Category> oldCategories) {
+	private int posCat(List<Category> newCategories, List<Category> oldCategories) {
 
 		int i=-1;
 		for(;++i<oldCategories.size();)

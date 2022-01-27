@@ -10,21 +10,24 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.VipulMittal.expensemanager.R;
+import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BsdCatFragment extends BottomSheetDialogFragment {
 
-	public BsdCatFragment(int catSelected, int subCatSelected, int type) {
+	public BsdCatFragment(int catSelected, int subCatSelected, int type, TransactionFragment transactionFragment) {
 		this.catSelected = catSelected;
 		this.subCatSelected = subCatSelected;
 		this.type=type;
+		this.transactionFragment=transactionFragment;
 	}
 
 //	ConstraintLayout CLCategory, CLSubCategory;
 	int catSelected, subCatSelected, type;
 	FragmentTransaction fragmentTransaction;
+	TransactionFragment transactionFragment;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,19 +35,14 @@ public class BsdCatFragment extends BottomSheetDialogFragment {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_bsd_cat, container, false);
 
-//		CLCategory=view.findViewById(R.id.FragmentForCategory);
-//		CLSubCategory=view.findViewById(R.id.FragmentForSubCategory);
-
 		BsdCategoryFragment bsdCategoryFragment=new BsdCategoryFragment(catSelected, subCatSelected,type);
-//		BsdSubCategoryFragment bsdSubCategoryFragment=new BsdSubCategoryFragment();
 		fragmentTransaction=getChildFragmentManager().beginTransaction();
-		fragmentTransaction.add(R.id.FragmentForCategory, bsdCategoryFragment).commit();
-//		fragmentTransaction.add(R.id.FragmentForSubCategory, bsdSubCategoryFragment).commit();
+		fragmentTransaction.replace(R.id.FragmentForCategory, bsdCategoryFragment).commit();
 		return view;
 	}
 
-	public void showSubCatFragment(int subCatSelected, int type, Category category, CategoryViewModel categoryViewModel, Observer observer) {
-		BsdSubCategoryFragment bsdSubCategoryFragment = new BsdSubCategoryFragment(subCatSelected, type, category, categoryViewModel, observer);
+	public void showSubCatFragment(int subCatSelected, int type, Category category) {
+		BsdSubCategoryFragment bsdSubCategoryFragment = new BsdSubCategoryFragment(subCatSelected, type, category);
 		fragmentTransaction=getChildFragmentManager().beginTransaction();
 		fragmentTransaction.replace(R.id.FragmentForSubCategory, bsdSubCategoryFragment).commit();
 	}

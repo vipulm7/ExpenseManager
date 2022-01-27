@@ -15,11 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.TransactionActivity;
+import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
@@ -28,8 +29,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 	//constructor
-	public BsdAccountsFragment(int selected) {
-		this.selected=selected;
+	public BsdAccountsFragment(int catSelected, TransactionFragment transactionFragment) {
+		this.catSelected = catSelected;
+		this.transactionFragment=transactionFragment;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -37,7 +39,8 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	Button addNew;
 	AccountAdapter accountAdapter;
 	AccountViewModel accountViewModel;
-	int selected;
+	int catSelected;
+	TransactionFragment transactionFragment;
 
 
 	@Override
@@ -48,30 +51,35 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		RVAccounts =view.findViewById(R.id.bsd_rv_accounts);
 		addNew=view.findViewById(R.id.BSD_BaddAccount);
 
-		accountAdapter=new AccountAdapter(selected, new AccountAdapter.ClickListener() {
+		MainActivity mainActivity=(MainActivity)getActivity();
+		accountAdapter=mainActivity.accountAdapter;
+		accountAdapter.selected=catSelected;
+
+		accountViewModel=mainActivity.accountViewModel;
+
+
+		AccountAdapter.ClickListener listener=new AccountAdapter.ClickListener() {
 			@Override
 			public void onItemClick(AccountAdapter.AccViewHolder viewHolder) {
 				int pos=viewHolder.getAdapterPosition();
 				Log.d(TAG, "onItemClick: "+pos);
-				selected=pos;
-				TransactionActivity transactionActivity=(TransactionActivity)getActivity();
+				catSelected =pos;
+				mainActivity.getSupportFragmentManager();
 
-				if (transactionActivity != null) {
-					transactionActivity.saveSelectedAccount(pos,accountAdapter.accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
-				}
-				else
-					Toast.makeText(getContext(),"Error in selecting account",Toast.LENGTH_SHORT).show();
+				transactionFragment.saveSelectedAccount(pos,accountAdapter.accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
 
 				dismiss();
 			}
-		});
+		};
+
+		accountAdapter.listener=listener;
 
 
-		accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-		accountViewModel.getAllAccounts().observe(getViewLifecycleOwner(), accounts -> {
-			accountAdapter.setAccounts(accounts);
-			accountAdapter.notifyItemInserted(accounts.size()-1);
-		});
+//		accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+//		accountViewModel.getAllAccounts().observe(getViewLifecycleOwner(), accounts -> {
+//			accountAdapter.setAccounts(accounts);
+//			accountAdapter.notifyItemInserted(accounts.size()-1);
+//		});
 
 		RVAccounts.setLayoutManager(new LinearLayoutManager(getContext()));
 		Log.d(TAG, "onCreate: transaction done");

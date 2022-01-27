@@ -83,16 +83,15 @@ public class TransactionActivity extends AppCompatActivity {
 
 
 
-		TVAccount.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account);
-			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Accounts");
-		});
+//		TVAccount.setOnClickListener(v->{
+//			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account);
+//			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Accounts");
+//		});
 
-		TVCategory.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCatFragment(cat, subCat, type);
-			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Category");
-		});
-
+//		TVCategory.setOnClickListener(v->{
+//			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCatFragment(cat, subCat, type);
+//			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Category");
+//		});
 
 	}
 

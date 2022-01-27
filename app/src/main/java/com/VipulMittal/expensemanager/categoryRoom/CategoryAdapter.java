@@ -17,15 +17,13 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCatViewHolder> {
 
-	ClickListener listener;
+	public ClickListener listener;
 	public List<Category> categories;
 	public int catSelected;
 	String TAG="Vipul_tag";
 
-	public CategoryAdapter(int catSelected, ClickListener listener) {
-		this.listener = listener;
+	public CategoryAdapter() {
 		categories=new ArrayList<>();
-		this.catSelected =catSelected;
 	}
 
 	@NonNull
@@ -50,7 +48,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 	@Override
 	public int getItemCount() {
-//		Log.d(TAG, "getItemCount: size = "+categories.size());
+		Log.d(TAG, "getItemCount: categories.size() = "+categories.size());
 //		Log.d(TAG, "getItemCount: categories = "+categories);
 		return categories.size();
 	}
@@ -66,7 +64,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 			itemView.setOnClickListener(view -> {
 				int position=getAdapterPosition();
-				if(listener!=null && position!=-1)
+				Log.d(TAG, "BSDCatViewHolder: pos = "+position);
+//				if(listener!=null && position!=-1)
+				if(listener!=null)
 					listener.onItemClick(this);
 			});
 		}

@@ -20,25 +20,14 @@ import java.util.Map;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.BSDSubCatViewHolder> {
 
-	ClickListener listener;
-//	public Map<Category, List<SubCategory>> subCategories;
-	int subCatSelected;
-	Category catSelected;
+	public ClickListener listener;
+	public int subCatSelected;
+	public Category catSelected;
 	String TAG="Vipul_tag";
-//	public List<SubCategory> subCategoriesToPrint;
 	public List<SubCategory> subCats;
 
-	public SubCategoryAdapter(int subCatSelected, ClickListener listener, Category catSelected) {
-		this.listener = listener;
-//		subCategories= new HashMap<>();
+	public SubCategoryAdapter() {
 		subCats =new ArrayList<>();
-//		Category a=new Category("A",0,0,0,2);
-//		subCategories.put(a,new ArrayList<>());
-		this.subCatSelected = subCatSelected;
-		this.catSelected=catSelected;
-//		subCategoriesToPrint=subCategories.get(catSelected);
-//		Log.d(TAG, "SubCategoryAdapter: subCategoriesToPrint = "+subCategoriesToPrint);
-//		Log.d(TAG, "SubCategoryAdapter: subCategories = "+subCategories);
 	}
 
 	@NonNull
@@ -76,8 +65,9 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 			name=itemView.findViewById(R.id.BSD_SubCat);
 
 			itemView.setOnClickListener(view -> {
-				int position=getAdapterPosition();
-				if(listener!=null && position!=-1)
+//				int position=getAdapterPosition();
+//				if(listener!=null && position!=-1)
+				if(listener!=null)
 					listener.onItemClick(this);
 			});
 		}

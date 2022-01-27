@@ -9,39 +9,38 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
+import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
-import com.VipulMittal.expensemanager.dateRoom.Date;
 import com.VipulMittal.expensemanager.dateRoom.DateViewModel;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
@@ -49,21 +48,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	FloatingActionButton FABAdd;
 
-	TransactionAdapter transactionAdapter;
-	TransactionViewModel transactionViewModel;
-	AccountAdapter accountAdapter;
-	AccountViewModel accountViewModel;
-	CategoryAdapter categoryAdapter;
-	CategoryViewModel categoryViewModel;
-	SubCategoryAdapter subCategoryAdapter;
-	SubCategoryViewModel subCategoryViewModel;
-	DateViewModel dateViewModel;
+	public TransactionAdapter transactionAdapter;
+	public TransactionViewModel transactionViewModel;
+	public AccountAdapter accountAdapter;
+	public AccountViewModel accountViewModel;
+	public CategoryAdapter categoryAdapter;
+	public CategoryViewModel categoryViewModel;
+	public SubCategoryAdapter subCategoryAdapter;
+	public SubCategoryViewModel subCategoryViewModel;
+	public DateViewModel dateViewModel;
 
 	NavigationBarView navigationBarView;
 	ConstraintLayout layoutForFragment;
 	Toast toast;
 
-	long income, expense, total;
+//	long income, expense, total;
+	LiveData<Long> income, expense, total;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,14 +76,29 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		navigationBarView=findViewById(R.id.BottomNavigation);
 		layoutForFragment=findViewById(R.id.layoutForFragment);
 
+//		transactionAdapter=new TransactionAdapter();
+		subCategoryAdapter=new SubCategoryAdapter();
+		accountAdapter=new AccountAdapter();
+		categoryAdapter=new CategoryAdapter();
 
-		showFragment(new HomeFragment(),R.id.bn_home);
+		accountROOM();
+		categoryROOM(2);
+		subCategoryROOM(0);
+//		transactionROOM();
+
+		Log.d(TAG, "onCreate: bn_home = "+R.id.bn_home);
+		Log.d(TAG, "onCreate: bn_accounts = "+R.id.bn_accounts);
+		Log.d(TAG, "onCreate: bn_cat = "+R.id.bn_cat);
+		Log.d(TAG, "onCreate: bn_analysis = "+R.id.bn_analysis);
+
+		showFragment(R.id.bn_home);
 
 		navigationBarView.setOnItemSelectedListener(item -> {
 			int id=item.getItemId();
-			showFragment(getFragment(id),id);
+			Log.d(TAG, "onCreate: selected = "+id);
+			showFragment(id);
 
-			return false;
+			return true;
 		});
 
 		navigationBarView.setOnItemReselectedListener(new NavigationBarView.OnItemReselectedListener() {
@@ -107,22 +123,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				toast.show();
 			}
 		});
-
-
-
-
-
-
-		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
-		transactionViewModel.getAllData().observe(this, transactions -> {
-			transactionAdapter.setTransactions(transactions);
-			transactionAdapter.notifyDataSetChanged();
-		});
-
-
-
-
-
 
 
 		ActivityResultLauncher<Intent> arl=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -153,30 +153,88 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				  });
 
 		FABAdd.setOnClickListener(v->{
-			Intent intent=new Intent(MainActivity.this, TransactionActivity.class);
-			intent.putExtra("amount",0);
-			intent.putExtra("note","");
-			intent.putExtra("description","");
-			Calendar calendar=Calendar.getInstance();
-			Bundle bundle=new Bundle();
-			bundle.putSerializable("date",calendar);
-//			bundle.put("main", this);
-			intent.putExtra("bundle",bundle);
-			Log.d(TAG, "onCreate: Adapter passed");
-			intent.putExtra("account",-1);
-			intent.putExtra("cat",-1);
-			intent.putExtra("subCat",-1);
-			intent.putExtra("request",1);
-			intent.putExtra("type",2);
 
-			arl.launch(intent);
+			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
+			{
+				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2);
+				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
+				fragmentTransaction.addToBackStack("home_page");
+				fragmentTransaction.commit();
+
+//				Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
+//				intent.putExtra("amount", 0);
+//				intent.putExtra("note", "");
+//				intent.putExtra("description", "");
+//				Calendar calendar = Calendar.getInstance();
+//				Bundle bundle = new Bundle();
+//				bundle.putSerializable("date", calendar);
+////			bundle.put("main", this);
+//				intent.putExtra("bundle", bundle);
+//				Log.d(TAG, "onCreate: Adapter passed");
+//				intent.putExtra("account", -1);
+//				intent.putExtra("cat", -1);
+//				intent.putExtra("subCat", -1);
+//				intent.putExtra("request", 1);
+//				intent.putExtra("type", 2);
+//
+//				arl.launch(intent);
+			}
 		});
 
+	}
 
+	@Override
+	public void onBackPressed() {
+		if(navigationBarView.getSelectedItemId()==R.id.bn_home)
+			super.onBackPressed();
+		else
+			navigationBarView.setSelectedItemId(R.id.bn_home);
+	}
 
+	private void transactionROOM() {
+		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
+		transactionViewModel.getAllData().observe(this, transactions -> {
+			transactionAdapter.setTransactions(transactions);
+			transactionAdapter.notifyDataSetChanged();
+		});
+	}
 
+	public void subCategoryROOM(int catID) {
+		subCategoryViewModel=new ViewModelProvider(this).get(SubCategoryViewModel.class);
+		subCategoryViewModel.getSubs(catID).observe(this, new Observer<List<SubCategory>>() {
+			@Override
+			public void onChanged(List<SubCategory> subCats) {
+				Log.d(TAG, "onChanged: "+subCats);
+				subCategoryAdapter.setSubCats(subCats);
+				subCategoryAdapter.notifyDataSetChanged();
+			}
+		});
+	}
 
+	public void accountROOM() {
+		accountViewModel=new ViewModelProvider(this).get(AccountViewModel.class);
+		accountViewModel.getAllAccounts().observe(this, new Observer<List<Account>>() {
+			@Override
+			public void onChanged(List<Account> accounts) {
+				accountAdapter.setAccounts(accounts);
+				accountAdapter.notifyItemInserted(accounts.size()-1);
+			}
+		});
+	}
 
+	public void categoryROOM(int type) {
+		categoryViewModel=new ViewModelProvider(this).get(CategoryViewModel.class);
+		categoryViewModel.getAllCategories(type).observe(this, new Observer<List<Category>>() {
+			@Override
+			public void onChanged(List<Category> categories) {
+				int pos1= posCat(categories, categoryAdapter.categories);
+//				Log.d(TAG, "onCreateView: view model called");
+//				Log.d(TAG, "onCreateView: type = "+type);
+				categoryAdapter.setCategories(categories);
+				categoryAdapter.notifyItemInserted(pos1);
+			}
+		});
 	}
 
 	private Fragment getFragment(int id) {
@@ -190,13 +248,32 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			return new AnalysisFragment();
 	}
 
-	public void showFragment(Fragment fragment, int id) {
-		navigationBarView.setSelectedItemId(id);
+	public void setActionBarTitle(String title)
+	{
+		getSupportActionBar().setTitle(title);
+	}
 
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.layoutForFragment,fragment, fragment.getClass().getSimpleName())
-				.commit();
+	public void showFragment(int id) {
+//		navigationBarView.setSelectedItemId(id);
+//		if(id==R.id.bn_analysis)
+		FABAdd.hide();
+		if(id!=R.id.bn_analysis)
+			FABAdd.show();
+
+
+		FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
+		if(id==R.id.bn_home)
+			fragmentTransaction.replace(R.id.layoutForFragment,new HomeFragment()).commit();
+		else if(id==R.id.bn_cat)
+			fragmentTransaction.replace(R.id.layoutForFragment,new CategoryFragment()).commit();
+		else if(id==R.id.bn_accounts)
+			fragmentTransaction.replace(R.id.layoutForFragment,new AccountsFragment()).commit();
+		else
+			fragmentTransaction.replace(R.id.layoutForFragment,new AnalysisFragment()).commit();
+//		getSupportFragmentManager()
+//				.beginTransaction()
+//				.replace(R.id.layoutForFragment,fragment, fragment.getClass().getSimpleName())
+//				.commit();
 	}
 
 	private String moneyToString(long money) {
@@ -258,5 +335,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	{
 		long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000;
 		return a/1000L;
+	}
+
+
+	private int posCat(List<Category> newCategories, List<Category> oldCategories) {
+
+		int i=-1;
+		for(;++i<oldCategories.size();)
+		{
+			if(newCategories.get(i) != oldCategories.get(i))
+				return i;
+		}
+		return i;
 	}
 }

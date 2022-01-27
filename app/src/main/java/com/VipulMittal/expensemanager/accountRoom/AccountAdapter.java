@@ -16,15 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewHolder> {
-	ClickListener listener;
+	public ClickListener listener;
 	public List<Account> accounts;
 	String TAG="Vipul_tag";
-	int selected;
+	public int selected;
 
-	public AccountAdapter(int selected, ClickListener listener) {
-		this.listener=listener;
+	public AccountAdapter() {
 		accounts=new ArrayList<>();
-		this.selected=selected;
+//		this.selected=selected;
 	}
 
 	@NonNull
