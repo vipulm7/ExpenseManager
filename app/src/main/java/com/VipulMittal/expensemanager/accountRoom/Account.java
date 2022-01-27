@@ -9,8 +9,8 @@ public class Account {
     public int id;
 
     public String name;
-    public int amount;
     public String amountDisplay;
+    public int amount;
 
 
     public int getId() {

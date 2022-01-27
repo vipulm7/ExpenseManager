@@ -3,8 +3,6 @@ package com.VipulMittal.expensemanager.BSD_Cat;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,11 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
-import com.VipulMittal.expensemanager.TransactionActivity;
 import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
@@ -31,6 +27,7 @@ public class BsdCategoryFragment extends Fragment {
 		this.catSelected = catSelected;
 		this.subCatSelected = subCatSelected;
 		this.type=type;
+		oldCatSelected=catSelected;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -40,7 +37,7 @@ public class BsdCategoryFragment extends Fragment {
 	CategoryViewModel categoryViewModel;
 	BsdCatFragment bsdCatFragment;
 	MainActivity mainActivity;
-	int catSelected, subCatSelected, type;
+	int catSelected, subCatSelected, type, oldCatSelected;
 	TransactionFragment transactionFragment;
 
 	@Override
@@ -114,11 +111,14 @@ public class BsdCategoryFragment extends Fragment {
 		RVCategories.setAdapter(categoryAdapter);
 		RVCategories.setNestedScrollingEnabled(false);
 
+		if(catSelected!=-1)
+			Log.d(TAG, "onCreateView: category.noOfSubCat"+categoryAdapter.categories.get(catSelected).noOfSubCat);
+
 		if(subCatSelected != -1) {
 			Log.d(TAG, "onCreateView: categoryAdapter.categories.size() = "+categoryAdapter.categories.size());
 			selectSubCat(subCatSelected);
 		}
-		else if(catSelected!=-1)
+		else if(catSelected!=-1 && categoryAdapter.categories.get(catSelected).noOfSubCat!=0)
 			selectSubCat(-1);
 
 		BAddNewCat.setOnClickListener(v->{
@@ -136,9 +136,13 @@ public class BsdCategoryFragment extends Fragment {
 		Log.d(TAG, "selectSubCat: catSelected = "+catSelected);
 		transactionFragment = bsdCatFragment.transactionFragment;
 		if(categoryAdapter.categories.get(catSelected).noOfSubCat!=0) {
-			transactionFragment.saveSelectedCategoryWithoutName(catSelected);
+			if(transactionFragment.TVCategory.getText().toString().equals("Category"))
+			{
+				transactionFragment.saveSelectedCategoryWithoutName(catSelected);
+				Log.d(TAG, "selectSubCat: saved cat");
+			}
 			Log.d(TAG, "category sent = "+categoryAdapter.categories.get(catSelected).catName);
-			bsdCatFragment.showSubCatFragment(subCatSelected, type, categoryAdapter.categories.get(catSelected));
+			bsdCatFragment.showSubCatFragment(catSelected,subCatSelected, type, categoryAdapter.categories.get(catSelected));
 		}
 		else
 		{

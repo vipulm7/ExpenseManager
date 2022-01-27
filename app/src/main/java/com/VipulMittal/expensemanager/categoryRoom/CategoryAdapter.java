@@ -44,6 +44,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 			holder.name.setBackgroundColor(Color.WHITE);
 		if(categories.get(position).noOfSubCat==0)
 			holder.arrow.setVisibility(View.INVISIBLE);
+		else
+			holder.arrow.setVisibility(View.VISIBLE);
 	}
 
 	@Override

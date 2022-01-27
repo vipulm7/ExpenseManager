@@ -41,8 +41,8 @@ public class BsdCatFragment extends BottomSheetDialogFragment {
 		return view;
 	}
 
-	public void showSubCatFragment(int subCatSelected, int type, Category category) {
-		BsdSubCategoryFragment bsdSubCategoryFragment = new BsdSubCategoryFragment(subCatSelected, type, category);
+	public void showSubCatFragment(int catSelected, int subCatSelected, int type, Category category) {
+		BsdSubCategoryFragment bsdSubCategoryFragment = new BsdSubCategoryFragment(catSelected, subCatSelected, type, category);
 		fragmentTransaction=getChildFragmentManager().beginTransaction();
 		fragmentTransaction.replace(R.id.FragmentForSubCategory, bsdSubCategoryFragment).commit();
 	}

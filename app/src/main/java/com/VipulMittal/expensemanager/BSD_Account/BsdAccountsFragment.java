@@ -3,7 +3,6 @@ package com.VipulMittal.expensemanager.BSD_Account;
 import android.app.AlertDialog;
 import android.os.Bundle;
 
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,11 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
-import com.VipulMittal.expensemanager.TransactionActivity;
 import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
@@ -54,6 +51,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		MainActivity mainActivity=(MainActivity)getActivity();
 		accountAdapter=mainActivity.accountAdapter;
 		accountAdapter.selected=catSelected;
+		accountAdapter.who=1;
 
 		accountViewModel=mainActivity.accountViewModel;
 

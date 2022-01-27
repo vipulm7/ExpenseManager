@@ -10,11 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ExpenseManager">
         <activity
-            android:name=".TransactionActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity"
-            />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

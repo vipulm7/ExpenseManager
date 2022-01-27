@@ -125,32 +125,32 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 
 
-		ActivityResultLauncher<Intent> arl=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-				  new ActivityResultCallback<ActivityResult>() {
-					  @Override
-					  public void onActivityResult(ActivityResult result) {
-						  if(result.getResultCode() == Activity.RESULT_OK)
-						  {
-						  	Intent data=result.getData();
-
-						  	Transaction transaction=new Transaction("",1,"1",
-									  "","","","",100000, 2);
-
-						  	transactionViewModel.Insert(transaction);
-						  }
-						  else if(result.getResultCode() == -2)
-						  {
-
-						  }
-						  else if(result.getResultCode() == Activity.RESULT_CANCELED)
-						  {
-						     if(toast!=null)
-						        toast.cancel();
-						     toast=Toast.makeText(MainActivity.this,"Cancelled",Toast.LENGTH_SHORT);
-						     toast.show();
-						  }
-					  }
-				  });
+//		ActivityResultLauncher<Intent> arl=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+//				  new ActivityResultCallback<ActivityResult>() {
+//					  @Override
+//					  public void onActivityResult(ActivityResult result) {
+//						  if(result.getResultCode() == Activity.RESULT_OK)
+//						  {
+//						  	Intent data=result.getData();
+//
+//						  	Transaction transaction=new Transaction("",1,"1",
+//									  "","","","",100000, 2);
+//
+//						  	transactionViewModel.Insert(transaction);
+//						  }
+//						  else if(result.getResultCode() == -2)
+//						  {
+//
+//						  }
+//						  else if(result.getResultCode() == Activity.RESULT_CANCELED)
+//						  {
+//						     if(toast!=null)
+//						        toast.cancel();
+//						     toast=Toast.makeText(MainActivity.this,"Cancelled",Toast.LENGTH_SHORT);
+//						     toast.show();
+//						  }
+//					  }
+//				  });
 
 		FABAdd.setOnClickListener(v->{
 

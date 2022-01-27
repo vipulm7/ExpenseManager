@@ -5,12 +5,15 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,11 +46,11 @@ public class TransactionFragment extends Fragment {
 
 
 	private static final String TAG = "Vipul_tag";
-	TextView TVDate, TVTime, TVAccount, TVCategory;
+	public TextView TVDate, TVTime, TVAccount, TVCategory;
 	RadioGroup radioGroup;
 	RadioButton RBIncome, RBExpense, RBTransfer;
 	Toast toast;
-	int account,cat, subCat, type, amount, request;
+	public int account,cat, subCat, type, amount, request;
 	String note, description;
 	Calendar calendar;
 	EditText ETNote, ETDes, ETAmt;
@@ -72,6 +75,7 @@ public class TransactionFragment extends Fragment {
 		ETNote =view.findViewById(R.id.ETNote);
 		ETDes=view.findViewById(R.id.ETDes);
 		ETAmt=view.findViewById(R.id.ETAmount);
+		save=view.findViewById(R.id.transaction_save_button);
 
 		ETAmt.setText(""+amount);
 		ETNote.setText(note);
@@ -104,6 +108,11 @@ public class TransactionFragment extends Fragment {
 
 
 		return view;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	private void enableDisableSaveButton() {
@@ -198,6 +207,7 @@ public class TransactionFragment extends Fragment {
 		TVCategory.setText(name);
 		BCat=true;
 		save.setEnabled(BNote && BDes && BAmt && BAcc && BCat);
+		subCat=-1;
 	}
 
 	public void saveSelectedCategoryWithoutName(int selectedCat)
@@ -205,8 +215,9 @@ public class TransactionFragment extends Fragment {
 		cat=selectedCat;
 	}
 
-	public void saveSelectedSubCategory(int selectedSubCat, String name)
+	public void saveSelectedSubCategory(int selectedCat, int selectedSubCat, String name)
 	{
+		cat=selectedCat;
 		subCat=selectedSubCat;
 		TVCategory.setText(name);
 		BCat=true;
@@ -222,8 +233,8 @@ public class TransactionFragment extends Fragment {
 				rNotSelected(RBExpense);
 				rNotSelected(RBTransfer);
 				type=1;
-
-
+				cat=-1;
+				subCat=-1;
 			}
 			else if(i==R.id.radioCatExpense)
 			{
@@ -232,7 +243,8 @@ public class TransactionFragment extends Fragment {
 				rNotSelected(RBIncome);
 				rNotSelected(RBTransfer);
 				type=2;
-
+				cat=-1;
+				subCat=-1;
 			}
 			else if(i==R.id.radioCatTransfer)
 			{
@@ -241,7 +253,8 @@ public class TransactionFragment extends Fragment {
 				rNotSelected(RBExpense);
 				rNotSelected(RBIncome);
 				type=3;
-
+				cat=-1;
+				subCat=-1;
 			}
 		});
 	}

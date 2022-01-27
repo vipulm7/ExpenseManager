@@ -3,8 +3,6 @@ package com.VipulMittal.expensemanager.BSD_Cat;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,36 +10,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
-import com.VipulMittal.expensemanager.TransactionActivity;
 import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
-import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
-import com.VipulMittal.expensemanager.subCategoryRoom.mix;
 
 import java.util.List;
-import java.util.Map;
 
 public class BsdSubCategoryFragment extends Fragment {
 
-	public BsdSubCategoryFragment(int subCatSelected, int type, Category catSelected) {
+	public BsdSubCategoryFragment(int catSelected, int subCatSelected, int type, Category categorySelected) {
 		this.subCatSelected = subCatSelected;
 		this.type=type;
-		this.catSelected = catSelected;
+		this.categorySelected = categorySelected;
+		this.catSelected=catSelected;
 	}
 
 	private static final String TAG = "Vipul_tag";
 	RecyclerView RVSubCategories;
 	SubCategoryAdapter subCategoryAdapter;
 	SubCategoryViewModel subCategoryViewModel;
-	Category catSelected;
-	int subCatSelected, type;
+	Category categorySelected;
+	int subCatSelected, type, catSelected;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +61,7 @@ public class BsdSubCategoryFragment extends Fragment {
 
 
 
-		mainActivity.subCategoryROOM(catSelected.catId);
+		mainActivity.subCategoryROOM(categorySelected.catId);
 
 //		subCategoryAdapter=new SubCategoryAdapter();
 //		subCategoryAdapter.subCats=mainActivity.subCategoryAdapter.subCats;
@@ -78,7 +72,7 @@ public class BsdSubCategoryFragment extends Fragment {
 			public void onItemClick(SubCategoryAdapter.BSDSubCatViewHolder viewHolder) {
 				int position=viewHolder.getAdapterPosition();
 				subCatSelected = position;
-				transactionFragment.saveSelectedSubCategory(subCatSelected, catSelected.catName + " / " + subCategoryAdapter.subCats.get(subCatSelected).name);
+				transactionFragment.saveSelectedSubCategory(catSelected, subCatSelected, categorySelected.catName + " / " + subCategoryAdapter.subCats.get(subCatSelected).name);
 
 //				Log.d(TAG, "onCreateView: hasActiveObservers = "+categoryViewModel.getAllCategories(type).hasActiveObservers());
 //				Log.d(TAG, "onCreateView: hasObservers = "+categoryViewModel.getAllCategories(type).hasObservers());
@@ -89,7 +83,7 @@ public class BsdSubCategoryFragment extends Fragment {
 //		subCategoryAdapter= mainActivity.subCategoryAdapter;
 		subCategoryAdapter.listener=listener;
 		subCategoryAdapter.subCatSelected=subCatSelected;
-		subCategoryAdapter.catSelected=catSelected;
+		subCategoryAdapter.catSelected=categorySelected;
 
 
 
