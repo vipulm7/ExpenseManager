@@ -4,19 +4,25 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Fts4;
 import androidx.room.PrimaryKey;
+
+import com.VipulMittal.expensemanager.dateRoom.Date;
+import com.google.gson.Gson;
+
 @Entity(tableName = "transaction_table")
 public class Transaction {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    public String note;
+
     public int amount;
     public String amountDisplay;
-    public String account;
-    public String cat;
-    public String subCat;
+    public int accountID;
+    public int catID;
+    public int subCatID;
+    public String note;
     public String description;
     public int type;
+//    public long date;
     public long date;
 
 
@@ -24,15 +30,15 @@ public class Transaction {
         return id;
     }
 
-    public Transaction(String note, int amount, String amountDisplay, String account, String cat, String subCat, String description, long date, int type) {
+    public Transaction(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date) {
         this.note = note;
         this.amount = amount;
         this.amountDisplay = amountDisplay;
-        this.account = account;
-        this.cat = cat;
-        this.subCat = subCat;
+        this.accountID = accountID;
+        this.catID = catID;
+        this.subCatID = subCatID;
         this.description = description;
-        this.date = date;
-        this.type=type;
+        this.type = type;
+        this.date=date;
     }
 }

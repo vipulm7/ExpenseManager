@@ -50,9 +50,7 @@ public abstract class TransactionDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-//            transactionDAO.Insert(new Transaction("Grofers",1032));
-            transactionDAO.Insert(new Transaction("Sample",100, "100", "Cash", "Food", "Grofers",
-                    "Desciption", getDate(Calendar.getInstance()), 2));
+            transactionDAO.Insert(new Transaction("Sample", 100, "100",1,1,1,"Des",2, ));
             return null;
         }
     }

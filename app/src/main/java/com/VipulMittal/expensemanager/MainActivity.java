@@ -38,6 +38,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				fragmentTransaction.addToBackStack("home_page");
 				fragmentTransaction.commit();
 
+				FABAdd.hide();
+
 //				Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
 //				intent.putExtra("amount", 0);
 //				intent.putExtra("note", "");
@@ -192,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			navigationBarView.setSelectedItemId(R.id.bn_home);
 	}
 
-	private void transactionROOM() {
+	public void transactionROOM() {
 		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
 		transactionViewModel.getAllData().observe(this, transactions -> {
 			transactionAdapter.setTransactions(transactions);

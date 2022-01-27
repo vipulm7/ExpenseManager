@@ -94,7 +94,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 				})
 				.setView(editText)
 				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(editText.getText().toString()));
+					accountViewModel.Insert(new Account(editText.getText().toString(),0));
 				});
 		AlertDialog dialog = builder.create();
 

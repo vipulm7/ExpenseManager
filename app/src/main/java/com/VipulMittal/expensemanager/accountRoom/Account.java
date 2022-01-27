@@ -9,7 +9,6 @@ public class Account {
     public int id;
 
     public String name;
-    public String amountDisplay;
     public int amount;
 
 
@@ -17,9 +16,8 @@ public class Account {
         return id;
     }
 
-    public Account(String name) {
+    public Account(String name, int amount) {
         this.name = name;
-        this.amount = 0;
-        this.amountDisplay = "0";
+        this.amount = amount;
     }
 }

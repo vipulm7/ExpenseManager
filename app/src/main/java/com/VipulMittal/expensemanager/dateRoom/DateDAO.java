@@ -21,6 +21,6 @@ public interface DateDAO {
 	@Delete
 	void Delete(Date date);
 
-	@Query("SELECT * FROM date_table ORDER BY date DESC")
+	@Query("SELECT * FROM date_table ORDER BY millies DESC")
 	LiveData<List<Date>> getAllDates();
 }

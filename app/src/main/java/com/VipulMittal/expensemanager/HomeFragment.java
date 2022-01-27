@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
+import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 
 public class HomeFragment extends Fragment {
 
@@ -21,6 +22,9 @@ public class HomeFragment extends Fragment {
 
 	TextView TVMainExpense,TVMainIncome,TVMainTotal;
 	RecyclerView RVTransactions;
+	TransactionAdapter transactionAdapter;
+
+	MainActivity mainActivity;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,15 +36,27 @@ public class HomeFragment extends Fragment {
 		TVMainIncome=view.findViewById(R.id.TVIncomeAmt);
 		TVMainExpense=view.findViewById(R.id.TVExpenseAmt);
 		TVMainTotal=view.findViewById(R.id.TVTotalAmt);
-		TVMainTotal=view.findViewById(R.id.TVTotalAmt);
-
 		RVTransactions=view.findViewById(R.id.RecyclerViewID);
+		mainActivity=(MainActivity)getActivity();
+		transactionAdapter= mainActivity.transactionAdapter;
+//		mainActivity.transactionROOM();
+
+
+
+
+
+
 		RVTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
-//		RVTransactions.setAdapter(transactionAdapter);
 		RVTransactions.setNestedScrollingEnabled(false);
 
 
 
+
 		return view;
+	}
+
+	public void indexToID()
+	{
+
 	}
 }

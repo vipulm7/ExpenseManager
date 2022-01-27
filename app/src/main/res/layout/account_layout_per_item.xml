@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="7dp"
+    >
 
     <ImageView
         android:layout_width="65dp"
@@ -22,9 +24,8 @@
         app:layout_constraintStart_toEndOf="@+id/IVAccountsLPI"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="4dp"
-        android:textSize="22sp"
-
+        android:padding="2dp"
+        android:textSize="24sp"
         />
 
     <TextView
@@ -34,24 +35,23 @@
         android:text="Balance : "
         app:layout_constraintStart_toEndOf="@+id/IVAccountsLPI"
         app:layout_constraintTop_toBottomOf="@id/TVAccounts_nameLPI"
-        android:textSize="18sp"
-        android:padding="4dp"
+        android:textSize="20sp"
+        android:padding="2dp"
         />
 
     <TextView
         android:id="@+id/TVAccounts_amountLPI"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="\u20b90"
-        app:layout_constraintStart_toEndOf="@+id/TVAccounts_AMOUNT_LPI"
-        app:layout_constraintTop_toBottomOf="@id/TVAccounts_nameLPI"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="18sp"
-        android:padding="4dp"
         android:autoSizeMaxTextSize="24sp"
         android:autoSizeMinTextSize="10sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
         android:maxLines="1"
-        />
+        android:padding="2dp"
+        android:text="\u20b90"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/TVAccounts_AMOUNT_LPI"
+        app:layout_constraintTop_toBottomOf="@id/TVAccounts_nameLPI" />
 </androidx.constraintlayout.widget.ConstraintLayout>

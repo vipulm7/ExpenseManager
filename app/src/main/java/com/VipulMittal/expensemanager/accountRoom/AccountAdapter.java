@@ -42,22 +42,39 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 	public void onBindViewHolder(@NonNull AccViewHolder holder, int position) {
 		Log.d(TAG, "onBindViewHolder: "+position);
 		if(who==1) {
-			if (position == selected)
+			if (position == selected) {
 				holder.name.setBackgroundColor(Color.CYAN);
-			else
+				holder.amount.setBackgroundColor(Color.CYAN);
+			}
+			else {
 				holder.name.setBackgroundColor(Color.WHITE);
+				holder.amount.setBackgroundColor(Color.WHITE);
+			}
 			holder.name.setText(accounts.get(position).name);
+
+			if(accounts.get(position).amount<0) {
+				holder.amount.setTextColor(Color.RED);
+				holder.amount.setText("- \u20b9"+(-accounts.get(position).amount));
+			}
+			else {
+				holder.amount.setTextColor(Color.GREEN);
+				holder.amount.setText("  \u20b9"+accounts.get(position).amount);
+			}
 		}
 		else
 		{
 			holder.name.setText(accounts.get(position).name);
 //			holder.name.setBackgroundColor(Color.BLUE);
-			if(accounts.get(position).amount<0)
+			if(accounts.get(position).amount<0) {
 				holder.amount.setTextColor(Color.RED);
-			else
+				holder.amount.setText("- \u20b9 "+(-accounts.get(position).amount));
+			}
+			else {
 				holder.amount.setTextColor(Color.GREEN);
+				holder.amount.setText("  \u20b9 "+accounts.get(position).amount);
+			}
 //			holder.amount.setText("\u20b91234567890123456789012345678901234567890");
-			holder.amount.setText("\u20b9"+accounts.get(position).amount);
+
 		}
 	}
 
@@ -75,6 +92,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 			super(itemView);
 			if(who==1) {
 				name = itemView.findViewById(R.id.BSD_Acc);
+				amount=itemView.findViewById(R.id.BSD_Acc_amt);
 
 				itemView.setOnClickListener(v -> {
 					int position = getAdapterPosition();
