@@ -74,61 +74,60 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 		accountAdapter.listener=listener;
 
-//		accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-//		accountViewModel.getAllAccounts().observe(getViewLifecycleOwner(), accounts -> {
-//			accountAdapter.setAccounts(accounts);
-//			accountAdapter.notifyItemInserted(accounts.size()-1);
-//		});
-
 		RVAccounts.setLayoutManager(new LinearLayoutManager(getContext()));
 		Log.d(TAG, "onCreate: transaction done");
 		RVAccounts.setNestedScrollingEnabled(false);
 		RVAccounts.setAdapter(accountAdapter);
 
 
-		EditText editText=new EditText(getContext());
+		alertDialogForAddAcc();
+
+		return view;
+	}
+
+	private void alertDialogForAddAcc() {
+		EditText ETForAccAdd=new EditText(getContext());
 
 		AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
 		builder.setTitle("Add New Account")
 				.setNegativeButton("Cancel", (dialog, which) -> {
 
 				})
-				.setView(editText)
+				.setView(ETForAccAdd)
 				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(editText.getText().toString(),0));
+					accountViewModel.Insert(new Account(ETForAccAdd.getText().toString(),0));
 				});
 		AlertDialog dialog = builder.create();
+
+		ETForAccAdd.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+
+			}
+		});
+
+		ETForAccAdd.setHint("Add Account name");
 
 		addNew.setOnClickListener(v->{
 			Log.d(TAG, "onCreateView: builder = "+builder);
 //			builder.create();
+			((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
-			editText.setText("");
-			editText.requestFocus();
+			ETForAccAdd.setText("");
+			ETForAccAdd.requestFocus();
 			dialog.show();
 
 			Log.d(TAG, "onCreateView: dialog created");
-
-			((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-
-			editText.addTextChangedListener(new TextWatcher() {
-				@Override
-				public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-				}
-
-				@Override
-				public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-					((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
-				}
-
-				@Override
-				public void afterTextChanged(Editable editable) {
-
-				}
-			});
 		});
-
-		return view;
 	}
 }

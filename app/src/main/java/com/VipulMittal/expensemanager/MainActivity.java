@@ -16,10 +16,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.accountRoom.Account;
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	NavigationBarView navigationBarView;
 	ConstraintLayout layoutForFragment;
 	Toast toast;
+//	EditText editText;
 
 //	long income, expense, total;
 	LiveData<Long> income, expense, total;
@@ -160,6 +165,40 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 //					  }
 //				  });
 
+
+		EditText ETForAccAdd=new EditText(this);
+
+		AlertDialog.Builder builder=new AlertDialog.Builder(this);
+		builder.setTitle("Add New Account")
+				.setNegativeButton("Cancel", (dialog, which) -> {
+
+				})
+				.setView(ETForAccAdd)
+				.setPositiveButton("Add", (dialog, which) -> {
+					accountViewModel.Insert(new Account(ETForAccAdd.getText().toString(),0));
+				});
+		AlertDialog dialog = builder.create();
+
+
+
+		ETForAccAdd.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+
+			}
+		});
+		ETForAccAdd.setHint("Add Account name");
+
 		FABAdd.setOnClickListener(v->{
 
 			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
@@ -189,6 +228,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 //				intent.putExtra("type", 2);
 //
 //				arl.launch(intent);
+			}
+
+			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
+			{
+				((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+				ETForAccAdd.setText("");
+				ETForAccAdd.requestFocus();
+				dialog.show();
 			}
 		});
 
