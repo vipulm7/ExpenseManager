@@ -137,35 +137,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			}
 		});
 
-
-//		ActivityResultLauncher<Intent> arl=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-//				  new ActivityResultCallback<ActivityResult>() {
-//					  @Override
-//					  public void onActivityResult(ActivityResult result) {
-//						  if(result.getResultCode() == Activity.RESULT_OK)
-//						  {
-//						  	Intent data=result.getData();
-//
-//						  	Transaction transaction=new Transaction("",1,"1",
-//									  "","","","",100000, 2);
-//
-//						  	transactionViewModel.Insert(transaction);
-//						  }
-//						  else if(result.getResultCode() == -2)
-//						  {
-//
-//						  }
-//						  else if(result.getResultCode() == Activity.RESULT_CANCELED)
-//						  {
-//						     if(toast!=null)
-//						        toast.cancel();
-//						     toast=Toast.makeText(MainActivity.this,"Cancelled",Toast.LENGTH_SHORT);
-//						     toast.show();
-//						  }
-//					  }
-//				  });
-
-
 		EditText ETForAccAdd=new EditText(this);
 
 		AlertDialog.Builder builder=new AlertDialog.Builder(this);
@@ -210,24 +181,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				fragmentTransaction.commit();
 
 				FABAdd.hide();
-
-//				Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
-//				intent.putExtra("amount", 0);
-//				intent.putExtra("note", "");
-//				intent.putExtra("description", "");
-//				Calendar calendar = Calendar.getInstance();
-//				Bundle bundle = new Bundle();
-//				bundle.putSerializable("date", calendar);
-////			bundle.put("main", this);
-//				intent.putExtra("bundle", bundle);
-//				Log.d(TAG, "onCreate: Adapter passed");
-//				intent.putExtra("account", -1);
-//				intent.putExtra("cat", -1);
-//				intent.putExtra("subCat", -1);
-//				intent.putExtra("request", 1);
-//				intent.putExtra("type", 2);
-//
-//				arl.launch(intent);
 			}
 
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)

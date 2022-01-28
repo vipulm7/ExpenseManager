@@ -57,9 +57,6 @@ public class BsdCategoryFragment extends Fragment {
 //
 
 		mainActivity.categoryROOM(type);
-
-//		categoryAdapter=new CategoryAdapter();
-//		categoryAdapter.categories=mainActivity.categoryAdapter.categories;
 		categoryAdapter= mainActivity.categoryAdapter;
 
 		CategoryAdapter.ClickListener listener=new CategoryAdapter.ClickListener() {
@@ -88,24 +85,7 @@ public class BsdCategoryFragment extends Fragment {
 		categoryAdapter.catSelected=catSelected;
 		categoryAdapter.listener=listener;
 
-//		categoryViewModel= mainActivity.categoryViewModel;
-//		categoryViewModel.getAllCategories(type).observe(getViewLifecycleOwner(), new Observer<List<Category>>() {
-//			@Override
-//			public void onChanged(List<Category> categories) {
-////				int pos1= posCat(categories, categoryAdapter.categories);
-////				Log.d(TAG, "onCreateView: view model called");
-//				Log.d(TAG, "onCreateView: type = "+type);
-//				categoryAdapter.setCategories(categories);
-////				categoryAdapter.notifyItemInserted(pos1);
-//				categoryAdapter.notifyDataSetChanged();
-//			}
-//		});
-
-
-
-
-
-		Log.d(TAG, "onCreateView: adapter after = "+categoryAdapter);
+//		Log.d(TAG, "onCreateView: adapter after = "+categoryAdapter);
 
 		RVCategories.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVCategories.setAdapter(categoryAdapter);

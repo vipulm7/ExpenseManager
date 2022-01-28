@@ -40,7 +40,7 @@ public class BsdSubCategoryFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
+
 		View view = inflater.inflate(R.layout.fragment_bsd_sub_category, container, false);
 
 		RVSubCategories=view.findViewById(R.id.bsd_rv_subcategories);
@@ -48,23 +48,8 @@ public class BsdSubCategoryFragment extends Fragment {
 		MainActivity mainActivity=(MainActivity)getActivity();
 		TransactionFragment transactionFragment= bsdCatFragment.transactionFragment;
 
-//		subCategoryAdapter=new SubCategoryAdapter(subCatSelected, viewHolder -> {
-//			int position=viewHolder.getAdapterPosition();
-//			subCatSelected = position;
-//
-//			transactionFragment.saveSelectedSubCategory(subCatSelected, catSelected.catName + " / " + subCategoryAdapter.subCats.get(subCatSelected).name);
-//
-////			Log.d(TAG, "onCreateView: hasActiveObservers = "+categoryViewModel.getAllCategories(type).hasActiveObservers());
-////			Log.d(TAG, "onCreateView: hasObservers = "+categoryViewModel.getAllCategories(type).hasObservers());
-//			bsdCatFragment.dismiss();
-//		}, catSelected);
-
-
-
 		mainActivity.subCategoryROOM(categorySelected.catId);
 
-//		subCategoryAdapter=new SubCategoryAdapter();
-//		subCategoryAdapter.subCats=mainActivity.subCategoryAdapter.subCats;
 		subCategoryAdapter= mainActivity.subCategoryAdapter;
 
 		SubCategoryAdapter.ClickListener listener=new SubCategoryAdapter.ClickListener() {
@@ -74,52 +59,13 @@ public class BsdSubCategoryFragment extends Fragment {
 				subCatSelected = position;
 				transactionFragment.saveSelectedSubCategory(catSelected, subCatSelected, categorySelected.catId, subCategoryAdapter.subCats.get(subCatSelected).id, categorySelected.catName + " / " + subCategoryAdapter.subCats.get(subCatSelected).name);
 
-//				Log.d(TAG, "onCreateView: hasActiveObservers = "+categoryViewModel.getAllCategories(type).hasActiveObservers());
-//				Log.d(TAG, "onCreateView: hasObservers = "+categoryViewModel.getAllCategories(type).hasObservers());
 				bsdCatFragment.dismiss();
 			}
 		};
 
-//		subCategoryAdapter= mainActivity.subCategoryAdapter;
 		subCategoryAdapter.listener=listener;
 		subCategoryAdapter.subCatSelected=subCatSelected;
 		subCategoryAdapter.catSelected=categorySelected;
-
-
-
-
-//		Log.d(TAG, "onCreateView: map = "+subCategoryAdapter.subCategories.get(catSelected));
-
-//		subCategoryViewModel=new ViewModelProvider(this).get(SubCategoryViewModel.class);
-//		subCategoryViewModel=mainActivity.subCategoryViewModel;
-//		subCategoryViewModel.getSubs(catSelected.catId).observe(getViewLifecycleOwner(), new Observer<List<SubCategory>>() {
-//			@Override
-//			public void onChanged(List<SubCategory> subCats) {
-//				Log.d(TAG, "onChanged: "+subCats);
-//				subCategoryAdapter.setSubCats(subCats);
-//				subCategoryAdapter.notifyDataSetChanged();
-//			}
-//		});
-
-//		subCategoryViewModel.getAllSubCategories(type).observe(getViewLifecycleOwner(), new Observer<Map<Category, List<SubCategory>>>() {
-//			@Override
-//			public void onChanged(Map<Category, List<SubCategory>> subCategories) {
-//				int pos=pos(subCategories.get(catSelected), subCategoryAdapter.subCategoriesToPrint);
-//				subCategoryAdapter.setSubCategories(subCategories);
-//				subCategoryAdapter.setSubCategoriesToPrint(subCategories.get(catSelected));
-////				subCategoryAdapter.notifyItemInserted(pos);
-//				subCategoryAdapter.notifyDataSetChanged();
-//
-//				Log.d(TAG, "onChanged: subCategories="+subCategories);
-////				Log.d(TAG, "onChanged: subCategories.get(catSelected)="+subCategories.get(catSelected));
-////				Log.d(TAG, "onChanged: subCategories.get(catSelected).get(0)="+subCategories.get(catSelected).get(0));
-//			}
-//		});
-
-
-//		subCategoryViewModel.getSubs(catSelected.catId).observe(getViewLifecycleOwner());
-
-
 
 		RVSubCategories.setLayoutManager(new LinearLayoutManager((getContext())));
 		RVSubCategories.setAdapter(subCategoryAdapter);
