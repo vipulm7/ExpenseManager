@@ -146,7 +146,7 @@ public class BsdCategoryFragment extends Fragment {
 		}
 		else
 		{
-			transactionFragment.saveSelectedCategoryWithName(catSelected, categoryAdapter.categories.get(catSelected).catName);
+			transactionFragment.saveSelectedCategoryWithName(catSelected, categoryAdapter.categories.get(catSelected).catName, categoryAdapter.categories.get(catSelected).catId);
 			bsdCatFragment.dismiss();
 		}
 	}

@@ -27,9 +27,11 @@ import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
 import com.VipulMittal.expensemanager.BSD_Cat.BsdCatFragment;
+import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
+import java.util.Map;
 
 public class TransactionFragment extends Fragment {
 
@@ -43,6 +45,11 @@ public class TransactionFragment extends Fragment {
 		this.subCat=subCat;
 		this.type=type;
 		this.request=request;
+		dateArray[0]=calendar.get(Calendar.YEAR);
+		dateArray[1]=calendar.get(Calendar.MONTH)+1;
+		dateArray[2]=calendar.get(Calendar.DATE);
+		dateArray[3]=calendar.get(Calendar.HOUR_OF_DAY);
+		dateArray[4]=calendar.get(Calendar.MINUTE);
 	}
 
 
@@ -55,8 +62,11 @@ public class TransactionFragment extends Fragment {
 	String note, description;
 	Calendar calendar;
 	EditText ETNote, ETDes, ETAmt;
-	boolean BNote, BDes, BAmt, BAcc, BCat;
+	boolean BNote, BAmt, BAcc, BCat;
 	Button save;
+	int dateArray[]=new int[5];
+	public int cID, sID, aID;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +78,6 @@ public class TransactionFragment extends Fragment {
 		TVTime=view.findViewById(R.id.TVTime);
 		TVAccount =view.findViewById(R.id.TVAccount);
 		TVCategory=view.findViewById(R.id.TVCategory);
-//		ActionBar actionBar=getSupportActionBar();
 		radioGroup=view.findViewById(R.id.RadioGroupType);
 		RBExpense=view.findViewById(R.id.radioCatExpense);
 		RBIncome=view.findViewById(R.id.radioCatIncome);
@@ -79,12 +88,12 @@ public class TransactionFragment extends Fragment {
 		save=view.findViewById(R.id.transaction_save_button);
 		save.setEnabled(false);
 
-		ETAmt.setText(""+amount);
+		if(amount!=0)
+			ETAmt.setText(""+amount);
 		ETNote.setText(note);
 		ETDes.setText(description);
 
 		enableDisableSaveButton();
-
 
 
 		radioGroupSetListener();
@@ -107,19 +116,20 @@ public class TransactionFragment extends Fragment {
 			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCatFragment(cat, subCat, type, this);
 			bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
 		});
-
-
 		return view;
 	}
 
-	
-
-	@Override
-	public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-	}
 
 	private void enableDisableSaveButton() {
+
+		save.setOnClickListener(v->{
+			MainActivity mainActivity = (MainActivity) getActivity();
+			String s = amt(ETAmt.getText().toString().trim());
+			int a=Integer.parseInt(s);
+			calendar.set(dateArray[0],dateArray[1],dateArray[2],dateArray[3],dateArray[4]);
+			mainActivity.transactionViewModel.Insert(new Transaction(ETNote.toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000-dateArray[4]*60000, calendar.getTimeInMillis()));
+		});
+
 		ETNote.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -130,26 +140,7 @@ public class TransactionFragment extends Fragment {
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 				String s=charSequence.toString().trim();
 				BNote= s.length() != 0;
-				save.setEnabled(BNote && BDes && BAmt && BAcc && BCat);
-			}
-
-			@Override
-			public void afterTextChanged(Editable editable) {
-
-			}
-		});
-
-		ETDes.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				String s=charSequence.toString().trim();
-				BDes=s.length()!=0;
-				save.setEnabled(BNote && BDes && BAmt && BAcc && BCat);
+				save.setEnabled(BNote && BAmt && BAcc && BCat);
 			}
 
 			@Override
@@ -167,51 +158,44 @@ public class TransactionFragment extends Fragment {
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 				String s=charSequence.toString().trim();
-				if(s.length()==0) {
-					ETAmt.setText("0");
-				}
-				else
-				{
-					if(s.indexOf('.')==-1)
-					{
-						long amt=Long.parseLong(s);
-						ETAmt.setText(""+amt);
-					}
-					else
-					{
-						double amt=Double.parseDouble(s);
-						ETAmt.setText(""+amt);
-					}
-				}
+//				s=amt(s);
+//				if(s.length()==0) {
+//					ETAmt.setText("0");
+//				}
+//				else
+//				{
+//					ETAmt.setText(s);
+//				}
 
-				BAmt=!s.equals("0");
-				save.setEnabled(BNote && BDes && BAmt && BAcc && BCat);
+				BAmt=s.length() != 0;
+				save.setEnabled(BNote && BAmt && BAcc && BCat);
 			}
 
 			@Override
 			public void afterTextChanged(Editable editable) {
-
 			}
 		});
 
 	}
 
-	public void saveSelectedAccount(int selectedAccount, String name)
+	public void saveSelectedAccount(int aID, String name)
 	{
-		account=selectedAccount;
+		this.aID=aID;
 		TVAccount.setText(name);
 		BAcc=true;
 
-		save.setEnabled(BNote && BDes && BAmt && BAcc && BCat);
+		save.setEnabled(BNote && BAmt && BAcc && BCat);
 	}
 
-	public void saveSelectedCategoryWithName(int selectedCat, String name)
+	public void saveSelectedCategoryWithName(int selectedCat, String name, int cID)
 	{
 		cat=selectedCat;
+		subCat=-1;
 		TVCategory.setText(name);
 		BCat=true;
-		save.setEnabled(BNote && BDes && BAmt && BAcc && BCat);
-		subCat=-1;
+		save.setEnabled(BNote && BAmt && BAcc && BCat);
+		this.cID=cID;
+		this.sID=-1;
 	}
 
 	public void saveSelectedCategoryWithoutName(int selectedCat)
@@ -219,13 +203,15 @@ public class TransactionFragment extends Fragment {
 		cat=selectedCat;
 	}
 
-	public void saveSelectedSubCategory(int selectedCat, int selectedSubCat, String name)
+	public void saveSelectedSubCategory(int selectedCat, int selectedSubCat, int cID, int sID, String name)
 	{
 		cat=selectedCat;
 		subCat=selectedSubCat;
 		TVCategory.setText(name);
 		BCat=true;
-		save.setEnabled(BNote && BDes && BAmt && BAcc && BCat);
+		save.setEnabled(BNote && BAmt && BAcc && BCat);
+		this.sID=sID;
+		this.cID=cID;
 	}
 
 	private void radioGroupSetListener() {
@@ -291,27 +277,38 @@ public class TransactionFragment extends Fragment {
 			toast=Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT);
 			toast.show();
 		}
+	}
 
+	public String amt(String s)
+	{
+		int i=-1;
+		for(;++i<s.length() && s.indexOf(i)=='0';);
+		i--;
+		String s1="";
+		for(;++i<s.length();)
+			s1+=s.indexOf(i);
+		return s1;
 	}
 
 	private void setDateAndTime(Calendar calendar) {
-		final int[] date = {calendar.get(Calendar.DATE)};
-		final int[] month = {calendar.get(Calendar.MONTH) + 1};
-		final int[] year = {calendar.get(Calendar.YEAR)};
-		final int[] hourOfDay = {calendar.get(Calendar.HOUR_OF_DAY)};
-		final int[] minute = {calendar.get(Calendar.MINUTE)};
-		TVDate.setText(datePrint(date[0], month[0], year[0]));
-		TVTime.setText(timePrint(hourOfDay[0], minute[0]));
+
+//		final int[] date = {calendar.get(Calendar.DATE)};
+//		final int[] month = {calendar.get(Calendar.MONTH) + 1};
+//		final int[] year = {calendar.get(Calendar.YEAR)};
+//		final int[] hourOfDay = {calendar.get(Calendar.HOUR_OF_DAY)};
+//		final int[] minute = {calendar.get(Calendar.MINUTE)};
+		TVDate.setText(datePrint(dateArray[2], dateArray[1], dateArray[0]));
+		TVTime.setText(timePrint(dateArray[3], dateArray[4]));
 
 		TVDate.setOnClickListener(v->{
 			DatePickerDialog datePickerDialog=new DatePickerDialog(getContext(),
 					(datePicker, i, i1, i2) -> {
 						i1++;
-						year[0] =i;
-						month[0] =i1;
-						date[0] =i2;
+						dateArray[0] =i;
+						dateArray[1] =i1;
+						dateArray[2] =i2;
 						TVDate.setText(datePrint(i2,i1,i));
-					}, year[0], month[0] -1, date[0]);
+					}, dateArray[0], dateArray[1] -1, dateArray[2]);
 			datePickerDialog.show();
 		});
 
@@ -321,10 +318,10 @@ public class TransactionFragment extends Fragment {
 						@Override
 						public void onTimeSet(TimePicker timePicker, int i, int i1) {
 							TVTime.setText(timePrint(i,i1));
-							hourOfDay[0] =i;
-							minute[0] =i1;
+							dateArray[3] =i;
+							dateArray[4] =i1;
 						}
-					}, hourOfDay[0], minute[0],false);
+					}, dateArray[3], dateArray[4],false);
 			timePickerDialog.show();
 		});
 	}

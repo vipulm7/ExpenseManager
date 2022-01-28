@@ -34,7 +34,7 @@ public class AccountsFragment extends Fragment {
 		MainActivity mainActivity=(MainActivity) getActivity();
 		accountAdapter=mainActivity.accountAdapter;
 		accountAdapter.who=2;
-		accountAdapter.selected=-1;
+		accountAdapter.aID =-1;
 		accountAdapter.listener=null;
 //		AccountAdapter.ClickListener listener=new AccountAdapter.ClickListener() {
 //			@Override

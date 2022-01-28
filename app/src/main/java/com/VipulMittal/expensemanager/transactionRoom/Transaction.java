@@ -20,7 +20,7 @@ public class Transaction {
     public String note;
     public String description;
     public int type;
-    public long date;
+    public long date,dateTime;
     public int month, dateOfMonth, year, week, day;
     public static final String TAG="Vipul_tag";
 
@@ -29,7 +29,7 @@ public class Transaction {
         return id;
     }
 
-    public Transaction(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date) {
+    public Transaction(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime) {
         this.note = note;
         this.amount = amount;
         this.amountDisplay = amountDisplay;
@@ -39,6 +39,7 @@ public class Transaction {
         this.description = description;
         this.type = type;
         this.date=date;
+        this.dateTime=dateTime;
         Calendar calendar=Calendar.getInstance();
         calendar.setTimeInMillis(date);
         month=calendar.get(Calendar.MONTH);

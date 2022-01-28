@@ -26,8 +26,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 	//constructor
-	public BsdAccountsFragment(int catSelected, TransactionFragment transactionFragment) {
-		this.catSelected = catSelected;
+	public BsdAccountsFragment(int aID, TransactionFragment transactionFragment) {
+		this.aID = aID;
 		this.transactionFragment=transactionFragment;
 	}
 
@@ -36,7 +36,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	Button addNew;
 	AccountAdapter accountAdapter;
 	AccountViewModel accountViewModel;
-	int catSelected;
+	int aID;
 	TransactionFragment transactionFragment;
 
 
@@ -50,7 +50,10 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 		MainActivity mainActivity=(MainActivity)getActivity();
 		accountAdapter=mainActivity.accountAdapter;
-		accountAdapter.selected=catSelected;
+		if(aID!=-1)
+			accountAdapter.aID = accountAdapter.accounts.get(aID).id;
+		else
+			accountAdapter.aID = aID;
 		accountAdapter.who=1;
 
 		accountViewModel=mainActivity.accountViewModel;
@@ -61,17 +64,15 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 			public void onItemClick(AccountAdapter.AccViewHolder viewHolder) {
 				int pos=viewHolder.getAdapterPosition();
 				Log.d(TAG, "onItemClick: "+pos);
-				catSelected =pos;
+				aID =pos;
 				mainActivity.getSupportFragmentManager();
 
-				transactionFragment.saveSelectedAccount(pos,accountAdapter.accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
-
+				transactionFragment.saveSelectedAccount(aID,accountAdapter.accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
 				dismiss();
 			}
 		};
 
 		accountAdapter.listener=listener;
-
 
 //		accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 //		accountViewModel.getAllAccounts().observe(getViewLifecycleOwner(), accounts -> {

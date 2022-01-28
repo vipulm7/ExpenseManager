@@ -72,7 +72,7 @@ public class BsdSubCategoryFragment extends Fragment {
 			public void onItemClick(SubCategoryAdapter.BSDSubCatViewHolder viewHolder) {
 				int position=viewHolder.getAdapterPosition();
 				subCatSelected = position;
-				transactionFragment.saveSelectedSubCategory(catSelected, subCatSelected, categorySelected.catName + " / " + subCategoryAdapter.subCats.get(subCatSelected).name);
+				transactionFragment.saveSelectedSubCategory(catSelected, subCatSelected, categorySelected.catId, subCategoryAdapter.subCats.get(subCatSelected).id, categorySelected.catName + " / " + subCategoryAdapter.subCats.get(subCatSelected).name);
 
 //				Log.d(TAG, "onCreateView: hasActiveObservers = "+categoryViewModel.getAllCategories(type).hasActiveObservers());
 //				Log.d(TAG, "onCreateView: hasObservers = "+categoryViewModel.getAllCategories(type).hasObservers());

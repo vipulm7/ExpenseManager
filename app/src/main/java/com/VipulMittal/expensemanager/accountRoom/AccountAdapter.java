@@ -20,7 +20,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 	public ClickListener listener;
 	public List<Account> accounts;
 	String TAG="Vipul_tag";
-	public int selected;
+	public int aID;
 	public int who;
 
 	public AccountAdapter() {
@@ -42,7 +42,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 	public void onBindViewHolder(@NonNull AccViewHolder holder, int position) {
 		Log.d(TAG, "onBindViewHolder: accounts name = "+accounts.get(position).name+" id = "+accounts.get(position).id);
 		if(who==1) {
-			if (position == selected) {
+			if (accounts.get(position).id == aID) {
 				holder.name.setBackgroundColor(Color.CYAN);
 				holder.amount.setBackgroundColor(Color.CYAN);
 			}
