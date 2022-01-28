@@ -17,9 +17,8 @@ public class SubCategoryRepo
     private SubCategoryDAO subCategoryDAO;
     private CategoryDAO categoryDAO;
     private LiveData<Map<Category, List<SubCategory>>> subCategories;
-//    private LiveData<List<SubCategory>> subs;
-//    private LiveData<List<mix>> subs;
     private LiveData<List<SubCategory>> subs;
+    private LiveData<List<SubCategory>> allSubs;
 
     public SubCategoryRepo(Application application)
     {
@@ -58,10 +57,16 @@ public class SubCategoryRepo
         return subCategories;
     }
 
-    LiveData<List<SubCategory>> getSubs(int catID)
+    public LiveData<List<SubCategory>> getSubs(int catID)
     {
         subs= subCategoryDAO.getSubs(catID);
         return subs;
+    }
+
+    public LiveData<List<SubCategory>> getAllSubcats()
+    {
+        allSubs= subCategoryDAO.getAllSubcats();
+        return allSubs;
     }
 
 

@@ -52,12 +52,12 @@ public abstract class SubCategoryDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            subCategoryDAO.Insert(new SubCategory("By amazon",0,0,1,1));
-            subCategoryDAO.Insert(new SubCategory("By gpay",0,0,1,1));
-            subCategoryDAO.Insert(new SubCategory("By freecharge",0,0,1,1));
+            subCategoryDAO.Insert(new SubCategory("By amazon",0,0,2,1));
+            subCategoryDAO.Insert(new SubCategory("By gpay",0,0,2,1));
+            subCategoryDAO.Insert(new SubCategory("By freecharge",0,0,2,1));
 
-            subCategoryDAO.Insert(new SubCategory("By bank",0,0,2,1));
-            subCategoryDAO.Insert(new SubCategory("By uncle",0,0,2,1));
+            subCategoryDAO.Insert(new SubCategory("By bank",0,0,3,1));
+            subCategoryDAO.Insert(new SubCategory("By uncle",0,0,3,1));
 
 
 

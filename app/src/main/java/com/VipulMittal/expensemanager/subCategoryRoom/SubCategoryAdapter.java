@@ -25,9 +25,15 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 	public Category catSelected;
 	String TAG="Vipul_tag";
 	public List<SubCategory> subCats;
+	public List<SubCategory> allSubCats;
 
 	public SubCategoryAdapter() {
 		subCats =new ArrayList<>();
+	}
+
+	public void setAllSubCats(List<SubCategory> allSubCats)
+	{
+		this.allSubCats=allSubCats;
 	}
 
 	@NonNull
@@ -39,8 +45,8 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
 	@Override
 	public void onBindViewHolder(@NonNull BSDSubCatViewHolder holder, int position) {
-//		holder.name.setText(subCategoriesToPrint.get(position).name);
-		Log.d(TAG, "onBindViewHolder: subCat pos = "+position);
+//		holder.name.setText(subCats.get(position).name);
+		Log.d(TAG, "onBindViewHolder: subCat name = "+subCats.get(position).name+" id = "+subCats.get(position).id);
 		holder.name.setText(subCats.get(position).name);
 		if(position== subCatSelected)
 			holder.name.setBackgroundColor(Color.CYAN);

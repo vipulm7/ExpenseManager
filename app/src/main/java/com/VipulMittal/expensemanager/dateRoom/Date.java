@@ -18,11 +18,11 @@ public class Date {
 		this.millies = millies;
 		Calendar calendar=Calendar.getInstance();
 		calendar.setTimeInMillis(millies);
-		month=calendar.MONTH;
-		date=calendar.DATE;
-		day=Calendar.DAY_OF_WEEK;
-		year=Calendar.YEAR;
-		week=Calendar.WEEK_OF_YEAR;
+		month=calendar.get(Calendar.MONTH);
+		date=calendar.get(Calendar.DATE);
+		day=calendar.get(Calendar.DAY_OF_WEEK);
+		year=calendar.get(Calendar.YEAR);
+		week=calendar.get(Calendar.WEEK_OF_YEAR);;
 		this.transactionsOnThatDate = 0;
 	}
 }

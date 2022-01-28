@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.Calendar;
 
-@Database(entities = Transaction.class, version = 2)
+@Database(entities = Transaction.class, version = 1)
 public abstract class TransactionDatabase extends RoomDatabase {
 
     private static TransactionDatabase instance;
@@ -50,7 +50,9 @@ public abstract class TransactionDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            transactionDAO.Insert(new Transaction("Sample", 100, "100",1,1,1,"Des",2, ));
+            transactionDAO.Insert(new Transaction("Sample1", 100, "100",1,4,8,"Des",2, getDate(Calendar.getInstance())));
+            transactionDAO.Insert(new Transaction("Sample2", -302, "302",2,7,12,"Des",2, getDate(Calendar.getInstance())));
+            transactionDAO.Insert(new Transaction("Sample3", -32, "302",3,7,12,"Des",2, getDateBefore(Calendar.getInstance())));
             return null;
         }
     }
@@ -58,6 +60,12 @@ public abstract class TransactionDatabase extends RoomDatabase {
     public static long getDate(Calendar calendar)
     {
         long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000;
-        return a/1000L;
+        return a;
+    }
+
+    public static long getDateBefore(Calendar calendar)
+    {
+        long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000-86400000;
+        return a;
     }
 }

@@ -40,7 +40,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 
 	@Override
 	public void onBindViewHolder(@NonNull AccViewHolder holder, int position) {
-		Log.d(TAG, "onBindViewHolder: "+position);
+		Log.d(TAG, "onBindViewHolder: accounts name = "+accounts.get(position).name+" id = "+accounts.get(position).id);
 		if(who==1) {
 			if (position == selected) {
 				holder.name.setBackgroundColor(Color.CYAN);

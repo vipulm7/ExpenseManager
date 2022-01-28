@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 
+import java.util.Calendar;
+
 public class HomeFragment extends Fragment {
 
 	public HomeFragment() {
@@ -32,26 +34,19 @@ public class HomeFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
 		TVMainIncome=view.findViewById(R.id.TVIncomeAmt);
 		TVMainExpense=view.findViewById(R.id.TVExpenseAmt);
 		TVMainTotal=view.findViewById(R.id.TVTotalAmt);
 		RVTransactions=view.findViewById(R.id.RecyclerViewID);
 		mainActivity=(MainActivity)getActivity();
 		transactionAdapter= mainActivity.transactionAdapter;
-//		mainActivity.transactionROOM();
 
+		Calendar calendar=Calendar.getInstance();
+		mainActivity.transactionROOM(calendar.get(Calendar.MONTH),calendar.get(Calendar.YEAR));
 
-
-
-
-
+		RVTransactions.setAdapter(transactionAdapter);
 		RVTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVTransactions.setNestedScrollingEnabled(false);
-
-
-
-
 		return view;
 	}
 

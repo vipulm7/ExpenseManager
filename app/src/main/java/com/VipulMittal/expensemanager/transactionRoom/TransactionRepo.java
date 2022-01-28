@@ -16,7 +16,6 @@ public class TransactionRepo
     {
         TransactionDatabase transactionDatabase = TransactionDatabase.getInstance(application);
         transactionDAO= transactionDatabase.transactionDAO();
-        transactions=transactionDAO.getAllTransactions();
     }
 
     public void Insert (Transaction transaction)
@@ -34,8 +33,9 @@ public class TransactionRepo
         new UpdateNoteASyncTask(transactionDAO).execute(transaction);
     }
 
-    public LiveData<List<Transaction>> getAllData()
+    public LiveData<List<Transaction>> getAllTransactions(int month, int year)
     {
+        transactions=transactionDAO.getAllTransactions(month, year);
         return transactions;
     }
 

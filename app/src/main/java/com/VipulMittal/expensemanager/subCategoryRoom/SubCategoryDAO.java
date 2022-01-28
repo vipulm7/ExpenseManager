@@ -30,7 +30,7 @@ public interface SubCategoryDAO {
 //    LiveData<List<SubCategory>> getAllSubCategories();
 
     @MapInfo(keyColumn = "id")
-    @Query("SELECT * FROM category_table JOIN subcategory_table ON category_table.catId = subcategory_table.categoryID")
+    @Query("SELECT * FROM category_table JOIN subcategory_table ON catId = categoryID")
     LiveData<Map<Category, List<SubCategory>>> getAllSubCategories();
 
 //    @Transaction
@@ -39,4 +39,7 @@ public interface SubCategoryDAO {
 
     @Query("SELECT * FROM subcategory_table WHERE categoryID=:catID")
     LiveData<List<SubCategory>> getSubs(int catID);
+
+    @Query("SELECT * FROM subcategory_table")
+    LiveData<List<SubCategory>> getAllSubcats();
 }

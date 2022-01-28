@@ -16,7 +16,6 @@ public class TransactionViewModel extends AndroidViewModel {
     public TransactionViewModel(@NonNull Application application) {
         super(application);
         repo =new TransactionRepo(application);
-        transactions= repo.getAllData();
     }
 
     public void Insert(Transaction transaction)
@@ -34,8 +33,9 @@ public class TransactionViewModel extends AndroidViewModel {
         repo.Update(transaction);
     }
 
-    public LiveData<List<Transaction>> getAllData()
+    public LiveData<List<Transaction>> getAllTransactions(int month, int year)
     {
+        transactions= repo.getAllTransactions(month, year);
         return transactions;
     }
 }

@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public SubCategoryAdapter subCategoryAdapter;
 	public SubCategoryViewModel subCategoryViewModel;
 	public DateViewModel dateViewModel;
+	public List<SubCategory> allSubcats;
 
 	NavigationBarView navigationBarView;
 	ConstraintLayout layoutForFragment;
@@ -73,19 +76,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 		FABAdd=findViewById(R.id.FABAdd);
-		transactionAdapter=new TransactionAdapter(this);
 		navigationBarView=findViewById(R.id.BottomNavigation);
 		layoutForFragment=findViewById(R.id.layoutForFragment);
 
-//		transactionAdapter=new TransactionAdapter();
 		subCategoryAdapter=new SubCategoryAdapter();
 		accountAdapter=new AccountAdapter();
 		categoryAdapter=new CategoryAdapter();
+		Calendar calendar=Calendar.getInstance();
+		allSubcats=new ArrayList<>();
 
 		accountROOM();
 		categoryROOM(2);
 		subCategoryROOM(0);
-//		transactionROOM();
+		transactionROOM(calendar.get(Calendar.MONTH),calendar.get(Calendar.YEAR));
+		subCatROOM();
+
+		transactionAdapter=new TransactionAdapter(this);
+
 
 		Log.d(TAG, "onCreate: bn_home = "+R.id.bn_home);
 		Log.d(TAG, "onCreate: bn_accounts = "+R.id.bn_accounts);
@@ -195,11 +202,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			navigationBarView.setSelectedItemId(R.id.bn_home);
 	}
 
-	public void transactionROOM() {
+	public void transactionROOM(int month, int year) {
 		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
-		transactionViewModel.getAllData().observe(this, transactions -> {
+		transactionViewModel.getAllTransactions(month, year).observe(this, transactions -> {
 			transactionAdapter.setTransactions(transactions);
 			transactionAdapter.notifyDataSetChanged();
+			Log.d(TAG, "transactionROOM: transactions = "+transactions.size());
 		});
 	}
 
@@ -222,6 +230,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			public void onChanged(List<Account> accounts) {
 				accountAdapter.setAccounts(accounts);
 				accountAdapter.notifyItemInserted(accounts.size()-1);
+				Log.d(TAG, "onChanged: account = "+accounts);
+
+				transactionAdapter.setAcc();
+				transactionAdapter.notifyDataSetChanged();
+			}
+		});
+	}
+
+	public void subCatROOM()
+	{
+		subCategoryViewModel.getAllSubcats().observe(this, new Observer<List<SubCategory>>() {
+			@Override
+			public void onChanged(List<SubCategory> subCategories) {
+				subCategoryAdapter.setAllSubCats(subCategories);
+
+				transactionAdapter.setSubcat();
+				transactionAdapter.notifyDataSetChanged();
 			}
 		});
 	}
@@ -236,6 +261,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 //				Log.d(TAG, "onCreateView: type = "+type);
 				categoryAdapter.setCategories(categories);
 				categoryAdapter.notifyItemInserted(pos1);
+
+				transactionAdapter.setCat();
+				transactionAdapter.notifyDataSetChanged();
 			}
 		});
 	}

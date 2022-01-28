@@ -77,6 +77,7 @@ public class TransactionFragment extends Fragment {
 		ETDes=view.findViewById(R.id.ETDes);
 		ETAmt=view.findViewById(R.id.ETAmount);
 		save=view.findViewById(R.id.transaction_save_button);
+		save.setEnabled(false);
 
 		ETAmt.setText(""+amount);
 		ETNote.setText(note);

@@ -1,18 +1,16 @@
 package com.VipulMittal.expensemanager.transactionRoom;
 
-import androidx.room.ColumnInfo;
+import android.util.Log;
+
 import androidx.room.Entity;
-import androidx.room.Fts4;
 import androidx.room.PrimaryKey;
 
-import com.VipulMittal.expensemanager.dateRoom.Date;
-import com.google.gson.Gson;
+import java.util.Calendar;
 
 @Entity(tableName = "transaction_table")
 public class Transaction {
     @PrimaryKey(autoGenerate = true)
     public int id;
-
 
     public int amount;
     public String amountDisplay;
@@ -22,8 +20,9 @@ public class Transaction {
     public String note;
     public String description;
     public int type;
-//    public long date;
     public long date;
+    public int month, dateOfMonth, year, week, day;
+    public static final String TAG="Vipul_tag";
 
 
     public int getId() {
@@ -40,5 +39,14 @@ public class Transaction {
         this.description = description;
         this.type = type;
         this.date=date;
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTimeInMillis(date);
+        month=calendar.get(Calendar.MONTH);
+        dateOfMonth =calendar.get(Calendar.DATE);
+        day=calendar.get(Calendar.DAY_OF_WEEK);
+        year=calendar.get(Calendar.YEAR);
+        week=calendar.get(Calendar.WEEK_OF_YEAR);
+
+        Log.d(TAG, "Transaction:database m="+month+" y="+year);
     }
 }
