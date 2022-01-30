@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 
 import java.util.List;
@@ -44,15 +45,9 @@ public class SubCategoryViewModel extends AndroidViewModel {
         return subCategories;
     }
 
-//    public LiveData<List<mix>> getSubCats()
-//    {
-//        subs= repo.getSubCats();
-//        return subs;
-//    }
-
-    public LiveData<List<SubCategory>> getSubs(int catID)
+    public LiveData<List<SubCategory>> getSubcategories(int catID)
     {
-        subs = repo.getSubs(catID);
+        subs = repo.getSubcategories(catID);
         return subs;
     }
 
@@ -60,5 +55,10 @@ public class SubCategoryViewModel extends AndroidViewModel {
     {
         allSubs = repo.getAllSubcats();
         return allSubs;
+    }
+
+    public SubCategory getSubCat(int sID)
+    {
+        return repo.getSubCat(sID);
     }
 }

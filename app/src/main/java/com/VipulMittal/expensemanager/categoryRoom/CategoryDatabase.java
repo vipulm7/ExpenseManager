@@ -26,6 +26,7 @@ public abstract class CategoryDatabase extends RoomDatabase {
             instance= Room.databaseBuilder(context.getApplicationContext(),
                     CategoryDatabase.class, "category_database")
                     .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
                     .addCallback(roomCallback).build();
 
         return instance;

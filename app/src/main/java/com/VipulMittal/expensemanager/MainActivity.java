@@ -1,9 +1,5 @@
 package com.VipulMittal.expensemanager;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,11 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,18 +29,15 @@ import com.VipulMittal.expensemanager.dateRoom.DateViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
-import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
@@ -68,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	NavigationBarView navigationBarView;
 	ConstraintLayout layoutForFragment;
-	Toast toast;
+	public Toast toast;
+	Calendar toShow;
 //	EditText editText;
 
 //	long income, expense, total;
@@ -87,13 +78,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		subCategoryAdapter=new SubCategoryAdapter();
 		accountAdapter=new AccountAdapter();
 		categoryAdapter=new CategoryAdapter();
-		Calendar calendar=Calendar.getInstance();
 		allSubcats=new ArrayList<>();
+		toShow=Calendar.getInstance();
 
 		accountROOM();
 		categoryROOM(2);
 		subCategoryROOM(0);
-		transactionROOM(calendar.get(Calendar.MONTH),calendar.get(Calendar.YEAR));
+//		transactionROOM(toShow);
 		subCatROOM();
 
 		transactionAdapter=new TransactionAdapter(this);
@@ -151,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		AlertDialog dialog = builder.create();
 
 
-
 		ETForAccAdd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -176,8 +166,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			{
 				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2);
 				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
-				fragmentTransaction.addToBackStack("home_page");
+				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
+				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
 
 				FABAdd.hide();
@@ -185,14 +175,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
 			{
-				((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
 				ETForAccAdd.setText("");
 				ETForAccAdd.requestFocus();
 				dialog.show();
 			}
 		});
-
 	}
 
 	@Override
@@ -201,9 +190,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			super.onBackPressed();
 		else
 			navigationBarView.setSelectedItemId(R.id.bn_home);
+
+
 	}
 
-	public void transactionROOM(int month, int year) {
+	public void transactionROOM() {
+		int month=toShow.get(Calendar.MONTH);
+		int year=toShow.get(Calendar.YEAR);
 		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
 		transactionViewModel.getAllTransactions(month, year).observe(this, transactions -> {
 			transactionAdapter.setTransactions(transactions);
@@ -214,11 +207,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public void subCategoryROOM(int catID) {
 		subCategoryViewModel=new ViewModelProvider(this).get(SubCategoryViewModel.class);
-		subCategoryViewModel.getSubs(catID).observe(this, new Observer<List<SubCategory>>() {
+		subCategoryViewModel.getSubcategories(catID).observe(this, new Observer<List<SubCategory>>() {
 			@Override
 			public void onChanged(List<SubCategory> subCats) {
 				Log.d(TAG, "onChanged: "+subCats);
-				subCategoryAdapter.setSubCats(subCats);
+				Log.d(TAG, "onChanged: subCats.size = "+subCats.size());
+				subCategoryAdapter.setSubCategories(subCats);
 				subCategoryAdapter.notifyDataSetChanged();
 			}
 		});

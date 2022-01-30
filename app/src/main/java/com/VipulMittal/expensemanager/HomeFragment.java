@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
 		// Required empty public constructor
 	}
 
-	TextView TVMainExpense,TVMainIncome,TVMainTotal;
+	TextView TVMainExpense,TVMainIncome,TVMainTotal, TVBefore, TVAfter, TVDateShown;
 	RecyclerView RVTransactions;
 	TransactionAdapter transactionAdapter;
 
@@ -42,24 +42,26 @@ public class HomeFragment extends Fragment {
 		TVMainExpense=view.findViewById(R.id.TVExpenseAmt);
 		TVMainTotal=view.findViewById(R.id.TVTotalAmt);
 		RVTransactions=view.findViewById(R.id.RecyclerViewID);
+		TVAfter=view.findViewById(R.id.TVafter);
+		TVBefore=view.findViewById(R.id.TVbefore);
+		TVDateShown=view.findViewById(R.id.TVDateChange);
 		mainActivity=(MainActivity)getActivity();
 		transactionAdapter= mainActivity.transactionAdapter;
 
-		Calendar calendar=Calendar.getInstance();
-		mainActivity.transactionROOM(calendar.get(Calendar.MONTH),calendar.get(Calendar.YEAR));
+		mainActivity.transactionROOM();
+		setDate();
+
 
 		TransactionAdapter.CLickListener listener=new TransactionAdapter.CLickListener() {
 			@Override
 			public void onItemClick(TransactionAdapter.TransViewHolder viewHolder) {
 				int position=viewHolder.getAdapterPosition();
 
+				Calendar calendar=Calendar.getInstance();
 				Transaction transaction=transactionAdapter.transactions.get(position);
 				calendar.setTimeInMillis(transaction.dateTime);
 
-				int send[]=new int[3];
-				getSend(send);
-
-				TransactionFragment transactionFragment=new TransactionFragment(transaction.amount,transaction.note,transaction.description,calendar, send[0], send[1], send[2], 2,transaction.type);
+				TransactionFragment transactionFragment=new TransactionFragment(transaction.amount,transaction.note,transaction.description,calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2,transaction.type);
 				FragmentTransaction fragmentTransaction=mainActivity.getSupportFragmentManager().beginTransaction();
 				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
 				fragmentTransaction.addToBackStack("home_page");
@@ -69,31 +71,35 @@ public class HomeFragment extends Fragment {
 			}
 		};
 
+		transactionAdapter.listener=listener;
+
+		TVBefore.setOnClickListener(v->{
+			mainActivity.toShow.add(Calendar.MONTH, -1);
+			mainActivity.transactionROOM();
+			setDate();
+		});
+
+		TVAfter.setOnClickListener(v->{
+			mainActivity.toShow.add(Calendar.MONTH, 1);
+			mainActivity.transactionROOM();
+			setDate();
+		});
+
 		RVTransactions.setAdapter(transactionAdapter);
 		RVTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVTransactions.setNestedScrollingEnabled(false);
 		return view;
 	}
 
-	private void getSend(int[] send) {
-		Map<Integer, String> acc;
-		Map<Integer, String> cat;
-		Map<Integer, String> subcat;
+	private void setDate() {
+		int month=mainActivity.toShow.get(Calendar.MONTH);
+		int year=mainActivity.toShow.get(Calendar.YEAR);
 
-		acc=mainActivity.transactionAdapter.acc;
-		cat=mainActivity.transactionAdapter.cat;
-		subcat=mainActivity.transactionAdapter.subcat;
-
-		for(int i=-1;++i<acc.size();)
-		{
-//			if(acc.keySet)
-		}
-		Set<Integer> keySet=acc.keySet();
-//		keySet.
+		TVDateShown.setText(getM(month)+", "+year);
 	}
 
-	public void indexToID()
-	{
-
+	private String getM(int m) {
+		String a[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+		return a[m];
 	}
 }

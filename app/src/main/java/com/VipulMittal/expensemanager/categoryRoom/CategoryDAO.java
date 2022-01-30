@@ -28,4 +28,7 @@ public interface CategoryDAO {
 
     @Query("UPDATE category_table SET noOfSubCat=noOfSubCat-1 WHERE catId=:catID")
     void catDeleted(int catID);
+
+    @Query("SELECT * FROM category_table WHERE catId=:catID")
+    Category getCat(int catID);
 }

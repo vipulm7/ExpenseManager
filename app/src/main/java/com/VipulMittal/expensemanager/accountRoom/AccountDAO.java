@@ -24,5 +24,6 @@ public interface AccountDAO {
     @Query("SELECT * FROM account_table")
     LiveData<List<Account>> getAllAccounts();
 
-
+    @Query("SELECT * FROM account_table WHERE id=:aID")
+    Account getAcc(int aID);
 }

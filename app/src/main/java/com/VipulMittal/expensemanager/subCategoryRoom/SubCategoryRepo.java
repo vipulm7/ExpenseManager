@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryDAO;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryDatabase;
@@ -57,9 +58,9 @@ public class SubCategoryRepo
         return subCategories;
     }
 
-    public LiveData<List<SubCategory>> getSubs(int catID)
+    public LiveData<List<SubCategory>> getSubcategories(int catID)
     {
-        subs= subCategoryDAO.getSubs(catID);
+        subs= subCategoryDAO.getSubcategories(catID);
         return subs;
     }
 
@@ -67,6 +68,11 @@ public class SubCategoryRepo
     {
         allSubs= subCategoryDAO.getAllSubcats();
         return allSubs;
+    }
+
+    public SubCategory getSubCat (int sID)
+    {
+        return subCategoryDAO.getSubCat(sID);
     }
 
 

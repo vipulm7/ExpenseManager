@@ -180,7 +180,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             transactions.add(0,new Transaction(""+amt[0],0,"",0,-1,0,""+(-amt[1]),0,d,0));
         }
 
-        Log.d(TAG, "acc="+accountAdapter.accounts.size()+"  cat="+categoryAdapter.categories.size()+"  subcat="+subCategoryAdapter.subCats.size());
+        Log.d(TAG, "acc="+accountAdapter.accounts.size()+"  cat="+categoryAdapter.categories.size()+"  subcat="+subCategoryAdapter.subCategories.size());
     }
 
     public void setAcc() {

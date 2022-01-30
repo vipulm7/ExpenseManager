@@ -14,21 +14,19 @@ import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.BSDSubCatViewHolder> {
 
 	public ClickListener listener;
-	public int subCatSelected;
+	public int sID;
 	public Category catSelected;
 	String TAG="Vipul_tag";
-	public List<SubCategory> subCats;
+	public List<SubCategory> subCategories;
 	public List<SubCategory> allSubCats;
 
 	public SubCategoryAdapter() {
-		subCats =new ArrayList<>();
+		subCategories =new ArrayList<>();
 	}
 
 	public void setAllSubCats(List<SubCategory> allSubCats)
@@ -46,9 +44,9 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 	@Override
 	public void onBindViewHolder(@NonNull BSDSubCatViewHolder holder, int position) {
 //		holder.name.setText(subCats.get(position).name);
-		Log.d(TAG, "onBindViewHolder: subCat name = "+subCats.get(position).name+" id = "+subCats.get(position).id);
-		holder.name.setText(subCats.get(position).name);
-		if(position== subCatSelected)
+		Log.d(TAG, "onBindViewHolder: subCat name = "+ subCategories.get(position).name+" id = "+ subCategories.get(position).id);
+		holder.name.setText(subCategories.get(position).name);
+		if(subCategories.get(position).id== sID)
 			holder.name.setBackgroundColor(Color.CYAN);
 		else
 			holder.name.setBackgroundColor(Color.WHITE);
@@ -59,7 +57,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 //		Log.d(TAG, "getItemCount: subCategoriesToPrint.size() = "+subCategoriesToPrint.size());
 //		Log.d(TAG, "getItemCount: subCategoriesToPrint = "+subCategoriesToPrint);
 
-		return subCats.size();
+		return subCategories.size();
 	}
 
 
@@ -84,18 +82,8 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 		void onItemClick(BSDSubCatViewHolder viewHolder);
 	}
 
-//	public void setSubCategories(Map<Category, List<SubCategory>> subCategories)
-//	{
-//		this.subCategories=subCategories;
-//	}
-//	public void setSubCategoriesToPrint(List<SubCategory> subCategoriesToPrint)
-//	{
-//		this.subCategoriesToPrint=subCategoriesToPrint;
-//	}
-
-
-	public void setSubCats(List<SubCategory> subCats)
+	public void setSubCategories(List<SubCategory> subCategories)
 	{
-		this.subCats=subCats;
+		this.subCategories = subCategories;
 	}
 }

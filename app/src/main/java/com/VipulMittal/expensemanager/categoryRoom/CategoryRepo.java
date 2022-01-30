@@ -11,6 +11,7 @@ public class CategoryRepo
 {
     private CategoryDAO categoryDAO;
     private LiveData<List<Category>> categories;
+    private Category category;
 
     public CategoryRepo(Application application)
     {
@@ -37,6 +38,12 @@ public class CategoryRepo
     {
         categories = categoryDAO.getAllCategories(type);
         return categories;
+    }
+
+    public Category getCat(int catID)
+    {
+        category=categoryDAO.getCat(catID);
+        return category;
     }
 
 

@@ -12,6 +12,7 @@ import androidx.lifecycle.LiveData;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,9 @@ import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
 import com.VipulMittal.expensemanager.BSD_Cat.BsdCatFragment;
+import com.VipulMittal.expensemanager.accountRoom.Account;
+import com.VipulMittal.expensemanager.categoryRoom.Category;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -35,21 +39,22 @@ import java.util.Map;
 
 public class TransactionFragment extends Fragment {
 
-	public TransactionFragment(int amount, String note, String description, Calendar calendar, int account, int cat, int subCat, int request, int type) {
-		this.account=account;
+	public TransactionFragment(int amount, String note, String description, Calendar calendar, int aID, int cID, int sID, int request, int type) {
+		this.aID=aID;
 		this.amount=amount;
 		this.note=note;
 		this.description=description;
 		this.calendar=calendar;
-		this.cat=cat;
-		this.subCat=subCat;
+		this.cID=cID;
+		this.sID=sID;
 		this.type=type;
 		this.request=request;
 		dateArray[0]=calendar.get(Calendar.YEAR);
-		dateArray[1]=calendar.get(Calendar.MONTH)+1;
+		dateArray[1]=calendar.get(Calendar.MONTH);
 		dateArray[2]=calendar.get(Calendar.DATE);
 		dateArray[3]=calendar.get(Calendar.HOUR_OF_DAY);
 		dateArray[4]=calendar.get(Calendar.MINUTE);
+		Log.d(TAG, "TransactionFragment: aid="+aID+" cid="+cID+" sid="+sID);
 	}
 
 
@@ -58,14 +63,15 @@ public class TransactionFragment extends Fragment {
 	RadioGroup radioGroup;
 	RadioButton RBIncome, RBExpense, RBTransfer;
 	Toast toast;
-	public int account,cat, subCat, type, amount, request;
+	public int type, amount, request;
 	String note, description;
 	Calendar calendar;
 	EditText ETNote, ETDes, ETAmt;
 	boolean BNote, BAmt, BAcc, BCat;
-	Button save;
+	Button save, repeat;
 	int dateArray[]=new int[5];
 	public int cID, sID, aID;
+	MainActivity mainActivity;
 
 
 	@Override
@@ -86,15 +92,36 @@ public class TransactionFragment extends Fragment {
 		ETDes=view.findViewById(R.id.ETDes);
 		ETAmt=view.findViewById(R.id.ETAmount);
 		save=view.findViewById(R.id.transaction_save_button);
+		repeat=view.findViewById(R.id.transaction_repeat_button);
 		save.setEnabled(false);
+		mainActivity=(MainActivity) getActivity();
 
-		if(amount!=0)
+
+		if(amount>0)
 			ETAmt.setText(""+amount);
+		else if(amount<0)
+			ETAmt.setText(""+(-amount));
 		ETNote.setText(note);
 		ETDes.setText(description);
 
 		enableDisableSaveButton();
 
+		if(aID!=-1)
+		{
+			Account account=mainActivity.accountViewModel.getAcc(aID);
+			TVAccount.setText(account.name);
+		}
+		if(cID!=-1)
+		{
+			Category category=mainActivity.categoryViewModel.getCat(cID);
+			if(sID!=-1)
+			{
+				SubCategory subCategory=mainActivity.subCategoryViewModel.getSubCat(sID);
+				TVCategory.setText(category.catName + " / " + subCategory.name);
+			}
+			else
+				TVCategory.setText(category.catName);
+		}
 
 		radioGroupSetListener();
 		setDateAndTime(calendar);
@@ -108,13 +135,20 @@ public class TransactionFragment extends Fragment {
 			mainActivity.setActionBarTitle("Edit Transaction");
 
 		TVAccount.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account, this);
+			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(aID, cID, 1, this);
 			bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
 		});
 
 		TVCategory.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdCatFragment(cat, subCat, type, this);
-			bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
+			if(type!=3) {
+				BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(cID, sID, type, this);
+				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
+			}
+			else
+			{
+				BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(cID, aID, 2, this);
+				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
+			}
 		});
 		return view;
 	}
@@ -124,10 +158,15 @@ public class TransactionFragment extends Fragment {
 
 		save.setOnClickListener(v->{
 			MainActivity mainActivity = (MainActivity) getActivity();
+			Log.d(TAG, "enableDisableSaveButton: string before = "+ETAmt.getText().toString().trim());
 			String s = amt(ETAmt.getText().toString().trim());
+			Log.d(TAG, "enableDisableSaveButton: string after = "+s);
 			int a=Integer.parseInt(s);
 			calendar.set(dateArray[0],dateArray[1],dateArray[2],dateArray[3],dateArray[4]);
-			mainActivity.transactionViewModel.Insert(new Transaction(ETNote.toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000-dateArray[4]*60000, calendar.getTimeInMillis()));
+			Log.d(TAG, "enableDisableSaveButton: month = "+(dateArray[1]-1)+" y= "+dateArray[0]);
+			Log.d(TAG, "enableDisableSaveButton: starting");
+			mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000-dateArray[4]*60000, calendar.getTimeInMillis()));
+			Log.d(TAG, "enableDisableSaveButton: ended");
 		});
 
 		ETNote.addTextChangedListener(new TextWatcher() {
@@ -158,19 +197,9 @@ public class TransactionFragment extends Fragment {
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 				String s=charSequence.toString().trim();
-//				s=amt(s);
-//				if(s.length()==0) {
-//					ETAmt.setText("0");
-//				}
-//				else
-//				{
-//					ETAmt.setText(s);
-//				}
-
 				BAmt=s.length() != 0;
 				save.setEnabled(BNote && BAmt && BAcc && BCat);
 			}
-
 			@Override
 			public void afterTextChanged(Editable editable) {
 			}
@@ -180,33 +209,29 @@ public class TransactionFragment extends Fragment {
 
 	public void saveSelectedAccount(int aID, String name)
 	{
-		this.aID=aID;
+		this.aID = aID;
 		TVAccount.setText(name);
-		BAcc=true;
+		BAcc = true;
 
 		save.setEnabled(BNote && BAmt && BAcc && BCat);
 	}
 
-	public void saveSelectedCategoryWithName(int selectedCat, String name, int cID)
+	public void saveSelectedCategoryWithName(int cID, String name)
 	{
-		cat=selectedCat;
-		subCat=-1;
-		TVCategory.setText(name);
-		BCat=true;
-		save.setEnabled(BNote && BAmt && BAcc && BCat);
 		this.cID=cID;
-		this.sID=-1;
+		TVCategory.setText(name);
+		BCat = true;
+		this.sID = -1;
+		save.setEnabled(BNote && BAmt && BAcc && BCat);
 	}
 
-	public void saveSelectedCategoryWithoutName(int selectedCat)
+	public void saveSelectedCategoryWithoutName(int cID)
 	{
-		cat=selectedCat;
+		this.cID =cID;
 	}
 
-	public void saveSelectedSubCategory(int selectedCat, int selectedSubCat, int cID, int sID, String name)
+	public void saveSelectedSubCategory(int cID, int sID, String name)
 	{
-		cat=selectedCat;
-		subCat=selectedSubCat;
 		TVCategory.setText(name);
 		BCat=true;
 		save.setEnabled(BNote && BAmt && BAcc && BCat);
@@ -223,8 +248,9 @@ public class TransactionFragment extends Fragment {
 				rNotSelected(RBExpense);
 				rNotSelected(RBTransfer);
 				type=1;
-				cat=-1;
-				subCat=-1;
+				cID=-1;
+				sID=-1;
+				BCat=false;
 			}
 			else if(i==R.id.radioCatExpense)
 			{
@@ -233,8 +259,9 @@ public class TransactionFragment extends Fragment {
 				rNotSelected(RBIncome);
 				rNotSelected(RBTransfer);
 				type=2;
-				cat=-1;
-				subCat=-1;
+				cID=-1;
+				sID=-1;
+				BCat=false;
 			}
 			else if(i==R.id.radioCatTransfer)
 			{
@@ -243,8 +270,9 @@ public class TransactionFragment extends Fragment {
 				rNotSelected(RBExpense);
 				rNotSelected(RBIncome);
 				type=3;
-				cat=-1;
-				subCat=-1;
+				cID=-1;
+				sID=-1;
+				BCat=false;
 			}
 		});
 	}
@@ -286,7 +314,7 @@ public class TransactionFragment extends Fragment {
 		i--;
 		String s1="";
 		for(;++i<s.length();)
-			s1+=s.indexOf(i);
+			s1+=s.charAt(i);
 		return s1;
 	}
 
@@ -297,18 +325,23 @@ public class TransactionFragment extends Fragment {
 //		final int[] year = {calendar.get(Calendar.YEAR)};
 //		final int[] hourOfDay = {calendar.get(Calendar.HOUR_OF_DAY)};
 //		final int[] minute = {calendar.get(Calendar.MINUTE)};
+
+//		dateArray[0]=calendar.get(Calendar.YEAR);
+//		dateArray[1]=calendar.get(Calendar.MONTH)+1;
+//		dateArray[2]=calendar.get(Calendar.DATE);
+//		dateArray[3]=calendar.get(Calendar.HOUR_OF_DAY);
+//		dateArray[4]=calendar.get(Calendar.MINUTE);
 		TVDate.setText(datePrint(dateArray[2], dateArray[1], dateArray[0]));
 		TVTime.setText(timePrint(dateArray[3], dateArray[4]));
 
 		TVDate.setOnClickListener(v->{
 			DatePickerDialog datePickerDialog=new DatePickerDialog(getContext(),
-					(datePicker, i, i1, i2) -> {
-						i1++;
-						dateArray[0] =i;
-						dateArray[1] =i1;
-						dateArray[2] =i2;
-						TVDate.setText(datePrint(i2,i1,i));
-					}, dateArray[0], dateArray[1] -1, dateArray[2]);
+					(datePicker, y, m, d) -> {
+						dateArray[0] =y;
+						dateArray[1] =m;
+						dateArray[2] =d;
+						TVDate.setText(datePrint(d,m,y));
+					}, dateArray[0], dateArray[1], dateArray[2]);
 			datePickerDialog.show();
 		});
 
@@ -351,6 +384,6 @@ public class TransactionFragment extends Fragment {
 	private String getMonth(int month) {
 		String name[]={"Jan","Feb","Mar","Apr","May","Jun",
 				"Jul","Aug","Sep","Oct","Nov","Dec"};
-		return name[month-1];
+		return name[month];
 	}
 }

@@ -16,7 +16,6 @@ public class AccountViewModel extends AndroidViewModel {
     public AccountViewModel(@NonNull Application application) {
         super(application);
         repo =new AccountRepo(application);
-        accounts = repo.getAllAccounts();
     }
 
     public void Insert(Account account)
@@ -36,6 +35,12 @@ public class AccountViewModel extends AndroidViewModel {
 
     public LiveData<List<Account>> getAllAccounts()
     {
+        accounts = repo.getAllAccounts();
         return accounts;
+    }
+
+    public Account getAcc(int aID)
+    {
+        return repo.getAcc(aID);
     }
 }

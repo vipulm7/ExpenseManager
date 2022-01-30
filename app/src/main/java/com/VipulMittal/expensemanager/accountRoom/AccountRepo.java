@@ -16,7 +16,6 @@ public class AccountRepo
     {
         AccountDatabase accountDatabase = AccountDatabase.getInstance(application);
         accountDAO = accountDatabase.accountDAO();
-        accounts = accountDAO.getAllAccounts();
     }
 
     public void Insert (Account account)
@@ -36,7 +35,13 @@ public class AccountRepo
 
     public LiveData<List<Account>> getAllAccounts()
     {
+        accounts = accountDAO.getAllAccounts();
         return accounts;
+    }
+
+    public Account getAcc (int aID)
+    {
+        return accountDAO.getAcc(aID);
     }
 
 

@@ -12,6 +12,7 @@ public class CategoryViewModel extends AndroidViewModel {
 
     private CategoryRepo repo;
     private LiveData<List<Category>> categories;
+    private Category category;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);
@@ -38,4 +39,11 @@ public class CategoryViewModel extends AndroidViewModel {
         categories = repo.getAllCategories(type);
         return categories;
     }
+
+    public Category getCat(int catID)
+    {
+        category=repo.getCat(catID);
+        return category;
+    }
+
 }

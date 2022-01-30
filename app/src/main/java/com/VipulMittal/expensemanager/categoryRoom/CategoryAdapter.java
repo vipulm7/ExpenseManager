@@ -19,7 +19,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 	public ClickListener listener;
 	public List<Category> categories;
-	public int catSelected;
+	public int cID;
 	String TAG="Vipul_tag";
 
 	public CategoryAdapter() {
@@ -35,14 +35,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 	@Override
 	public void onBindViewHolder(@NonNull BSDCatViewHolder holder, int position) {
-		holder.name.setText(categories.get(position).catName);
+		Category category=categories.get(position);
+		holder.name.setText(category.catName);
 		Log.d(TAG, "onBindViewHolder: ofCat position="+position);
-		Log.d(TAG, "onBindViewHolder: ofCat name="+categories.get(position).catName +" noOfSubCat="+categories.get(position).noOfSubCat+" id="+categories.get(position).catId);
-		if(position== catSelected)
+		Log.d(TAG, "onBindViewHolder: ofCat name="+category.catName +" noOfSubCat="+category.noOfSubCat+" id="+category.catId);
+		if(category.catId == cID)
 			holder.name.setBackgroundColor(Color.CYAN);
 		else
 			holder.name.setBackgroundColor(Color.WHITE);
-		if(categories.get(position).noOfSubCat==0)
+
+		if(category.noOfSubCat==0)
 			holder.arrow.setVisibility(View.INVISIBLE);
 		else
 			holder.arrow.setVisibility(View.VISIBLE);
@@ -50,7 +52,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 	@Override
 	public int getItemCount() {
-		Log.d(TAG, "getItemCount: categories.size() = "+categories.size());
+//		Log.d(TAG, "getItemCount: categories.size() = "+categories.size());
 //		Log.d(TAG, "getItemCount: categories = "+categories);
 		return categories.size();
 	}

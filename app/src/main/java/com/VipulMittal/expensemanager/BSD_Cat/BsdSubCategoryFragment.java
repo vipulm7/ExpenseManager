@@ -23,11 +23,11 @@ import java.util.List;
 
 public class BsdSubCategoryFragment extends Fragment {
 
-	public BsdSubCategoryFragment(int catSelected, int subCatSelected, int type, Category categorySelected) {
-		this.subCatSelected = subCatSelected;
+	public BsdSubCategoryFragment(int cID, int sID, int type, Category categorySelected) {
+		this.sID = sID;
 		this.type=type;
 		this.categorySelected = categorySelected;
-		this.catSelected=catSelected;
+		this.cID = cID;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -35,7 +35,7 @@ public class BsdSubCategoryFragment extends Fragment {
 	SubCategoryAdapter subCategoryAdapter;
 	SubCategoryViewModel subCategoryViewModel;
 	Category categorySelected;
-	int subCatSelected, type, catSelected;
+	int sID, type, cID;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,43 +48,31 @@ public class BsdSubCategoryFragment extends Fragment {
 		MainActivity mainActivity=(MainActivity)getActivity();
 		TransactionFragment transactionFragment= bsdCatFragment.transactionFragment;
 
-		mainActivity.subCategoryROOM(categorySelected.catId);
+		Log.d(TAG, "onCreateView: cID in BsdSubCategoryFragment = "+cID);
+		mainActivity.subCategoryROOM(cID);
 
 		subCategoryAdapter= mainActivity.subCategoryAdapter;
+		Log.d(TAG, "onCreateView: subCategories.size() = "+subCategoryAdapter.subCategories.size());
 
 		SubCategoryAdapter.ClickListener listener=new SubCategoryAdapter.ClickListener() {
 			@Override
 			public void onItemClick(SubCategoryAdapter.BSDSubCatViewHolder viewHolder) {
 				int position=viewHolder.getAdapterPosition();
-				subCatSelected = position;
-				transactionFragment.saveSelectedSubCategory(catSelected, subCatSelected, categorySelected.catId, subCategoryAdapter.subCats.get(subCatSelected).id, categorySelected.catName + " / " + subCategoryAdapter.subCats.get(subCatSelected).name);
+				sID = subCategoryAdapter.subCategories.get(position).id;
+				transactionFragment.saveSelectedSubCategory(cID, sID, categorySelected.catName + " / " + subCategoryAdapter.subCategories.get(position).name);
 
 				bsdCatFragment.dismiss();
 			}
 		};
 
 		subCategoryAdapter.listener=listener;
-		subCategoryAdapter.subCatSelected=subCatSelected;
-		subCategoryAdapter.catSelected=categorySelected;
+		subCategoryAdapter.sID = sID;
+		subCategoryAdapter.catSelected = categorySelected;
 
 		RVSubCategories.setLayoutManager(new LinearLayoutManager((getContext())));
 		RVSubCategories.setAdapter(subCategoryAdapter);
 		RVSubCategories.setNestedScrollingEnabled(false);
 
 		return view;
-	}
-
-	private int pos(List<SubCategory> newCategories, List<SubCategory> oldCategories) {
-
-		int i=-1;
-		Log.d(TAG, "newCategories = "+newCategories);
-		if(oldCategories==null)
-			return 0;
-		for(;++i<oldCategories.size();)
-		{
-			if(newCategories.get(i) != oldCategories.get(i))
-				return i;
-		}
-		return i;
 	}
 }

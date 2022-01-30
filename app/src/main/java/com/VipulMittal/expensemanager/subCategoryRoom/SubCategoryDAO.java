@@ -9,6 +9,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
+import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 
 import java.util.List;
@@ -38,8 +39,11 @@ public interface SubCategoryDAO {
 //    LiveData<List<mix>> getSubCats();
 
     @Query("SELECT * FROM subcategory_table WHERE categoryID=:catID")
-    LiveData<List<SubCategory>> getSubs(int catID);
+    LiveData<List<SubCategory>> getSubcategories(int catID);
 
     @Query("SELECT * FROM subcategory_table")
     LiveData<List<SubCategory>> getAllSubcats();
+
+    @Query("SELECT * FROM subcategory_table WHERE id=:sID")
+    SubCategory getSubCat(int sID);
 }

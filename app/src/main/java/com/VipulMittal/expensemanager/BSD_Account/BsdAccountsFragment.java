@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
@@ -23,12 +24,16 @@ import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.List;
+
 public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 	//constructor
-	public BsdAccountsFragment(int aID, TransactionFragment transactionFragment) {
+	public BsdAccountsFragment(int aID, int other, int aType, TransactionFragment transactionFragment) {
 		this.aID = aID;
 		this.transactionFragment=transactionFragment;
+		this.aType = aType;
+		this.other=other;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -36,8 +41,9 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	Button addNew;
 	AccountAdapter accountAdapter;
 	AccountViewModel accountViewModel;
-	int aID;
+	int aID, aType, other;
 	TransactionFragment transactionFragment;
+	List<Account> accounts;
 
 
 	@Override
@@ -50,10 +56,8 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 		MainActivity mainActivity=(MainActivity)getActivity();
 		accountAdapter=mainActivity.accountAdapter;
-		if(aID!=-1)
-			accountAdapter.aID = accountAdapter.accounts.get(aID).id;
-		else
-			accountAdapter.aID = aID;
+		accounts=accountAdapter.accounts;
+		accountAdapter.aID = aID;
 		accountAdapter.who=1;
 
 		accountViewModel=mainActivity.accountViewModel;
@@ -64,11 +68,24 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 			public void onItemClick(AccountAdapter.AccViewHolder viewHolder) {
 				int pos=viewHolder.getAdapterPosition();
 				Log.d(TAG, "onItemClick: "+pos);
-				aID =pos;
+				aID =accounts.get(pos).id;
 				mainActivity.getSupportFragmentManager();
 
-				transactionFragment.saveSelectedAccount(aID,accountAdapter.accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
-				dismiss();
+				if(aID != other) {
+					if (aType == 1)
+						transactionFragment.saveSelectedAccount(aID, accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
+					else
+						transactionFragment.saveSelectedCategoryWithName(aID, accounts.get(pos).name);
+					dismiss();
+				}
+				else
+				{
+					if(mainActivity.toast!=null)
+						mainActivity.toast.cancel();
+
+					mainActivity.toast = Toast.makeText(getContext(), "Can't select same accounts", Toast.LENGTH_SHORT);
+					mainActivity.toast.show();
+				}
 			}
 		};
 
@@ -79,9 +96,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		RVAccounts.setNestedScrollingEnabled(false);
 		RVAccounts.setAdapter(accountAdapter);
 
-
 		alertDialogForAddAcc();
-
 		return view;
 	}
 
