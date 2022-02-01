@@ -46,4 +46,9 @@ public class CategoryViewModel extends AndroidViewModel {
         return category;
     }
 
+    public void UpdateAmt(int increment, int cID)
+    {
+        repo.UpdateAmt(increment, cID);
+    }
+
 }

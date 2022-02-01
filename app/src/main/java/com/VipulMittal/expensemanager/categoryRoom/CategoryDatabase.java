@@ -57,10 +57,10 @@ public abstract class CategoryDatabase extends RoomDatabase {
             categoryDAO.Insert(new Category("Cashback",0,0,3,1));
             categoryDAO.Insert(new Category("Interest",0,0,2,1));
 
-            categoryDAO.Insert(new Category("Food",0,0,4,2));
+            categoryDAO.Insert(new Category("Food",-100,0,4,2));
             categoryDAO.Insert(new Category("Transport",0,0,2,2));
             categoryDAO.Insert(new Category("Beauty",0,0,0,2));
-            categoryDAO.Insert(new Category("Health",0,0,2,2));
+            categoryDAO.Insert(new Category("Health",-334,0,2,2));
             return null;
         }
     }

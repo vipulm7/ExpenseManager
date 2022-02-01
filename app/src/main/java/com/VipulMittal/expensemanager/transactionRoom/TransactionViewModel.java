@@ -38,4 +38,9 @@ public class TransactionViewModel extends AndroidViewModel {
         transactions= repo.getAllTransactions(month, year);
         return transactions;
     }
+
+    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
+    {
+        repo.UpdateTrans(note, amount, amountDisplay,  accountID, catID, subCatID, description, type, date, dateTime, id);
+    }
 }

@@ -43,4 +43,9 @@ public class AccountViewModel extends AndroidViewModel {
     {
         return repo.getAcc(aID);
     }
+
+    public void UpdateAmt(int increment, int aID)
+    {
+        repo.UpdateAmt(increment, aID);
+    }
 }

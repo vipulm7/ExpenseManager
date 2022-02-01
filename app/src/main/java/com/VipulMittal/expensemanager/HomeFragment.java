@@ -51,6 +51,9 @@ public class HomeFragment extends Fragment {
 		mainActivity.transactionROOM();
 		setDate();
 
+		TVAfter.setText(">");
+		TVBefore.setText("<");
+
 
 		TransactionAdapter.CLickListener listener=new TransactionAdapter.CLickListener() {
 			@Override
@@ -61,7 +64,7 @@ public class HomeFragment extends Fragment {
 				Transaction transaction=transactionAdapter.transactions.get(position);
 				calendar.setTimeInMillis(transaction.dateTime);
 
-				TransactionFragment transactionFragment=new TransactionFragment(transaction.amount,transaction.note,transaction.description,calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2,transaction.type);
+				TransactionFragment transactionFragment=new TransactionFragment(transaction.amount,transaction.note,transaction.description,calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2,transaction.type, transaction.id);
 				FragmentTransaction fragmentTransaction=mainActivity.getSupportFragmentManager().beginTransaction();
 				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
 				fragmentTransaction.addToBackStack("home_page");

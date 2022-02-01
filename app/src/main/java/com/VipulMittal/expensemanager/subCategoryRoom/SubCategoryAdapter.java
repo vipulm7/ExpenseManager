@@ -19,7 +19,7 @@ import java.util.List;
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.BSDSubCatViewHolder> {
 
 	public ClickListener listener;
-	public int sID;
+	public int sID, cID;
 	public Category catSelected;
 	String TAG="Vipul_tag";
 	public List<SubCategory> subCategories;

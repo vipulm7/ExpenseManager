@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
@@ -44,12 +45,10 @@ public class AccountsFragment extends Fragment {
 //			}
 //		};
 
+
 		RVAccount.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVAccount.setAdapter(accountAdapter);
 		RVAccount.setNestedScrollingEnabled(false);
-
-
-
 
 		return view;
 	}

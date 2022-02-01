@@ -1,5 +1,6 @@
 package com.VipulMittal.expensemanager.BSD_Cat;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentTransaction;
@@ -35,6 +36,7 @@ public class BsdCatFragment extends BottomSheetDialogFragment {
 		BsdCategoryFragment bsdCategoryFragment=new BsdCategoryFragment(cID, sID,type);
 		fragmentTransaction=getChildFragmentManager().beginTransaction();
 		fragmentTransaction.replace(R.id.FragmentForCategory, bsdCategoryFragment).commit();
+		setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BSDTheme);
 		return view;
 	}
 

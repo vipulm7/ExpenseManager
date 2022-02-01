@@ -11,11 +11,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -51,19 +53,21 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public AccountViewModel accountViewModel;
 	public CategoryAdapter categoryAdapter;
 	public CategoryViewModel categoryViewModel;
+	public CategoryAdapter categoryAdapter2;
+	public CategoryViewModel categoryViewModel2;
 	public SubCategoryAdapter subCategoryAdapter;
 	public SubCategoryViewModel subCategoryViewModel;
-	public DateViewModel dateViewModel;
 	public List<SubCategory> allSubcats;
 
 	NavigationBarView navigationBarView;
 	ConstraintLayout layoutForFragment;
 	public Toast toast;
 	Calendar toShow;
-//	EditText editText;
-
-//	long income, expense, total;
-	LiveData<Long> income, expense, total;
+	public int expense, income;
+	HomeFragment homeFragment;
+	AccountsFragment accountsFragment;
+	AnalysisFragment analysisFragment;
+	CategoryFragment categoryFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +82,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		subCategoryAdapter=new SubCategoryAdapter();
 		accountAdapter=new AccountAdapter();
 		categoryAdapter=new CategoryAdapter();
+		categoryAdapter2=new CategoryAdapter();
 		allSubcats=new ArrayList<>();
 		toShow=Calendar.getInstance();
+
+
+		accountViewModel=new ViewModelProvider(this).get(AccountViewModel.class);
+		categoryViewModel=new ViewModelProvider(this).get(CategoryViewModel.class);
+		categoryViewModel2=new ViewModelProvider(this).get(CategoryViewModel.class);
+		subCategoryViewModel=new ViewModelProvider(this).get(SubCategoryViewModel.class);
+		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
 
 		accountROOM();
 		categoryROOM(2);
 		subCategoryROOM(0);
-//		transactionROOM(toShow);
 		subCatROOM();
 
 		transactionAdapter=new TransactionAdapter(this);
@@ -141,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				});
 		AlertDialog dialog = builder.create();
 
-
 		ETForAccAdd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -150,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
+				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
 			}
 
 			@Override
@@ -164,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
 			{
-				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2);
+				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1);
 				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
 				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
 				fragmentTransaction.addToBackStack(null);
@@ -175,38 +185,50 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
 			{
+				dialog.show();
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-
 				ETForAccAdd.setText("");
 				ETForAccAdd.requestFocus();
-				dialog.show();
 			}
 		});
 	}
 
 	@Override
 	public void onBackPressed() {
-		if(navigationBarView.getSelectedItemId()==R.id.bn_home)
-			super.onBackPressed();
-		else
-			navigationBarView.setSelectedItemId(R.id.bn_home);
-
-
+		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
+			getSupportFragmentManager().popBackStack();
+			FABAdd.show();
+		}
+		else {
+			if (navigationBarView.getSelectedItemId() == R.id.bn_home)
+				super.onBackPressed();
+			else
+				navigationBarView.setSelectedItemId(R.id.bn_home);
+		}
 	}
 
 	public void transactionROOM() {
 		int month=toShow.get(Calendar.MONTH);
 		int year=toShow.get(Calendar.YEAR);
-		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
 		transactionViewModel.getAllTransactions(month, year).observe(this, transactions -> {
 			transactionAdapter.setTransactions(transactions);
 			transactionAdapter.notifyDataSetChanged();
 			Log.d(TAG, "transactionROOM: transactions = "+transactions.size());
+
+			homeFragment.TVMainIncome.setText("\u20b9"+income);
+			homeFragment.TVMainExpense.setText("- \u20b9"+(-expense));
+			if(income+expense>=0) {
+				homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
+				homeFragment.TVMainTotal.setTextColor(Color.GREEN);
+			}
+			else {
+				homeFragment.TVMainTotal.setText("- \u20b9" + -(income + expense));
+				homeFragment.TVMainTotal.setTextColor(Color.RED);
+			}
 		});
 	}
 
 	public void subCategoryROOM(int catID) {
-		subCategoryViewModel=new ViewModelProvider(this).get(SubCategoryViewModel.class);
 		subCategoryViewModel.getSubcategories(catID).observe(this, new Observer<List<SubCategory>>() {
 			@Override
 			public void onChanged(List<SubCategory> subCats) {
@@ -214,12 +236,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				Log.d(TAG, "onChanged: subCats.size = "+subCats.size());
 				subCategoryAdapter.setSubCategories(subCats);
 				subCategoryAdapter.notifyDataSetChanged();
+				subCategoryAdapter.cID=catID;
 			}
 		});
 	}
 
 	public void accountROOM() {
-		accountViewModel=new ViewModelProvider(this).get(AccountViewModel.class);
+
 		accountViewModel.getAllAccounts().observe(this, new Observer<List<Account>>() {
 			@Override
 			public void onChanged(List<Account> accounts) {
@@ -247,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	public void categoryROOM(int type) {
-		categoryViewModel=new ViewModelProvider(this).get(CategoryViewModel.class);
+
 		categoryViewModel.getAllCategories(type).observe(this, new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
@@ -259,6 +282,21 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 				transactionAdapter.setCat();
 				transactionAdapter.notifyDataSetChanged();
+			}
+		});
+	}
+
+	public void categoryROOM2(int type) {
+
+		categoryViewModel2.getAllCategories(type).observe(this, new Observer<List<Category>>() {
+			@Override
+			public void onChanged(List<Category> categories) {
+				int pos1= posCat(categories, categoryAdapter2.categories);
+//				Log.d(TAG, "onCreateView: view model called");
+//				Log.d(TAG, "onCreateView: type = "+type);
+				Log.d(TAG, "onChanged: categories2.size()= "+categories.size());
+				categoryAdapter2.setCategories(categories);
+				categoryAdapter2.notifyDataSetChanged();
 			}
 		});
 	}
@@ -280,26 +318,30 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	public void showFragment(int id) {
-//		navigationBarView.setSelectedItemId(id);
-//		if(id==R.id.bn_analysis)
 		FABAdd.hide();
 		if(id!=R.id.bn_analysis)
 			FABAdd.show();
 
 
 		FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
-		if(id==R.id.bn_home)
-			fragmentTransaction.replace(R.id.layoutForFragment,new HomeFragment()).commit();
-		else if(id==R.id.bn_cat)
-			fragmentTransaction.replace(R.id.layoutForFragment,new CategoryFragment()).commit();
-		else if(id==R.id.bn_accounts)
-			fragmentTransaction.replace(R.id.layoutForFragment,new AccountsFragment()).commit();
-		else
-			fragmentTransaction.replace(R.id.layoutForFragment,new AnalysisFragment()).commit();
-//		getSupportFragmentManager()
-//				.beginTransaction()
-//				.replace(R.id.layoutForFragment,fragment, fragment.getClass().getSimpleName())
-//				.commit();
+		if(id==R.id.bn_home) {
+			homeFragment=new HomeFragment();
+			fragmentTransaction.replace(R.id.layoutForFragment, homeFragment).commit();
+		}
+		else if(id==R.id.bn_cat) {
+			categoryROOM(1);
+			categoryROOM2(2);
+			categoryFragment=new CategoryFragment();
+			fragmentTransaction.replace(R.id.layoutForFragment, categoryFragment).commit();
+		}
+		else if(id==R.id.bn_accounts) {
+			accountsFragment=new AccountsFragment();
+			fragmentTransaction.replace(R.id.layoutForFragment, accountsFragment).commit();
+		}
+		else {
+			analysisFragment=new AnalysisFragment();
+			fragmentTransaction.replace(R.id.layoutForFragment, analysisFragment).commit();
+		}
 	}
 
 	private String moneyToString(long money) {

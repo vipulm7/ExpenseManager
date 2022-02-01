@@ -26,4 +26,7 @@ public interface AccountDAO {
 
     @Query("SELECT * FROM account_table WHERE id=:aID")
     Account getAcc(int aID);
+
+    @Query("UPDATE account_table SET amount=amount+:increment WHERE id=:aID")
+    void UpdateAmt(int increment, int aID);
 }

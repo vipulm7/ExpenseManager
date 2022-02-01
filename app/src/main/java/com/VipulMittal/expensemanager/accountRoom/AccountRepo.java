@@ -10,7 +10,6 @@ import java.util.List;
 public class AccountRepo
 {
     private AccountDAO accountDAO;
-    private LiveData<List<Account>> accounts;
 
     public AccountRepo(Application application)
     {
@@ -35,13 +34,17 @@ public class AccountRepo
 
     public LiveData<List<Account>> getAllAccounts()
     {
-        accounts = accountDAO.getAllAccounts();
-        return accounts;
+        return accountDAO.getAllAccounts();
     }
 
     public Account getAcc (int aID)
     {
         return accountDAO.getAcc(aID);
+    }
+
+    public void UpdateAmt(int increment, int aID)
+    {
+        accountDAO.UpdateAmt(increment, aID);
     }
 
 

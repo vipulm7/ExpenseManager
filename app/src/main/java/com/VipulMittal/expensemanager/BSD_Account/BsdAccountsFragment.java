@@ -122,7 +122,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
+				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
 			}
 
 			@Override
@@ -136,12 +136,11 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		addNew.setOnClickListener(v->{
 			Log.d(TAG, "onCreateView: builder = "+builder);
 //			builder.create();
-			((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
+			dialog.show();
+			dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 			ETForAccAdd.setText("");
 			ETForAccAdd.requestFocus();
-			dialog.show();
-
 			Log.d(TAG, "onCreateView: dialog created");
 		});
 	}

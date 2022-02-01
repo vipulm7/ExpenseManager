@@ -2,45 +2,84 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="61dp"
+        android:layout_height="61dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/IVCat_image"
+        />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/TVCat_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="70dp"
-        tools:layout_editor_absoluteY="18dp" />
+        android:text="Cat Name"
+        app:layout_constraintStart_toEndOf="@id/IVCat_image"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="2dp"
+        />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/TVCat_AMOUNT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="62dp"
-        tools:layout_editor_absoluteY="45dp" />
+        android:text="Amount"
+        app:layout_constraintStart_toEndOf="@id/IVCat_image"
+        app:layout_constraintTop_toBottomOf="@id/TVCat_name"
+        android:padding="2dp"
+        android:textSize="11sp"
+        />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/TVCat_amt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="Amt"
         tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="41dp" />
+        tools:layout_editor_absoluteY="41dp"
+        app:layout_constraintStart_toEndOf="@id/TVCat_AMOUNT"
+        app:layout_constraintTop_toBottomOf="@id/TVCat_name"
+        android:padding="2dp"
+        android:layout_marginStart="10dp"
+        android:textSize="11sp"
+        />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/TVCat_BUDGET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="63dp"
-        tools:layout_editor_absoluteY="70dp" />
+        android:text="Budget "
+        app:layout_constraintStart_toEndOf="@id/IVCat_image"
+        app:layout_constraintTop_toBottomOf="@id/TVCat_AMOUNT"
+        android:padding="2dp"
+        android:textSize="11sp"
+        />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/TVCat_budget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="71dp" />
+        android:text="Bgt"
+        app:layout_constraintStart_toEndOf="@id/TVCat_BUDGET"
+        app:layout_constraintTop_toBottomOf="@id/TVCat_amt"
+        android:padding="2dp"
+        android:layout_marginStart="12dp"
+        android:textSize="11sp"
+        />
+
+    <TextView
+        android:id="@+id/TVCat_ARROW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="V"
+        android:padding="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

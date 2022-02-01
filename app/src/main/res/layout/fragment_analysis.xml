@@ -1,14 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".AnalysisFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RadioGroup
+        android:id="@+id/RGChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+
+        <RadioButton
+            android:id="@+id/radioCatIncomeChart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="Income"
+            android:textSize="27sp" />
+
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="wrap_content"
+            android:textSize="27dp"
+            android:background="@color/black" />
+
+        <RadioButton
+            android:id="@+id/radioCatExpenseChart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="Expense"
+            android:textSize="27sp" />
+
+    </RadioGroup>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/RGChart"
+        android:id="@+id/pieChart"
+        />
+    
+
+</androidx.constraintlayout.widget.ConstraintLayout>

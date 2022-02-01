@@ -77,6 +77,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.TVSubCat.setTextColor(Color.GREEN);
             holder.TVAmount.setText("\u20b9"+transactions.get(position).description);
             holder.TVAmount.setTextColor(Color.RED);
+
+            Log.d(TAG, "onBindViewHolder: Tnote = "+transaction.note);
+            Log.d(TAG, "onBindViewHolder: Ttime = "+transaction.date);
         }
         else
         {
@@ -161,6 +164,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     {
         this.transactions=transactions;
 
+        int ex=0,in=0;
         if(transactions.size()>0) {
             long d = transactions.get(transactions.size() - 1).date;
             long amt[] = new long[2];
@@ -172,13 +176,19 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                     d = transactions.get(i).date;
                     amt[0]=amt[1]=0;
                 }
-                if(transactions.get(i).amount>=0)
-                    amt[0]+=transactions.get(i).amount;
-                else
-                    amt[1]+=transactions.get(i).amount;
+                if(transactions.get(i).amount>=0) {
+                    amt[0] += transactions.get(i).amount;
+                    in+=transactions.get(i).amount;
+                }
+                else {
+                    amt[1] += transactions.get(i).amount;
+                    ex+=transactions.get(i).amount;
+                }
             }
             transactions.add(0,new Transaction(""+amt[0],0,"",0,-1,0,""+(-amt[1]),0,d,0));
         }
+        mainActivity.income=in;
+        mainActivity.expense=ex;
 
         Log.d(TAG, "acc="+accountAdapter.accounts.size()+"  cat="+categoryAdapter.categories.size()+"  subcat="+subCategoryAdapter.subCategories.size());
     }
@@ -202,6 +212,4 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         for(int i=-1;++i<subCategoryAdapter.allSubCats.size();)
             subcat.put(subCategoryAdapter.allSubCats.get(i).id, subCategoryAdapter.allSubCats.get(i).name);
     }
-
-
 }

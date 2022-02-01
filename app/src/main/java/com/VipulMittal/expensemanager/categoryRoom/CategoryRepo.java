@@ -10,7 +10,6 @@ import java.util.List;
 public class CategoryRepo
 {
     private CategoryDAO categoryDAO;
-    private LiveData<List<Category>> categories;
     private Category category;
 
     public CategoryRepo(Application application)
@@ -36,14 +35,17 @@ public class CategoryRepo
 
     public LiveData<List<Category>> getAllCategories(int type)
     {
-        categories = categoryDAO.getAllCategories(type);
-        return categories;
+        return categoryDAO.getAllCategories(type);
     }
 
     public Category getCat(int catID)
     {
-        category=categoryDAO.getCat(catID);
-        return category;
+        return categoryDAO.getCat(catID);
+    }
+
+    public void UpdateAmt(int increment, int cID)
+    {
+        categoryDAO.UpdateAmt(increment, cID);
     }
 
 

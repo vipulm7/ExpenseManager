@@ -1,5 +1,6 @@
 package com.VipulMittal.expensemanager.BSD_Cat;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -49,13 +50,15 @@ public class BsdCategoryFragment extends Fragment {
 		BAddNewCat=view.findViewById(R.id.BAddNewCat);
 		bsdCatFragment= (BsdCatFragment) getParentFragment();
 		mainActivity=(MainActivity)getActivity();
+//		mainActivity.categoryROOM(type);
 
 		Log.d(TAG, "onCreateView: subCatSelectedID = "+ sID);
 //		Log.d(TAG, "onCreateView: adapter before = "+categoryAdapter);
 
-		mainActivity.categoryROOM(type);
 		categoryAdapter= mainActivity.categoryAdapter;
+		categoryAdapter.who=1;
 		categoryViewModel=mainActivity.categoryViewModel;
+		transactionFragment= bsdCatFragment.transactionFragment;
 		if(cID!=-1)
 			categorySelected=categoryViewModel.getCat(cID);
 
@@ -97,8 +100,10 @@ public class BsdCategoryFragment extends Fragment {
 		BAddNewCat.setOnClickListener(v->{
 
 		});
+
 		return view;
 	}
+
 
 	private void selectSubCat(int sID) {
 
@@ -110,6 +115,7 @@ public class BsdCategoryFragment extends Fragment {
 		Log.d(TAG, "selectSubCat: catSelectedID = "+ cID);
 		transactionFragment = bsdCatFragment.transactionFragment;
 		if(categorySelected.noOfSubCat!=0) {
+			mainActivity.subCategoryROOM(cID);
 			if(transactionFragment.TVCategory.getText().toString().equals("Category"))
 			{
 				transactionFragment.saveSelectedCategoryWithoutName(cID);

@@ -61,4 +61,9 @@ public class SubCategoryViewModel extends AndroidViewModel {
     {
         return repo.getSubCat(sID);
     }
+
+    public void UpdateAmt(int increment, int sID)
+    {
+        repo.UpdateAmt(increment, sID);
+    }
 }

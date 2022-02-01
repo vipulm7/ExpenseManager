@@ -46,4 +46,7 @@ public interface SubCategoryDAO {
 
     @Query("SELECT * FROM subcategory_table WHERE id=:sID")
     SubCategory getSubCat(int sID);
+
+    @Query("UPDATE subcategory_table SET subCatAmount=subCatAmount+:increment WHERE id=:sID")
+    void UpdateAmt(int increment, int sID);
 }

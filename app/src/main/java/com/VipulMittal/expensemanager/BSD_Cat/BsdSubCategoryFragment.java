@@ -49,9 +49,10 @@ public class BsdSubCategoryFragment extends Fragment {
 		TransactionFragment transactionFragment= bsdCatFragment.transactionFragment;
 
 		Log.d(TAG, "onCreateView: cID in BsdSubCategoryFragment = "+cID);
-		mainActivity.subCategoryROOM(cID);
 
 		subCategoryAdapter= mainActivity.subCategoryAdapter;
+//		mainActivity.subCategoryROOM(cID);
+
 		Log.d(TAG, "onCreateView: subCategories.size() = "+subCategoryAdapter.subCategories.size());
 
 		SubCategoryAdapter.ClickListener listener=new SubCategoryAdapter.ClickListener() {

@@ -75,6 +75,11 @@ public class SubCategoryRepo
         return subCategoryDAO.getSubCat(sID);
     }
 
+    public void UpdateAmt(int increment, int sID)
+    {
+        subCategoryDAO.UpdateAmt(increment, sID);
+    }
+
 
     private static class InsertNoteASyncTask extends AsyncTask<SubCategory,Void,Void>
     {

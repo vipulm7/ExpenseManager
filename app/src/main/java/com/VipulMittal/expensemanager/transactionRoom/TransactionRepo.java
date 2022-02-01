@@ -39,6 +39,11 @@ public class TransactionRepo
         return transactions;
     }
 
+    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
+    {
+        transactionDAO.UpdateTrans(note, amount, amountDisplay,  accountID, catID, subCatID, description, type, date, dateTime, id);
+    }
+
 
     private static class InsertNoteASyncTask extends AsyncTask<Transaction,Void,Void>
     {
