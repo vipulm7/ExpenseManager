@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,7 @@ import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 
 import java.util.List;
 
@@ -118,14 +120,22 @@ public class BsdCategoryFragment extends Fragment {
 		Log.d(TAG, "selectSubCat: catSelectedID = "+ cID);
 		transactionFragment = bsdCatFragment.transactionFragment;
 		if(categorySelected.noOfSubCat!=0) {
-			mainActivity.subCategoryROOM(cID);
+//			mainActivity.subCategoryROOM(cID);
+
 			if(transactionFragment.TVCategory.getText().toString().equals("Category"))
 			{
 				transactionFragment.saveSelectedCategoryWithoutName(cID);
 				Log.d(TAG, "selectSubCat: saved cat");
 			}
 			Log.d(TAG, "category sent = "+categorySelected.catName);
-			bsdCatFragment.showSubCatFragment(cID,sID, type, categorySelected);
+			mainActivity.subCategoryViewModel.getSubcategories(cID).observe(getViewLifecycleOwner(), new Observer<List<SubCategory>>() {
+				@Override
+				public void onChanged(List<SubCategory> subCategories) {
+					mainActivity.subCategoryAdapter.setSubCategories(subCategories);
+					mainActivity.subCategoryAdapter.notifyDataSetChanged();
+					bsdCatFragment.showSubCatFragment(cID,sID, type, categorySelected);
+				}
+			});
 		}
 		else
 		{

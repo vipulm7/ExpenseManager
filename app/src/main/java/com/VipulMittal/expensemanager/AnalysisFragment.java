@@ -94,11 +94,12 @@ public class AnalysisFragment extends Fragment {
 				pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 				pieDataSet.setDrawValues(true);
 				Log.d(TAG, "radioGroupSetListener: pieEntries.size() = "+pieEntries.size());
-				if(pieEntries.size()>0)
+//				if(pieEntries.size()>0)
 					pieChart.setData(new PieData(pieDataSet));
 				pieChart.animateY(1000);
 				pieChart.getDescription().setText("Trans2 chart");
 				pieChart.getDescription().setTextColor(Color.CYAN);
+				pieChart.setNoDataText("No data");
 
 
 				RBI.setTextColor(Color.parseColor("#a912db"));

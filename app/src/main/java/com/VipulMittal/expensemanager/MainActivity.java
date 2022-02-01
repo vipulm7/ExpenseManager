@@ -237,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				Log.d(TAG, "onChanged: subCats.size = "+subCats.size());
 				subCategoryAdapter.setSubCategories(subCats);
 				subCategoryAdapter.notifyDataSetChanged();
-				subCategoryAdapter.cID=catID;
 			}
 		});
 	}
