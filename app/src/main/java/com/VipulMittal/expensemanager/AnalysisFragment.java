@@ -97,8 +97,8 @@ public class AnalysisFragment extends Fragment {
 //				if(pieEntries.size()>0)
 					pieChart.setData(new PieData(pieDataSet));
 				pieChart.animateY(1000);
-				pieChart.getDescription().setText("Trans2 chart");
-				pieChart.getDescription().setTextColor(Color.CYAN);
+//				pieChart.getDescription().setText("Trans2 chart");
+//				pieChart.getDescription().setTextColor(Color.CYAN);
 				pieChart.setNoDataText("No data");
 
 
@@ -122,8 +122,8 @@ public class AnalysisFragment extends Fragment {
 				pieDataSet.setDrawValues(true);
 				pieChart.setData(new PieData(pieDataSet));
 				pieChart.animateY(1000);
-				pieChart.getDescription().setText("Trans2 chart");
-				pieChart.getDescription().setTextColor(Color.CYAN);
+//				pieChart.getDescription().setText("Trans2 chart");
+//				pieChart.getDescription().setTextColor(Color.CYAN);
 
 
 				RBE.setTextColor(Color.parseColor("#a912db"));

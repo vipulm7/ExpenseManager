@@ -111,33 +111,58 @@
         android:layout_height="wrap_content"
         android:id="@+id/constraintChooseCat"
         app:layout_constraintTop_toBottomOf="@id/constraintChooseType"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
 
-        <TextView
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Account "
-            android:id="@+id/TVAccount"
+            android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/TVCategory"
             app:layout_constraintTop_toTopOf="parent"
-            android:textSize="18sp"
-            android:padding="5dp"
-            android:background="@drawable/item_sel"
-            />
+            app:layout_constraintEnd_toStartOf="@id/constraintChooseType2"
+            android:id="@+id/constraintChooseType1"
+            >
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Account "
+                android:id="@+id/TVAccount"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:background="@drawable/item_sel"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:id="@+id/TVCategory"
-            app:layout_constraintStart_toEndOf="@+id/TVAccount"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toEndOf="@id/constraintChooseType1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="18sp"
-            android:padding="5dp"
-            android:background="@drawable/item_sel"
-            />
+            android:id="@+id/constraintChooseType2"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:id="@+id/TVCategory"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:background="@drawable/item_sel"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -151,29 +176,57 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
-        <TextView
-            android:id="@+id/TVDate"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="date"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/TVTime"
+            android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/constraintDateTime2"
+            android:id="@+id/constraintDateTime1"
+            >
 
-        <TextView
-            android:id="@+id/TVTime"
+            <TextView
+                android:id="@+id/TVDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="date"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/item_sel"
+                android:padding="3dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="time"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toEndOf="@id/constraintDateTime1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/TVDate"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/constraintDateTime2"
+            >
+            <TextView
+                android:id="@+id/TVTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="time"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/item_sel"
+                android:padding="3dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -190,7 +243,9 @@
             android:id="@+id/ETNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:hint="Enter title"
+            android:singleLine="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -201,6 +256,8 @@
             android:hint="Enter description"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ETNote"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             />
 
         <EditText
@@ -211,7 +268,10 @@
             android:inputType="numberDecimal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ETDes" />
+            app:layout_constraintTop_toBottomOf="@+id/ETDes"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button

@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				fragmentTransaction.commit();
 
 				FABAdd.hide();
-				navigationBarView.setVisibility(View.GONE);
+				navigationBarView.setVisibility(View.INVISIBLE);
 			}
 
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
