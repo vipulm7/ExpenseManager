@@ -55,7 +55,10 @@ public class BsdCategoryFragment extends Fragment {
 		Log.d(TAG, "onCreateView: subCatSelectedID = "+ sID);
 //		Log.d(TAG, "onCreateView: adapter before = "+categoryAdapter);
 
-		categoryAdapter= mainActivity.categoryAdapter;
+		if(type==1)
+			categoryAdapter= mainActivity.categoryAdapter;
+		else
+			categoryAdapter= mainActivity.categoryAdapter2;
 		categoryAdapter.who=1;
 		categoryViewModel=mainActivity.categoryViewModel;
 		transactionFragment= bsdCatFragment.transactionFragment;

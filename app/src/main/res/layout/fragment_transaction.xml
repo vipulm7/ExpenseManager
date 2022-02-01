@@ -32,11 +32,13 @@
                 android:button="@null"
                 android:padding="10dp"
                 android:text="Income"
-                android:textSize="27sp" />
+                android:textSize="27sp"
+                android:layout_marginEnd="5dp"
+                />
 
             <TextView
                 android:layout_width="2dp"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:textSize="27dp"
                 android:background="@color/black" />
 
@@ -47,13 +49,17 @@
                 android:button="@null"
                 android:padding="10dp"
                 android:text="Expense"
-                android:textSize="27sp" />
+                android:textSize="27sp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                />
 
             <TextView
                 android:layout_width="2dp"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:textSize="27dp"
-                android:background="@color/black" />
+                android:background="@color/black"
+                />
 
             <RadioButton
                 android:id="@+id/radioCatTransfer"
@@ -62,7 +68,9 @@
                 android:button="@null"
                 android:padding="10dp"
                 android:text="Transfer"
-                android:textSize="27sp" />
+                android:textSize="27sp"
+                android:layout_marginStart="5dp"
+                />
 
         </RadioGroup>
 

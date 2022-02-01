@@ -11,8 +11,6 @@ import java.util.List;
 public class CategoryViewModel extends AndroidViewModel {
 
     private CategoryRepo repo;
-    private LiveData<List<Category>> categories;
-    private Category category;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);
@@ -36,14 +34,12 @@ public class CategoryViewModel extends AndroidViewModel {
 
     public LiveData<List<Category>> getAllCategories(int type)
     {
-        categories = repo.getAllCategories(type);
-        return categories;
+        return repo.getAllCategories(type);
     }
 
     public Category getCat(int catID)
     {
-        category=repo.getCat(catID);
-        return category;
+        return repo.getCat(catID);
     }
 
     public void UpdateAmt(int increment, int cID)

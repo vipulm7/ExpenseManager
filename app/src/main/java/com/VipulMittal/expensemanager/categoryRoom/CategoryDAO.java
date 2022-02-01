@@ -34,4 +34,6 @@ public interface CategoryDAO {
 
     @Query("UPDATE category_table SET catAmount=catAmount+:increment WHERE catId=:cID")
     void UpdateAmt(int increment, int cID);
+
+
 }

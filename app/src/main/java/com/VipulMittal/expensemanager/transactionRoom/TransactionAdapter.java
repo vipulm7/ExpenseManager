@@ -28,7 +28,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public CLickListener listener;
     public static final String TAG="Vipul_tag";
     MainActivity mainActivity;
-    CategoryAdapter categoryAdapter;
     AccountAdapter accountAdapter;
     SubCategoryAdapter subCategoryAdapter;
     public Map<Integer, String> acc;
@@ -38,7 +37,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public TransactionAdapter(MainActivity mainActivity) {
         transactions = new ArrayList<>();
         this.mainActivity=mainActivity;
-        categoryAdapter=mainActivity.categoryAdapter;
         accountAdapter= mainActivity.accountAdapter;
         subCategoryAdapter= mainActivity.subCategoryAdapter;
         acc=new HashMap<>();
@@ -95,7 +93,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 holder.TVAmount.setText("- \u20b9"+(-transaction.amount));
                 holder.TVAmount.setTextColor(Color.RED);
             }
-
+            Log.d(TAG, "onBindViewHolder: note = "+transaction.note);
+            Log.d(TAG, "onBindViewHolder: cat map = "+cat);
+            Log.d(TAG, "onBindViewHolder: cat id "+transaction.catID);
+            Log.d(TAG, "onBindViewHolder: cat from map "+cat.get(transaction.catID));
             holder.TVCat.setText(cat.get(transaction.catID));
             holder.TVAccount.setText(acc.get(transaction.accountID));
         }
@@ -190,25 +191,35 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         mainActivity.income=in;
         mainActivity.expense=ex;
 
-        Log.d(TAG, "acc="+accountAdapter.accounts.size()+"  cat="+categoryAdapter.categories.size()+"  subcat="+subCategoryAdapter.subCategories.size());
+//        Log.d(TAG, "acc="+accountAdapter.accounts.size()+"  cat="+categoryAdapter.categories.size()+"  subcat="+subCategoryAdapter.subCategories.size());
     }
 
     public void setAcc() {
-        acc.clear();
+//        acc.clear();
         for(int i=-1;++i<accountAdapter.accounts.size();)
             acc.put(accountAdapter.accounts.get(i).id, accountAdapter.accounts.get(i).name);
     }
 
-    public void setCat()
+    public void setCat(int type)
     {
-        cat.clear();
-        for(int i=-1;++i<categoryAdapter.categories.size();)
-            cat.put(categoryAdapter.categories.get(i).catId, categoryAdapter.categories.get(i).catName);
+        CategoryAdapter categoryAdapter;
+//        cat.clear();
+        if(type == 1)
+        {
+            categoryAdapter=mainActivity.categoryAdapter;
+            for (int i = -1; ++i < categoryAdapter.categories.size(); )
+                cat.put(categoryAdapter.categories.get(i).catId, categoryAdapter.categories.get(i).catName);
+        }
+        else {
+            categoryAdapter=mainActivity.categoryAdapter2;
+            for (int i = -1; ++i < categoryAdapter.categories.size(); )
+                cat.put(categoryAdapter.categories.get(i).catId, categoryAdapter.categories.get(i).catName);
+        }
     }
 
     public void setSubcat()
     {
-        subcat.clear();
+//        subcat.clear();
         for(int i=-1;++i<subCategoryAdapter.allSubCats.size();)
             subcat.put(subCategoryAdapter.allSubCats.get(i).id, subCategoryAdapter.allSubCats.get(i).name);
     }

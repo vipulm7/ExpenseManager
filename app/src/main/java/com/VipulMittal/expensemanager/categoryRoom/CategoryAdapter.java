@@ -60,7 +60,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 		else if(who==2)
 		{
 			holder.name.setText(category.catName);
-			holder.amt.setText(""+category.catAmount);
+			if(category.catAmount>=0)
+			{
+				holder.amt.setText(""+category.catAmount);
+				holder.amt.setTextColor(Color.GREEN);
+			}
+			else
+			{
+				holder.amt.setText(""+(-category.catAmount));
+				holder.amt.setTextColor(Color.RED);
+			}
+
 			holder.bgt.setText(""+category.catBudget);
 			if(category.noOfSubCat>0)
 				holder.arrow.setVisibility(View.VISIBLE);

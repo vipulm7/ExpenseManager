@@ -98,7 +98,6 @@ public class TransactionFragment extends Fragment {
 		save.setEnabled(request != 1);
 		repeat.setEnabled(request != 1);
 		mainActivity=(MainActivity) getActivity();
-		mainActivity.categoryROOM(type);
 
 
 		setRadioButton(type);
@@ -320,7 +319,6 @@ public class TransactionFragment extends Fragment {
 				cID=-1;
 				sID=-1;
 				BCat=false;
-				mainActivity.categoryROOM(type);
 			}
 			else if(i==R.id.radioCatExpense)
 			{
@@ -332,7 +330,6 @@ public class TransactionFragment extends Fragment {
 				cID=-1;
 				sID=-1;
 				BCat=false;
-				mainActivity.categoryROOM(type);
 			}
 			else if(i==R.id.radioCatTransfer)
 			{

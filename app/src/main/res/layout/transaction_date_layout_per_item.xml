@@ -17,8 +17,7 @@
         app:layout_constraintEnd_toStartOf="@id/TD_income_lpi"
         android:padding="3dp"
         android:textSize="16sp"
-        app:layout_constraintHorizontal_bias="0.5"
-
+        android:layout_marginStart="10dp"
         />
     <TextView
         android:layout_width="0dp"

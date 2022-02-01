@@ -23,7 +23,7 @@ public interface TransactionDAO {
 
 //    @Query("SELECT * FROM transaction_table ORDER BY date DESC")
 //    @Query("SELECT * FROM transaction_table")
-    @Query("SELECT * FROM transaction_table WHERE month=:month AND year=:year ORDER BY date DESC")
+    @Query("SELECT * FROM transaction_table WHERE month=:month AND year=:year ORDER BY dateTime DESC")
     LiveData<List<Transaction>> getAllTransactions(int month, int year);
 
     @Query("UPDATE transaction_table SET note=:note, amount=:amount, amountDisplay=:amountDisplay, accountID=:accountID, catID=:catID, subCatID=:subCatID, description=:description, type=:type, date=:date, dateTime=:dateTime WHERE id=:id")

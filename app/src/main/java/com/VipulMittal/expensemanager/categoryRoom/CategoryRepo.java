@@ -10,7 +10,6 @@ import java.util.List;
 public class CategoryRepo
 {
     private CategoryDAO categoryDAO;
-    private Category category;
 
     public CategoryRepo(Application application)
     {

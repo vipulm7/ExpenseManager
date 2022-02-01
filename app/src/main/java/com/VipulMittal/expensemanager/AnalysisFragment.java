@@ -32,7 +32,6 @@ public class AnalysisFragment extends Fragment {
 	Toast toast;
 	ArrayList<PieEntry> pieEntries;
 	CategoryAdapter categoryAdapter;
-	CategoryViewModel categoryViewModel;
 	RadioButton RBI,RBE;
 
 	public AnalysisFragment() {
@@ -49,8 +48,7 @@ public class AnalysisFragment extends Fragment {
 		pieChart=view.findViewById(R.id.pieChart);
 		mainActivity=(MainActivity) getActivity();
 		rg_chart=view.findViewById(R.id.RGChart);
-		categoryAdapter= mainActivity.categoryAdapter;
-		categoryViewModel = mainActivity.categoryViewModel;
+
 		toast=mainActivity.toast;
 		RBE=view.findViewById(R.id.radioCatExpenseChart);
 		RBI=view.findViewById(R.id.radioCatIncomeChart);
@@ -83,7 +81,7 @@ public class AnalysisFragment extends Fragment {
 		rg_chart.setOnCheckedChangeListener((radioGroup, type) -> {
 			if(type==R.id.radioCatIncomeChart)
 			{
-				categoryViewModel.getAllCategories(1);
+				categoryAdapter= mainActivity.categoryAdapter;
 				pieEntries=new ArrayList<>();
 				for(int i=-1;++i<categoryAdapter.categories.size();) {
 					if(categoryAdapter.categories.get(i).catAmount>0)
@@ -91,14 +89,18 @@ public class AnalysisFragment extends Fragment {
 				}
 
 				Log.d(TAG, "radioGroupSetListener: pie size="+pieEntries.size());
-				
+
 				PieDataSet pieDataSet=new PieDataSet(pieEntries, "b");
 				pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 				pieDataSet.setDrawValues(true);
-				pieChart.setData(new PieData(pieDataSet));
-				pieChart.animateY(2000);
+				Log.d(TAG, "radioGroupSetListener: pieEntries.size() = "+pieEntries.size());
+				if(pieEntries.size()>0)
+					pieChart.setData(new PieData(pieDataSet));
+				pieChart.animateY(1000);
 				pieChart.getDescription().setText("Trans2 chart");
 				pieChart.getDescription().setTextColor(Color.CYAN);
+
+
 				RBI.setTextColor(Color.parseColor("#a912db"));
 				RBI.setTextSize(25);
 				RBE.setTextColor(Color.parseColor("#db4002"));
@@ -107,7 +109,7 @@ public class AnalysisFragment extends Fragment {
 			}
 			else if(type==R.id.radioCatExpenseChart)
 			{
-				categoryViewModel.getAllCategories(2);
+				categoryAdapter= mainActivity.categoryAdapter2;
 				pieEntries=new ArrayList<>();
 				for(int i=-1;++i<categoryAdapter.categories.size();) {
 					if(categoryAdapter.categories.get(i).catAmount<0)
@@ -121,6 +123,8 @@ public class AnalysisFragment extends Fragment {
 				pieChart.animateY(1000);
 				pieChart.getDescription().setText("Trans2 chart");
 				pieChart.getDescription().setTextColor(Color.CYAN);
+
+
 				RBE.setTextColor(Color.parseColor("#a912db"));
 				RBE.setTextSize(25);
 				RBI.setTextColor(Color.parseColor("#db4002"));

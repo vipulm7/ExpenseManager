@@ -51,10 +51,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public TransactionViewModel transactionViewModel;
 	public AccountAdapter accountAdapter;
 	public AccountViewModel accountViewModel;
-	public CategoryAdapter categoryAdapter;
-	public CategoryViewModel categoryViewModel;
-	public CategoryAdapter categoryAdapter2;
-	public CategoryViewModel categoryViewModel2;
+	public CategoryAdapter categoryAdapter, categoryAdapter2;
+	public CategoryViewModel categoryViewModel, categoryViewModel2;
 	public SubCategoryAdapter subCategoryAdapter;
 	public SubCategoryViewModel subCategoryViewModel;
 	public List<SubCategory> allSubcats;
@@ -94,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
 
 		accountROOM();
-		categoryROOM(2);
+		categoryROOM();
 		subCategoryROOM(0);
 		subCatROOM();
 
@@ -110,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		navigationBarView.setOnItemSelectedListener(item -> {
 			int id=item.getItemId();
-			Log.d(TAG, "onCreate: selected = "+id);
+			Log.d(TAG, "onCreate: selected navigation bar id = "+id);
 			showFragment(id);
 
 			return true;
@@ -181,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				fragmentTransaction.commit();
 
 				FABAdd.hide();
+				navigationBarView.setVisibility(View.GONE);
 			}
 
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
@@ -198,6 +197,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
 			getSupportFragmentManager().popBackStack();
 			FABAdd.show();
+			navigationBarView.setVisibility(View.VISIBLE);
+			setActionBarTitle("Expense Manager");
 		}
 		else {
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home)
@@ -269,9 +270,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 	}
 
-	public void categoryROOM(int type) {
+	public void categoryROOM() {
 
-		categoryViewModel.getAllCategories(type).observe(this, new Observer<List<Category>>() {
+		categoryViewModel.getAllCategories(1).observe(this, new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
 				int pos1= posCat(categories, categoryAdapter.categories);
@@ -280,15 +281,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				categoryAdapter.setCategories(categories);
 				categoryAdapter.notifyItemInserted(pos1);
 
-				transactionAdapter.setCat();
+				transactionAdapter.setCat(1);
 				transactionAdapter.notifyDataSetChanged();
 			}
 		});
-	}
 
-	public void categoryROOM2(int type) {
-
-		categoryViewModel2.getAllCategories(type).observe(this, new Observer<List<Category>>() {
+		categoryViewModel2.getAllCategories(2).observe(this, new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
 				int pos1= posCat(categories, categoryAdapter2.categories);
@@ -296,10 +294,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 //				Log.d(TAG, "onCreateView: type = "+type);
 				Log.d(TAG, "onChanged: categories2.size()= "+categories.size());
 				categoryAdapter2.setCategories(categories);
-				categoryAdapter2.notifyDataSetChanged();
+				categoryAdapter2.notifyItemInserted(pos1);
+
+				transactionAdapter.setCat(2);
+				transactionAdapter.notifyDataSetChanged();
 			}
 		});
 	}
+
 
 	private Fragment getFragment(int id) {
 		if(id==R.id.bn_home)
@@ -329,8 +331,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			fragmentTransaction.replace(R.id.layoutForFragment, homeFragment).commit();
 		}
 		else if(id==R.id.bn_cat) {
-			categoryROOM(1);
-			categoryROOM2(2);
 			categoryFragment=new CategoryFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, categoryFragment).commit();
 		}
@@ -338,9 +338,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			accountsFragment=new AccountsFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, accountsFragment).commit();
 		}
-		else {
+		else if(id==R.id.bn_analysis) {
 			analysisFragment=new AnalysisFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, analysisFragment).commit();
+		}
+		else {
+			if(toast!=null)
+				toast.cancel();
+			toast=Toast.makeText(this, "Slow Down", Toast.LENGTH_SHORT);
+			toast.show();
 		}
 	}
 
@@ -402,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public long getDate(Calendar calendar)
 	{
 		long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000;
-		return a/1000L;
+		return a;
 	}
 
 

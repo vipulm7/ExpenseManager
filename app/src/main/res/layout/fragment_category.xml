@@ -24,7 +24,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/TVCat_income"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:text="Income Categories"
                 />
             
@@ -42,7 +42,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/RVCat_income"
                 android:id="@+id/TVCat_expense"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:text="Expense Categories"
                 />
 
