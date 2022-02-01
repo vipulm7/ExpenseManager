@@ -11,6 +11,7 @@
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout-v26/activity_main.xml" value="0.536" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/a.xml" value="0.4" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/abc.xml" value="0.72" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/account_dialog.xml" value="0.23278985507246377" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/account_layout_per_item.xml" value="0.5" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/activity_main.xml" value="0.5" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/activity_transaction.xml" value="0.1" />
@@ -31,7 +32,7 @@
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_category.xml" value="0.5" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_sub_category.xml" value="0.2453125" />
-        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_transaction.xml" value="0.39611650485436894" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_transaction.xml" value="0.1" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/layout_per_item.xml" value="0.25" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/transaction_date_layout_per_item.xml" value="0.5" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/transaction_layout_per_item.xml" value="0.5" />

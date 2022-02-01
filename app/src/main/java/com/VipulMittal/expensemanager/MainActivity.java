@@ -138,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 
 		EditText ETForAccAdd=new EditText(this);
+		EditText ETForAccAdd2=new EditText(this);
+		boolean b1=false, b2=false;
 
 		AlertDialog.Builder builder=new AlertDialog.Builder(this);
 		builder.setTitle("Add New Account")
@@ -163,10 +165,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			@Override
 			public void afterTextChanged(Editable editable) {
-
 			}
 		});
 		ETForAccAdd.setHint("Add Account name");
+		ETForAccAdd2.setHint("Enter initial balance");
 
 		FABAdd.setOnClickListener(v->{
 
@@ -181,12 +183,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				FABAdd.hide();
 				navigationBarView.setVisibility(View.INVISIBLE);
 			}
-
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
 			{
 				dialog.show();
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 				ETForAccAdd.setText("");
+				ETForAccAdd2.setText("");
 				ETForAccAdd.requestFocus();
 			}
 		});
@@ -256,8 +258,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 	}
 
-	public void subCatROOM()
-	{
+	public void subCatROOM() {
 		subCategoryViewModel.getAllSubcats().observe(this, new Observer<List<SubCategory>>() {
 			@Override
 			public void onChanged(List<SubCategory> subCategories) {

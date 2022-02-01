@@ -58,7 +58,7 @@ public abstract class SubCategoryDatabase extends RoomDatabase {
             subCategoryDAO.Insert(new SubCategory("By freecharge",0,0,2,1));
 
             subCategoryDAO.Insert(new SubCategory("By bank",0,0,3,1));
-            subCategoryDAO.Insert(new SubCategory("By uncle",0,0,3,1));
+            subCategoryDAO.Insert(new SubCategory("By paytm",0,0,3,1));
 
             subCategoryDAO.Insert(new SubCategory("Lunch",0,0,4,2));
             subCategoryDAO.Insert(new SubCategory("BreakFast",0,0,4,2));

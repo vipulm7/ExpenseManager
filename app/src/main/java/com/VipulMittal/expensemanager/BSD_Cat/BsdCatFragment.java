@@ -37,6 +37,8 @@ public class BsdCatFragment extends BottomSheetDialogFragment {
 		fragmentTransaction=getChildFragmentManager().beginTransaction();
 		fragmentTransaction.replace(R.id.FragmentForCategory, bsdCategoryFragment).commit();
 		setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BSDTheme);
+
+		setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BSDTheme);
 		return view;
 	}
 

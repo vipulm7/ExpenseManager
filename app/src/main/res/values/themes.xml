@@ -14,11 +14,11 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="BSDTheme" parent="Theme.Design.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/BSDStyle</item>
-    </style>
+<!--    <style name="BSDTheme" parent="Theme.Design.Light.BottomSheetDialog">-->
+<!--        <item name="bottomSheetStyle">@style/BSDStyle</item>-->
+<!--    </style>-->
 
-    <style name="BSDStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@android:color/transparent</item>
-    </style>
+<!--    <style name="BSDStyle" parent="Widget.Design.BottomSheet.Modal">-->
+<!--        <item name="android:background">@android:color/transparent</item>-->
+<!--    </style>-->
 </resources>
