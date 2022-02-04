@@ -161,7 +161,7 @@ public class TransactionFragment extends Fragment {
 			else
 			{
 				BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(cID, aID, 2, this);
-				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
+				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts2");
 			}
 		});
 		return view;
@@ -175,7 +175,7 @@ public class TransactionFragment extends Fragment {
 			String s = amt(ETAmt.getText().toString().trim());
 			Log.d(TAG, "enableDisableSaveButton: string after = "+s);
 			int a=Integer.parseInt(s);
-			if(type==2)
+			if(type!=1)
 				a=-a;
 			calendar.set(dateArray[0],dateArray[1],dateArray[2],dateArray[3],dateArray[4]);
 			calendar.set(Calendar.SECOND, 0);
@@ -192,9 +192,14 @@ public class TransactionFragment extends Fragment {
 			mainActivity.onBackPressed();
 			Log.d(TAG, "enableDisableSaveButton: ended");
 			mainActivity.accountViewModel.UpdateAmt(a-amountCame, aID);
-			mainActivity.categoryViewModel.UpdateAmt(a-amountCame, cID);
-			if(sID!=-1)
-				mainActivity.subCategoryViewModel.UpdateAmt(a-amountCame,sID);
+			if(type!=3)
+			{
+				mainActivity.categoryViewModel.UpdateAmt(a - amountCame, cID);
+				if (sID != -1)
+					mainActivity.subCategoryViewModel.UpdateAmt(a - amountCame, sID);
+			}
+			else
+				mainActivity.accountViewModel.UpdateAmt(amountCame-a, cID);//cid has aid2 data
 		});
 
 		repeat.setOnClickListener(v->{
@@ -215,9 +220,14 @@ public class TransactionFragment extends Fragment {
 			}
 
 			mainActivity.accountViewModel.UpdateAmt(a-amountCame, aID);
-			mainActivity.categoryViewModel.UpdateAmt(a-amountCame, cID);
-			if(sID!=-1)
-				mainActivity.subCategoryViewModel.UpdateAmt(a-amountCame,sID);
+			if(type!=3)
+			{
+				mainActivity.categoryViewModel.UpdateAmt(a - amountCame, cID);
+				if (sID != -1)
+					mainActivity.subCategoryViewModel.UpdateAmt(a - amountCame, sID);
+			}
+			else
+				mainActivity.accountViewModel.UpdateAmt(amountCame-a, cID);//cid has aid2 data
 
 //			mainActivity.getSupportFragmentManager().
 			TransactionFragment transactionFragment=new TransactionFragment(0, "", "", Calendar.getInstance(), aID, cID, sID, 1, type, -1);

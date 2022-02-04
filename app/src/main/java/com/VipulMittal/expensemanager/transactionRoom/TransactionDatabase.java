@@ -53,7 +53,7 @@ public abstract class TransactionDatabase extends RoomDatabase {
 
             transactionDAO.Insert(new Transaction("Sample1", -100, "100",1,4,8,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()));
             transactionDAO.Insert(new Transaction("Sample2", -302, "302",2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()));
-            transactionDAO.Insert(new Transaction("Sample3", -32, "302",3,7,12,"Des",2, getDateBefore(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()));
+            transactionDAO.Insert(new Transaction("Sample3", -32, "302",3,7,12,"Des",2, getDateBefore(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000));
             return null;
         }
     }

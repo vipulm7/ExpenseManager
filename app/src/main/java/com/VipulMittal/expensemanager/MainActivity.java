@@ -16,9 +16,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.accountRoom.Account;
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	AccountsFragment accountsFragment;
 	AnalysisFragment analysisFragment;
 	CategoryFragment categoryFragment;
+	View accView, catView;
+	boolean b1, b2, b3, b4;
+	RadioGroup rg_catDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			return true;
 		});
 
-		navigationBarView.setOnItemReselectedListener(new NavigationBarView.OnItemReselectedListener() {
+		navigationBarView.setOnItemReselectedListener (new NavigationBarView.OnItemReselectedListener() {
 			@Override
 			public void onNavigationItemReselected(@NonNull MenuItem item) {
 				int id=item.getItemId();
@@ -137,22 +142,29 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			}
 		});
 
-		EditText ETForAccAdd=new EditText(this);
-		EditText ETForAccAdd2=new EditText(this);
-		boolean b1=false, b2=false;
+		LayoutInflater layoutInflater=LayoutInflater.from(this);
+		accView=layoutInflater.inflate(R.layout.account_dialog, null);
+
+
+
+//
+//		EditText ETForAccN=new EditText(this);
+//		EditText ETForAccIB=new EditText(this);
+		EditText ETForAccN=accView.findViewById(R.id.ETDialogAccName);
+		EditText ETForAccIB=accView.findViewById(R.id.ETDialogAccBalance);
 
 		AlertDialog.Builder builder=new AlertDialog.Builder(this);
 		builder.setTitle("Add New Account")
 				.setNegativeButton("Cancel", (dialog, which) -> {
 
 				})
-				.setView(ETForAccAdd)
+				.setView(accView)
 				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(ETForAccAdd.getText().toString(),0));
+					accountViewModel.Insert(new Account(ETForAccN.getText().toString(),0, Integer.parseInt(ETForAccIB.getText().toString().trim())));
 				});
 		AlertDialog dialog = builder.create();
 
-		ETForAccAdd.addTextChangedListener(new TextWatcher() {
+		ETForAccN.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -160,15 +172,94 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
+				b1=charSequence.toString().trim().length() != 0;
+				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b1 && b2);
 			}
 
 			@Override
 			public void afterTextChanged(Editable editable) {
 			}
 		});
-		ETForAccAdd.setHint("Add Account name");
-		ETForAccAdd2.setHint("Enter initial balance");
+
+		ETForAccIB.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				b2=charSequence.toString().trim().length() != 0;
+				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b1 && b2);
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+			}
+		});
+
+
+
+
+
+
+
+		catView = layoutInflater.inflate(R.layout.category_dialog_main, null);
+
+		EditText ETForCatN = catView.findViewById(R.id.ETDialogCatName);
+		EditText ETForCatIB = catView.findViewById(R.id.ETDialogCatBudget);
+		rg_catDialog=catView.findViewById(R.id.RGCatDialog);
+
+		AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+		builder2.setTitle("Add New Category")
+				.setNegativeButton("Cancel", (dialog2, which) -> {
+
+				})
+				.setView(catView)
+				.setPositiveButton("Add", (dialog2, which) -> {
+					int type=-1;
+					if(rg_catDialog.getCheckedRadioButtonId()==R.id.RBE)
+						type = 2;
+					else if(rg_catDialog.getCheckedRadioButtonId()==R.id.RBI)
+						type=1;
+					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type));
+				});
+		AlertDialog dialog2 = builder2.create();
+
+		ETForCatN.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				b3 = charSequence.toString().trim().length() != 0;
+				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b3 && b4);
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+			}
+		});
+
+		ETForCatIB.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				b4 = charSequence.toString().trim().length() != 0;
+				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b3 && b4);
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+			}
+		});
+
+
 
 		FABAdd.setOnClickListener(v->{
 
@@ -176,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			{
 				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1);
 				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+//				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
+//				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
@@ -187,9 +280,18 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			{
 				dialog.show();
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-				ETForAccAdd.setText("");
-				ETForAccAdd2.setText("");
-				ETForAccAdd.requestFocus();
+				ETForAccN.setText("");
+				ETForAccIB.setText("");
+				ETForAccN.requestFocus();
+			}
+			else if(navigationBarView.getSelectedItemId()==R.id.bn_cat)
+			{
+				dialog2.show();
+				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+				ETForCatN.setText("");
+				ETForCatIB.setText("");
+				ETForCatN.requestFocus();
+				Log.d(TAG, "onCreateView: dialog created");
 			}
 		});
 	}
@@ -249,7 +351,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			@Override
 			public void onChanged(List<Account> accounts) {
 				accountAdapter.setAccounts(accounts);
-				accountAdapter.notifyItemInserted(accounts.size()-1);
+//				accountAdapter.notifyItemInserted(accounts.size()-1);
+				accountAdapter.notifyDataSetChanged();
 				Log.d(TAG, "onChanged: account = "+accounts);
 
 				transactionAdapter.setAcc();
@@ -279,14 +382,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 //				Log.d(TAG, "onCreateView: view model called");
 //				Log.d(TAG, "onCreateView: type = "+type);
 				categoryAdapter.setCategories(categories);
-				categoryAdapter.notifyItemInserted(pos1);
+//				categoryAdapter.notifyItemInserted(pos1);
+				categoryAdapter.notifyDataSetChanged();
 
 				transactionAdapter.setCat(1);
 				transactionAdapter.notifyDataSetChanged();
 			}
 		});
 
-		categoryViewModel2.getAllCategories(2).observe(this, new Observer<List<Category>>() {
+		categoryViewModel.getAllCategories(2).observe(this, new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
 				int pos1= posCat(categories, categoryAdapter2.categories);
@@ -294,7 +398,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 //				Log.d(TAG, "onCreateView: type = "+type);
 				Log.d(TAG, "onChanged: categories2.size()= "+categories.size());
 				categoryAdapter2.setCategories(categories);
-				categoryAdapter2.notifyItemInserted(pos1);
+//				categoryAdapter2.notifyItemInserted(pos1);
+				categoryAdapter2.notifyDataSetChanged();
 
 				transactionAdapter.setCat(2);
 				transactionAdapter.notifyDataSetChanged();
@@ -326,23 +431,29 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 		FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
+//		fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
 		if(id==R.id.bn_home) {
 			homeFragment=new HomeFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, homeFragment).commit();
+			Log.d(TAG, "showFragment: home");
 		}
 		else if(id==R.id.bn_cat) {
 			categoryFragment=new CategoryFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, categoryFragment).commit();
+			Log.d(TAG, "showFragment: category");
 		}
 		else if(id==R.id.bn_accounts) {
 			accountsFragment=new AccountsFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, accountsFragment).commit();
+			Log.d(TAG, "showFragment: accounts");
 		}
 		else if(id==R.id.bn_analysis) {
 			analysisFragment=new AnalysisFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, analysisFragment).commit();
+			Log.d(TAG, "showFragment: analysis");
 		}
 		else {
+			Log.d(TAG, "showFragment: else");
 			if(toast!=null)
 				toast.cancel();
 			toast=Toast.makeText(this, "Slow Down", Toast.LENGTH_SHORT);
@@ -421,5 +532,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				return i;
 		}
 		return i;
+	}
+
+	private void addNewCat() {
+
 	}
 }

@@ -60,7 +60,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     @Override
     public void onBindViewHolder(@NonNull TransViewHolder holder, int position) {
         Transaction transaction=transactions.get(position);
-        Log.d(TAG, "onBindViewHolder: "+transaction.catID+" "+transaction.date);
+//        Log.d(TAG, "onBindViewHolder: transaction cid = "+transaction.catID+" date"+transaction.date);
+
+        Log.d(TAG, "onBindViewHolder: transaction name="+transaction.note+ "cid="+transaction.catID+" sid="+transaction.subCatID);
 
         if(holder.getItemViewType() == 1)
         {
@@ -83,6 +85,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         {
             if(transaction.subCatID!=-1)
                 holder.TVSubCat.setText(subcat.get(transaction.subCatID));
+            else
+                holder.TVSubCat.setText("");
             holder.TVNote.setText(transaction.note);
             if(transaction.amount>=0) {
                 holder.TVAmount.setText("\u20b9"+transaction.amount);
@@ -97,8 +101,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             Log.d(TAG, "onBindViewHolder: cat map = "+cat);
             Log.d(TAG, "onBindViewHolder: cat id "+transaction.catID);
             Log.d(TAG, "onBindViewHolder: cat from map "+cat.get(transaction.catID));
-            holder.TVCat.setText(cat.get(transaction.catID));
-            holder.TVAccount.setText(acc.get(transaction.accountID));
+            if(transaction.type!=3) {
+                holder.TVCat.setText(cat.get(transaction.catID));
+                holder.TVAccount.setText(acc.get(transaction.accountID));
+            }
+            else {
+                holder.TVCat.setText("Transfer");
+                holder.TVAccount.setText(acc.get(transaction.accountID) +" -> "+acc.get(transaction.catID));
+                holder.TVAmount.setTextColor(Color.BLUE);
+                holder.TVAmount.setText("\u20b9"+(-transaction.amount));
+            }
         }
     }
 
@@ -177,6 +189,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                     d = transactions.get(i).date;
                     amt[0]=amt[1]=0;
                 }
+                if(transactions.get(i).type==3)
+                    continue;
                 if(transactions.get(i).amount>=0) {
                     amt[0] += transactions.get(i).amount;
                     in+=transactions.get(i).amount;

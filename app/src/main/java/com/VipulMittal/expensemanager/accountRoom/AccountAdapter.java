@@ -40,7 +40,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 
 	@Override
 	public void onBindViewHolder(@NonNull AccViewHolder holder, int position) {
-		Log.d(TAG, "onBindViewHolder: accounts name = "+accounts.get(position).name+" id = "+accounts.get(position).id);
+		Log.d(TAG, "onBindViewHolder: accounts name = "+accounts.get(position).name+" id = "+accounts.get(position).id+" amt = "+accounts.get(position).amount+" bal = "+accounts.get(position).initialBalance);
+		int amt=accounts.get(position).amount+accounts.get(position).initialBalance;
 		if(who==1) {
 			if (accounts.get(position).id == aID) {
 				holder.name.setBackgroundColor(Color.CYAN);
@@ -51,27 +52,27 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 				holder.amount.setBackgroundColor(Color.WHITE);
 			}
 			holder.name.setText(accounts.get(position).name);
-
-			if(accounts.get(position).amount<0) {
+			if(amt<0) {
 				holder.amount.setTextColor(Color.RED);
-				holder.amount.setText("- \u20b9"+(-accounts.get(position).amount));
+				holder.amount.setText("- \u20b9"+(-amt));
 			}
 			else {
 				holder.amount.setTextColor(Color.GREEN);
-				holder.amount.setText("  \u20b9"+accounts.get(position).amount);
+				holder.amount.setText("  \u20b9"+amt);
 			}
 		}
 		else
 		{
 			holder.name.setText(accounts.get(position).name);
 //			holder.name.setBackgroundColor(Color.BLUE);
-			if(accounts.get(position).amount<0) {
+
+			if(amt<0) {
 				holder.amount.setTextColor(Color.RED);
-				holder.amount.setText("- \u20b9 "+(-accounts.get(position).amount));
+				holder.amount.setText("- \u20b9 "+(-amt));
 			}
 			else {
 				holder.amount.setTextColor(Color.GREEN);
-				holder.amount.setText("  \u20b9 "+accounts.get(position).amount);
+				holder.amount.setText("  \u20b9 "+amt);
 			}
 //			holder.amount.setText("\u20b91234567890123456789012345678901234567890");
 
@@ -110,6 +111,11 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 				amount=itemView.findViewById(R.id.TVAccounts_amountLPI);
 				imageView=itemView.findViewById(R.id.IVAccountsLPI);
 
+				itemView.setOnClickListener(v -> {
+					if (listener != null) {
+						listener.onItemClick(this);
+					}
+				});
 //				itemView.setOnClickListener();
 			}
 		}

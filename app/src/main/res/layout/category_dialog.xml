@@ -7,45 +7,45 @@
 
 
     <TextView
-        android:id="@+id/TVDialogAN"
+        android:id="@+id/TVDialogCN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Account Name"
+        android:text="Category Name"
         app:layout_constraintStart_toStartOf="parent"
         android:textSize="18sp"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/ETDialogAccName"
+        android:id="@+id/ETDialogCatName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Enter Account Name"
+        android:hint="Enter Category Name"
         android:inputType="textPersonName"
         android:singleLine="true"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TVDialogAN" />
+        app:layout_constraintTop_toBottomOf="@id/TVDialogCN" />
 
     <TextView
-        android:id="@+id/TVDialogAB"
+        android:id="@+id/TVDialogCB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Initial Balance"
+        android:text="Budget"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ETDialogAccName"
+        app:layout_constraintTop_toBottomOf="@id/ETDialogCatName"
         />
 
     <EditText
-        android:id="@+id/ETDialogAccBalance"
+        android:id="@+id/ETDialogCatBudget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Enter Initial balance"
+        android:hint="Enter Budget"
         android:inputType="numberSigned|number|phone"
         android:singleLine="true"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TVDialogAB" />
+        app:layout_constraintTop_toBottomOf="@id/TVDialogCB" />
 </androidx.constraintlayout.widget.ConstraintLayout>

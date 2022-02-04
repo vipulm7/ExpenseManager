@@ -44,6 +44,8 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	int aID, aType, other;
 	TransactionFragment transactionFragment;
 	List<Account> accounts;
+	View accView;
+	boolean b1=false, b2=false;
 
 
 	@Override
@@ -101,20 +103,24 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	}
 
 	private void alertDialogForAddAcc() {
-		EditText ETForAccAdd=new EditText(getContext());
+		LayoutInflater layoutInflater=LayoutInflater.from(getContext());
+		accView=layoutInflater.inflate(R.layout.account_dialog, null);
+
+		EditText ETForAccN=accView.findViewById(R.id.ETDialogAccName);
+		EditText ETForAccIB=accView.findViewById(R.id.ETDialogAccBalance);
 
 		AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
 		builder.setTitle("Add New Account")
 				.setNegativeButton("Cancel", (dialog, which) -> {
 
 				})
-				.setView(ETForAccAdd)
+				.setView(accView)
 				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(ETForAccAdd.getText().toString(),0));
+					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim())));
 				});
 		AlertDialog dialog = builder.create();
 
-		ETForAccAdd.addTextChangedListener(new TextWatcher() {
+		ETForAccN.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -122,16 +128,31 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(charSequence.toString().trim().length() != 0);
+				b1=charSequence.toString().trim().length() != 0;
+				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b1 && b2);
 			}
 
 			@Override
 			public void afterTextChanged(Editable editable) {
-
 			}
 		});
 
-		ETForAccAdd.setHint("Add Account name");
+		ETForAccIB.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				b2=charSequence.toString().trim().length() != 0;
+				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b1 && b2);
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+			}
+		});
 
 		addNew.setOnClickListener(v->{
 			Log.d(TAG, "onCreateView: builder = "+builder);
@@ -139,8 +160,9 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 			dialog.show();
 			dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-			ETForAccAdd.setText("");
-			ETForAccAdd.requestFocus();
+			ETForAccN.setText("");
+			ETForAccIB.setText("");
+			ETForAccN.requestFocus();
 			Log.d(TAG, "onCreateView: dialog created");
 		});
 	}

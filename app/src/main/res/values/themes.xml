@@ -21,4 +21,9 @@
 <!--    <style name="BSDStyle" parent="Widget.Design.BottomSheet.Modal">-->
 <!--        <item name="android:background">@android:color/transparent</item>-->
 <!--    </style>-->
+
+    <style name="Vip" >
+        <item name="cornerRadius">5dp</item>
+        <item name="selectableItemBackground">@color/purple_200</item>
+    </style>
 </resources>

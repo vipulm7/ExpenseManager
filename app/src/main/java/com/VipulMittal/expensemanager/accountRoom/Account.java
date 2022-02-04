@@ -9,15 +9,16 @@ public class Account {
     public int id;
 
     public String name;
-    public int amount;
+    public int amount, initialBalance;
 
 
     public int getId() {
         return id;
     }
 
-    public Account(String name, int amount) {
+    public Account(String name, int amount, int initialBalance) {
         this.name = name;
         this.amount = amount;
+        this.initialBalance = initialBalance;
     }
 }
