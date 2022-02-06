@@ -26,4 +26,10 @@
         <item name="cornerRadius">5dp</item>
         <item name="selectableItemBackground">@color/purple_200</item>
     </style>
+
+    <style name="BottomSheetDialog" parent="Theme.Material3.Dark.BottomSheetDialog">
+        <item name="android:background">@color/black</item>
+        <item name="android:colorBackground">@color/black</item>
+        <item name="colorBackgroundFloating">@color/black</item>
+    </style>
 </resources>

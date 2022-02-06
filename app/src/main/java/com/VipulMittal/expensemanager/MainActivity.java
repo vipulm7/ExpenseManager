@@ -1,16 +1,28 @@
 package com.VipulMittal.expensemanager;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,7 +41,6 @@ import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
-import com.VipulMittal.expensemanager.dateRoom.DateViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
@@ -71,6 +82,16 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	View accView, catView;
 	boolean b1, b2, b3, b4;
 	RadioGroup rg_catDialog;
+	public long systemTimeInMillies;
+
+	NotificationManagerCompat notificationManager;
+	public static final String ACTION_SNOOZE="com.example.android.wearable.wear.wearnotifications.handlers.action.SNOOZE";
+	public static final String ACTION_DISMISS="com.example.android.wearable.wear.wearnotifications.handlers.action.DISMISS";
+	public final String CHANNEL_ID="1";
+	public static final int notifID=2;
+	ActivityResultLauncher<Intent> abc;
+	boolean areNotifEnabled;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		categoryROOM();
 		subCategoryROOM(0);
 		subCatROOM();
+		notification();
 
 		transactionAdapter=new TransactionAdapter(this);
 
@@ -263,11 +285,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		FABAdd.setOnClickListener(v->{
 
+			systemTimeInMillies=0;
 			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
 			{
 				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1);
 				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-//				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
+				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 //				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
 				fragmentTransaction.addToBackStack(null);
@@ -296,6 +319,91 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 	}
 
+	private void notification() {
+		abc=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+			@Override
+			public void onActivityResult(ActivityResult result) {
+				notificationManager=NotificationManagerCompat.from(getApplicationContext());
+				createNotificationChannelForOreoAndAbove();
+				areNotifEnabled=notificationManager.areNotificationsEnabled();
+			}
+		});
+
+		notificationManager=NotificationManagerCompat.from(this);
+		createNotificationChannelForOreoAndAbove();
+		areNotifEnabled=notificationManager.areNotificationsEnabled();
+
+		if(!areNotifEnabled)
+			openNotifSettings();
+		else
+			createNotif();
+	}
+
+	private void createNotif() {
+		NotificationCompat.Builder builder= new NotificationCompat.Builder(this, CHANNEL_ID);
+		builder.setSmallIcon(R.drawable.ic_notifications)
+				.setContentTitle("Add today's records!")
+				.setContentText("Add today's records!")
+				.setStyle(new NotificationCompat.BigTextStyle()
+						.bigText("Add today's records!"))
+				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+				.setColor(ContextCompat.getColor(this, R.color.cyan));
+
+
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		builder.setContentIntent(pendingIntent);
+		builder.setAutoCancel(true);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		Calendar calendar=Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 20);
+		calendar.set(Calendar.MINUTE, 20);
+		calendar.set(Calendar.SECOND, 20);
+		calendar.set(Calendar.MILLISECOND, 20);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+
+		Intent snoozeIntent = new Intent(this, IntentService1.class);
+		snoozeIntent.setAction(ACTION_SNOOZE);
+		PendingIntent snoozePendingIntent = PendingIntent.getService(this, 0, snoozeIntent, 0);
+		NotificationCompat.Action snoozeAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
+				"Snooze!", snoozePendingIntent).build();
+
+
+		Intent dismissIntent = new Intent(this, IntentService1.class);
+		dismissIntent.setAction(ACTION_DISMISS);
+		PendingIntent dismissPendingIntent = PendingIntent.getService(this, 0, dismissIntent, 0);
+		NotificationCompat.Action dismissAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
+				"Nothing today!", dismissPendingIntent).build();
+
+		builder.addAction(snoozeAction);
+		builder.addAction(dismissAction);
+
+		GlobalNotificationBuilder.setGlobalNotificationCompatBuilder(builder);
+		notificationManager.notify(notifID, builder.build());
+	}
+
+	private void openNotifSettings(){
+		Intent intent=new Intent();
+		intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+		intent.putExtra("app_package", getPackageName());
+		intent.putExtra("app_uid", getApplicationInfo().uid);
+
+		intent.putExtra("android.provider.extra.APP_PACKAGE",getPackageName());
+		abc.launch(intent);
+	}
+
+	private void createNotificationChannelForOreoAndAbove(){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+			NotificationChannel channel=new NotificationChannel(CHANNEL_ID, "Notif", NotificationManager.IMPORTANCE_DEFAULT);
+			channel.setDescription("DesForNotifChannel");
+
+			NotificationManager notificationManager=getSystemService(NotificationManager.class);
+			notificationManager.createNotificationChannel(channel);
+		}
+	}
+
 	@Override
 	public void onBackPressed() {
 		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
@@ -305,8 +413,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			setActionBarTitle("Expense Manager");
 		}
 		else {
-			if (navigationBarView.getSelectedItemId() == R.id.bn_home)
-				super.onBackPressed();
+			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
+				if(System.currentTimeMillis() - systemTimeInMillies<2000)
+					super.onBackPressed();
+				else {
+					systemTimeInMillies = System.currentTimeMillis();
+					if(toast!=null)
+						toast.cancel();
+					toast=Toast.makeText(this, "Press again to exit!", Toast.LENGTH_LONG);
+					toast.show();
+				}
+			}
 			else
 				navigationBarView.setSelectedItemId(R.id.bn_home);
 		}
@@ -431,7 +548,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 		FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
-//		fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+		fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
 		if(id==R.id.bn_home) {
 			homeFragment=new HomeFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, homeFragment).commit();
@@ -441,16 +558,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			categoryFragment=new CategoryFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, categoryFragment).commit();
 			Log.d(TAG, "showFragment: category");
+			systemTimeInMillies=0;
 		}
 		else if(id==R.id.bn_accounts) {
 			accountsFragment=new AccountsFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, accountsFragment).commit();
 			Log.d(TAG, "showFragment: accounts");
+			systemTimeInMillies=0;
 		}
 		else if(id==R.id.bn_analysis) {
 			analysisFragment=new AnalysisFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, analysisFragment).commit();
 			Log.d(TAG, "showFragment: analysis");
+			systemTimeInMillies=0;
 		}
 		else {
 			Log.d(TAG, "showFragment: else");
@@ -532,9 +652,5 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				return i;
 		}
 		return i;
-	}
-
-	private void addNewCat() {
-
 	}
 }

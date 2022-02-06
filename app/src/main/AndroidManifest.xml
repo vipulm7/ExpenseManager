@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.VipulMittal.expensemanager">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ExpenseManager">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -19,6 +23,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".IntentService1"
+            android:exported="false">
+        </service>
+
+        <receiver android:name=".Receiver"
+            android:enabled="true"
+            android:exported="false">
+        </receiver>
+
     </application>
 
 </manifest>

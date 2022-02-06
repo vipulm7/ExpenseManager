@@ -60,7 +60,6 @@ public class CategoryFragment extends Fragment {
 		RVIncomeCats.setNestedScrollingEnabled(false);
 
 		categoryAdapter2= mainActivity.categoryAdapter2;
-//		mainActivity.categoryROOM2(2);
 		categoryAdapter2.listener=null;
 		categoryAdapter2.who=2;
 		categoryAdapter2.cID=-1;
@@ -76,13 +75,5 @@ public class CategoryFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mainActivity=(MainActivity) getActivity();
-//		mainActivity.categoryROOM(1);
-//		mainActivity.categoryROOM2(2);
-
-	}
-
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
 	}
 }

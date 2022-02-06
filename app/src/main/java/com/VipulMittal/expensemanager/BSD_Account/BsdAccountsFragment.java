@@ -98,6 +98,8 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		RVAccounts.setNestedScrollingEnabled(false);
 		RVAccounts.setAdapter(accountAdapter);
 
+		setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BottomSheetDialog);
+
 		alertDialogForAddAcc();
 		return view;
 	}
