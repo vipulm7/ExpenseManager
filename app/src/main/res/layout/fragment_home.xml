@@ -59,6 +59,17 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="5dp"
             />
+
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/ic_filter"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/TVFilter"
+            />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

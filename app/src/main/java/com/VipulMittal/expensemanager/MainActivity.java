@@ -5,16 +5,16 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -23,12 +23,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -84,13 +86,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	RadioGroup rg_catDialog;
 	public long systemTimeInMillies;
 
-	NotificationManagerCompat notificationManager;
+	public static NotificationManagerCompat notificationManager;
 	public static final String ACTION_SNOOZE="com.example.android.wearable.wear.wearnotifications.handlers.action.SNOOZE";
 	public static final String ACTION_DISMISS="com.example.android.wearable.wear.wearnotifications.handlers.action.DISMISS";
 	public final String CHANNEL_ID="1";
 	public static final int notifID=2;
 	ActivityResultLauncher<Intent> abc;
 	boolean areNotifEnabled;
+	ActionBar actionBar;
+	public static PendingIntent pendingIntent;
 
 
 	@Override
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		subCategoryAdapter=new SubCategoryAdapter();
 		accountAdapter=new AccountAdapter();
 		categoryAdapter=new CategoryAdapter();
-		categoryAdapter2=new CategoryAdapter();
+		categoryAdapter2 = new CategoryAdapter();
 		allSubcats=new ArrayList<>();
 		toShow=Calendar.getInstance();
 
@@ -131,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		Log.d(TAG, "onCreate: bn_cat = "+R.id.bn_cat);
 		Log.d(TAG, "onCreate: bn_analysis = "+R.id.bn_analysis);
 
-		showFragment(R.id.bn_home);
+//		showFragment(R.id.bn_home);
+		actionBar=getSupportActionBar();
 
 		navigationBarView.setOnItemSelectedListener(item -> {
 			int id=item.getItemId();
@@ -140,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			return true;
 		});
+
+		navigationBarView.setSelectedItemId(R.id.bn_home);
 
 		navigationBarView.setOnItemReselectedListener (new NavigationBarView.OnItemReselectedListener() {
 			@Override
@@ -293,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 //				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
-				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.addToBackStack("main");
 				fragmentTransaction.commit();
 
 				FABAdd.hide();
@@ -317,7 +324,27 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				Log.d(TAG, "onCreateView: dialog created");
 			}
 		});
+
+
+
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean showNotif=sharedPreferences.getBoolean("notifs", true);
+
+		sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+			@Override
+			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+				if(key.equals("notifs"))
+				{
+					if(sharedPreferences.getBoolean(key, true))
+						createNotif();
+					else
+						stopNotif();
+				}
+			}
+		});
+
 	}
+
 
 	private void notification() {
 		abc=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -340,51 +367,31 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	private void createNotif() {
-		NotificationCompat.Builder builder= new NotificationCompat.Builder(this, CHANNEL_ID);
-		builder.setSmallIcon(R.drawable.ic_notifications)
-				.setContentTitle("Add today's records!")
-				.setContentText("Add today's records!")
-				.setStyle(new NotificationCompat.BigTextStyle()
-						.bigText("Add today's records!"))
-				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-				.setColor(ContextCompat.getColor(this, R.color.cyan));
-
-
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-		builder.setContentIntent(pendingIntent);
-		builder.setAutoCancel(true);
-		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Calendar calendar=Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, 20);
-		calendar.set(Calendar.MINUTE, 20);
-		calendar.set(Calendar.SECOND, 20);
-		calendar.set(Calendar.MILLISECOND, 20);
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
 
-
-		Intent snoozeIntent = new Intent(this, IntentService1.class);
-		snoozeIntent.setAction(ACTION_SNOOZE);
-		PendingIntent snoozePendingIntent = PendingIntent.getService(this, 0, snoozeIntent, 0);
-		NotificationCompat.Action snoozeAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
-				"Snooze!", snoozePendingIntent).build();
-
-
-		Intent dismissIntent = new Intent(this, IntentService1.class);
-		dismissIntent.setAction(ACTION_DISMISS);
-		PendingIntent dismissPendingIntent = PendingIntent.getService(this, 0, dismissIntent, 0);
-		NotificationCompat.Action dismissAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
-				"Nothing today!", dismissPendingIntent).build();
-
-		builder.addAction(snoozeAction);
-		builder.addAction(dismissAction);
-
-		GlobalNotificationBuilder.setGlobalNotificationCompatBuilder(builder);
-		notificationManager.notify(notifID, builder.build());
+		Intent intent = new Intent(this, Receiver.class);
+		pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		if(alarmManager != null) {
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+		}
 	}
 
-	private void openNotifSettings(){
+	private void stopNotif() {
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
+
+		if(toast!=null)
+			toast.cancel();
+		toast=Toast.makeText(this, "Notif turned off", Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
+	private void openNotifSettings() {
 		Intent intent=new Intent();
 		intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
 		intent.putExtra("app_package", getPackageName());
@@ -394,9 +401,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		abc.launch(intent);
 	}
 
-	private void createNotificationChannelForOreoAndAbove(){
+	private void createNotificationChannelForOreoAndAbove() {
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-			NotificationChannel channel=new NotificationChannel(CHANNEL_ID, "Notif", NotificationManager.IMPORTANCE_DEFAULT);
+			NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Notif", NotificationManager.IMPORTANCE_DEFAULT);
 			channel.setDescription("DesForNotifChannel");
 
 			NotificationManager notificationManager=getSystemService(NotificationManager.class);
@@ -406,8 +413,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	@Override
 	public void onBackPressed() {
+		Log.d(TAG, "onBackPressed: getBackStackEntryCount = "+getSupportFragmentManager().getBackStackEntryCount());
 		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
 			getSupportFragmentManager().popBackStack();
+			Fragment fragment=getSupportFragmentManager().findFragmentByTag("repeat");
+			if(fragment != null)
+				getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 			FABAdd.show();
 			navigationBarView.setVisibility(View.VISIBLE);
 			setActionBarTitle("Expense Manager");
@@ -432,19 +443,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public void transactionROOM() {
 		int month=toShow.get(Calendar.MONTH);
 		int year=toShow.get(Calendar.YEAR);
-		transactionViewModel.getAllTransactions(month, year).observe(this, transactions -> {
+		transactionViewModel.getAllTransactionsMONTH(month, year).observe(this, transactions -> {
 			transactionAdapter.setTransactions(transactions);
 			transactionAdapter.notifyDataSetChanged();
 			Log.d(TAG, "transactionROOM: transactions = "+transactions.size());
 
 			homeFragment.TVMainIncome.setText("\u20b9"+income);
-			homeFragment.TVMainExpense.setText("- \u20b9"+(-expense));
+			homeFragment.TVMainExpense.setText("\u20b9"+(-expense));
 			if(income+expense>=0) {
 				homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
 				homeFragment.TVMainTotal.setTextColor(Color.GREEN);
 			}
 			else {
-				homeFragment.TVMainTotal.setText("- \u20b9" + -(income + expense));
+				homeFragment.TVMainTotal.setText("\u20b9" + -(income + expense));
 				homeFragment.TVMainTotal.setTextColor(Color.RED);
 			}
 		});
@@ -538,7 +549,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public void setActionBarTitle(String title)
 	{
-		getSupportActionBar().setTitle(title);
+		actionBar.setTitle(title);
 	}
 
 	public void showFragment(int id) {
@@ -642,6 +653,25 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		return a;
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		int id=item.getItemId();
+		if(id==R.id.action_settings)
+		{
+			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+			fragmentTransaction.addToBackStack("settings");
+			fragmentTransaction.replace(R.id.layoutForFragment, new SettingsFragment())
+					.commit();
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
 
 	private int posCat(List<Category> newCategories, List<Category> oldCategories) {
 

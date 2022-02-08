@@ -11,14 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -33,6 +38,7 @@ public class AnalysisFragment extends Fragment {
 	ArrayList<PieEntry> pieEntries;
 	CategoryAdapter categoryAdapter;
 	RadioButton RBI,RBE;
+	TextView TVBefore, TVAfter, TVMonthShown;
 
 	public AnalysisFragment() {
 		// Required empty public constructor
@@ -48,6 +54,29 @@ public class AnalysisFragment extends Fragment {
 		pieChart=view.findViewById(R.id.pieChart);
 		mainActivity=(MainActivity) getActivity();
 		rg_chart=view.findViewById(R.id.RGChart);
+		TVAfter=view.findViewById(R.id.TVafter);
+		TVBefore=view.findViewById(R.id.TVbefore);
+		TVMonthShown =view.findViewById(R.id.TVDateChange);
+
+		pieChart.setUsePercentValues(true);
+		pieChart.setHoleColor(Color.TRANSPARENT);
+		pieChart.setHighlightPerTapEnabled(true);
+		pieChart.setEntryLabelTextSize(12);
+
+		pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+			@Override
+			public void onValueSelected(Entry e, Highlight h) {
+
+			}
+
+			@Override
+			public void onNothingSelected() {
+
+			}
+		});
+
+		TVAfter.setText(">");
+		TVBefore.setText("<");
 
 		toast=mainActivity.toast;
 		RBE=view.findViewById(R.id.radioCatExpenseChart);
@@ -85,21 +114,30 @@ public class AnalysisFragment extends Fragment {
 				pieEntries=new ArrayList<>();
 				for(int i=-1;++i<categoryAdapter.categories.size();) {
 					if(categoryAdapter.categories.get(i).catAmount>0)
-						pieEntries.add(new PieEntry(categoryAdapter.categories.get(i).catAmount));
+						pieEntries.add(new PieEntry(categoryAdapter.categories.get(i).catAmount, categoryAdapter.categories.get(i).catName));
 				}
 
 				Log.d(TAG, "radioGroupSetListener: pie size="+pieEntries.size());
 
-				PieDataSet pieDataSet=new PieDataSet(pieEntries, "b");
+				PieDataSet pieDataSet=new PieDataSet(pieEntries, "");
 				pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 				pieDataSet.setDrawValues(true);
 				Log.d(TAG, "radioGroupSetListener: pieEntries.size() = "+pieEntries.size());
 //				if(pieEntries.size()>0)
-					pieChart.setData(new PieData(pieDataSet));
+
+				PieData pieData = new PieData(pieDataSet);
+				pieData.setValueFormatter(new PercentFormatter());
+				pieData.setValueTextSize(12f);
+
+				if(pieEntries.size()>0)
+					pieChart.setData(pieData);
+				else
+					pieChart.setData(null);
 				pieChart.animateY(1000);
 //				pieChart.getDescription().setText("Trans2 chart");
 //				pieChart.getDescription().setTextColor(Color.CYAN);
-				pieChart.setNoDataText("No data");
+				pieChart.getDescription().setEnabled(false);
+				pieChart.setNoDataText("No Income Entries");
 
 
 				RBI.setTextColor(Color.parseColor("#a912db"));
@@ -107,6 +145,7 @@ public class AnalysisFragment extends Fragment {
 				RBE.setTextColor(Color.parseColor("#db4002"));
 				RBE.setTextSize(20);
 
+				pieChart.invalidate();
 			}
 			else if(type==R.id.radioCatExpenseChart)
 			{
@@ -114,22 +153,34 @@ public class AnalysisFragment extends Fragment {
 				pieEntries=new ArrayList<>();
 				for(int i=-1;++i<categoryAdapter.categories.size();) {
 					if(categoryAdapter.categories.get(i).catAmount<0)
-						pieEntries.add(new PieEntry(-categoryAdapter.categories.get(i).catAmount*1f));
+						pieEntries.add(new PieEntry(-categoryAdapter.categories.get(i).catAmount, categoryAdapter.categories.get(i).catName));
 				}
 				Log.d(TAG, "radioGroupSetListener: pie size="+pieEntries.size());
 				PieDataSet pieDataSet=new PieDataSet(pieEntries, "");
 				pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 				pieDataSet.setDrawValues(true);
-				pieChart.setData(new PieData(pieDataSet));
+
+				PieData pieData = new PieData(pieDataSet);
+				pieData.setValueFormatter(new PercentFormatter());
+				pieData.setValueTextSize(12f);
+
+				if(pieEntries.size()>0)
+					pieChart.setData(pieData);
+				else
+					pieChart.setData(null);
 				pieChart.animateY(1000);
 //				pieChart.getDescription().setText("Trans2 chart");
 //				pieChart.getDescription().setTextColor(Color.CYAN);
+				pieChart.getDescription().setEnabled(false);
+				pieChart.setNoDataText("No Expense Entries");
 
 
 				RBE.setTextColor(Color.parseColor("#a912db"));
 				RBE.setTextSize(25);
 				RBI.setTextColor(Color.parseColor("#db4002"));
 				RBI.setTextSize(20);
+
+				pieChart.invalidate();
 			}
 		});
 	}

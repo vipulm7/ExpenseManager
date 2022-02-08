@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -56,6 +58,8 @@ public class TransactionFragment extends Fragment {
 		dateArray[2]=calendar.get(Calendar.DATE);
 		dateArray[3]=calendar.get(Calendar.HOUR_OF_DAY);
 		dateArray[4]=calendar.get(Calendar.MINUTE);
+		dateArray[5]=calendar.get(Calendar.SECOND);
+		dateArray[6]=calendar.get(Calendar.MILLISECOND);
 		amountCame=amount;
 		Log.d(TAG, "TransactionFragment: aid="+aID+" cid="+cID+" sid="+sID);
 	}
@@ -72,7 +76,7 @@ public class TransactionFragment extends Fragment {
 	EditText ETNote, ETDes, ETAmt;
 	boolean BNote, BAmt, BAcc, BCat;
 	Button save, repeat;
-	int dateArray[]=new int[5];
+	int dateArray[]=new int[7];
 	MainActivity mainActivity;
 
 
@@ -149,7 +153,7 @@ public class TransactionFragment extends Fragment {
 			mainActivity.setActionBarTitle("Edit Transaction");
 
 		TVAccount.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(aID, cID, 1, this);
+			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(aID, cID, 1, type, this);
 			bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
 		});
 
@@ -160,7 +164,7 @@ public class TransactionFragment extends Fragment {
 			}
 			else
 			{
-				BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(cID, aID, 2, this);
+				BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(cID, aID, 2, type, this);
 				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts2");
 			}
 		});
@@ -178,14 +182,14 @@ public class TransactionFragment extends Fragment {
 			if(type!=1)
 				a=-a;
 			calendar.set(dateArray[0],dateArray[1],dateArray[2],dateArray[3],dateArray[4]);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.SECOND, dateArray[5]);
+			calendar.set(Calendar.MILLISECOND, dateArray[6]);
 			Log.d(TAG, "enableDisableSaveButton: month = "+(dateArray[1]-1)+" y= "+dateArray[0]);
 			Log.d(TAG, "enableDisableSaveButton: starting");
 			if(request==1)
-				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L, calendar.getTimeInMillis()));
+				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L-dateArray[5]*1000L-dateArray[6], calendar.getTimeInMillis()));
 			else {
-				Transaction transaction=new Transaction(ETNote.getText().toString().trim(), a, "", aID, cID, sID, ETDes.getText().toString().trim(), type, calendar.getTimeInMillis() - dateArray[3] * 3600000L - dateArray[4] * 60000L, calendar.getTimeInMillis());
+				Transaction transaction=new Transaction(ETNote.getText().toString().trim(), a, "", aID, cID, sID, ETDes.getText().toString().trim(), type, calendar.getTimeInMillis() - dateArray[3]*3600000L - dateArray[4]*60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis());
 				transaction.id=id;
 				mainActivity.transactionViewModel.Update(transaction);
 			}
@@ -208,13 +212,13 @@ public class TransactionFragment extends Fragment {
 			if(type==2)
 				a=-a;
 			calendar.set(dateArray[0],dateArray[1],dateArray[2],dateArray[3],dateArray[4]);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.SECOND, dateArray[5]);
+			calendar.set(Calendar.MILLISECOND, dateArray[6]);
 
 			if(request==1)
-				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L, calendar.getTimeInMillis()));
+				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis()));
 			else {
-				Transaction transaction=new Transaction(ETNote.getText().toString().trim(), a, "", aID, cID, sID, ETDes.getText().toString().trim(), type, calendar.getTimeInMillis() - dateArray[3] * 3600000L - dateArray[4] * 60000L, calendar.getTimeInMillis());
+				Transaction transaction=new Transaction(ETNote.getText().toString().trim(), a, "", aID, cID, sID, ETDes.getText().toString().trim(), type, calendar.getTimeInMillis() - dateArray[3] * 3600000L - dateArray[4] * 60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis());
 				transaction.id=id;
 				mainActivity.transactionViewModel.Update(transaction);
 			}
@@ -232,7 +236,8 @@ public class TransactionFragment extends Fragment {
 //			mainActivity.getSupportFragmentManager().
 			TransactionFragment transactionFragment=new TransactionFragment(0, "", "", Calendar.getInstance(), aID, cID, sID, 1, type, -1);
 			FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
-			fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
+			fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
+			fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "repeat");
 			fragmentTransaction.commit();
 		});
 
@@ -476,4 +481,5 @@ public class TransactionFragment extends Fragment {
 				"Jul","Aug","Sep","Oct","Nov","Dec"};
 		return name[month];
 	}
+
 }

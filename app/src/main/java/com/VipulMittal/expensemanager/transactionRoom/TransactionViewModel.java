@@ -33,14 +33,23 @@ public class TransactionViewModel extends AndroidViewModel {
         repo.Update(transaction);
     }
 
-    public LiveData<List<Transaction>> getAllTransactions(int month, int year)
+    public LiveData<List<Transaction>> getAllTransactionsMONTH(int month, int year)
     {
-        transactions= repo.getAllTransactions(month, year);
-        return transactions;
+        return repo.getAllTransactionsMONTH(month, year);
     }
 
-    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
+    public LiveData<List<Transaction>> getAllTransactionsWEEK(int month, int year)
     {
-        repo.UpdateTrans(note, amount, amountDisplay,  accountID, catID, subCatID, description, type, date, dateTime, id);
+        return repo.getAllTransactionsWEEK(month, year);
     }
+
+    public LiveData<List<Transaction>> getAllTransactionsDAY(int month, int year)
+    {
+        return repo.getAllTransactionsDAY(month, year);
+    }
+
+//    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
+//    {
+//        repo.UpdateTrans(note, amount, amountDisplay,  accountID, catID, subCatID, description, type, date, dateTime, id);
+//    }
 }

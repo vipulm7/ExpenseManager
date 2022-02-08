@@ -29,11 +29,12 @@ import java.util.List;
 public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 	//constructor
-	public BsdAccountsFragment(int aID, int other, int aType, TransactionFragment transactionFragment) {
+	public BsdAccountsFragment(int aID, int other, int aType, int type, TransactionFragment transactionFragment) {
 		this.aID = aID;
 		this.transactionFragment=transactionFragment;
 		this.aType = aType;
 		this.other=other;
+		this.type=type;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -41,7 +42,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	Button addNew;
 	AccountAdapter accountAdapter;
 	AccountViewModel accountViewModel;
-	int aID, aType, other;
+	int aID, aType, other, type;
 	TransactionFragment transactionFragment;
 	List<Account> accounts;
 	View accView;
@@ -73,20 +74,21 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 				aID =accounts.get(pos).id;
 				mainActivity.getSupportFragmentManager();
 
-				if(aID != other) {
-					if (aType == 1)
-						transactionFragment.saveSelectedAccount(aID, accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
-					else
-						transactionFragment.saveSelectedCategoryWithName(aID, accounts.get(pos).name);
-					dismiss();
-				}
-				else
+
+				if(type == 3 && aID == other)
 				{
 					if(mainActivity.toast!=null)
 						mainActivity.toast.cancel();
 
 					mainActivity.toast = Toast.makeText(getContext(), "Can't select same accounts", Toast.LENGTH_SHORT);
 					mainActivity.toast.show();
+				}
+				else {
+					if (aType == 1)
+						transactionFragment.saveSelectedAccount(aID, accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
+					else
+						transactionFragment.saveSelectedCategoryWithName(aID, accounts.get(pos).name);
+					dismiss();
 				}
 			}
 		};
@@ -98,7 +100,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		RVAccounts.setNestedScrollingEnabled(false);
 		RVAccounts.setAdapter(accountAdapter);
 
-		setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BottomSheetDialog);
+//		setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BottomSheetDialog);
 
 		alertDialogForAddAcc();
 		return view;

@@ -68,6 +68,7 @@
         android:text="Note"
         android:textSize="18sp"
         android:singleLine="true"
+        android:layout_marginStart="4dp"
         app:layout_constraintStart_toEndOf="@+id/constraintLayAccount"
         app:layout_constraintEnd_toStartOf="@+id/TVLayAmt"
         app:layout_constraintTop_toTopOf="parent" />
@@ -78,6 +79,7 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:text="Account"
+        android:layout_marginStart="4dp"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/TVLayAmt"
         app:layout_constraintStart_toEndOf="@+id/constraintLayAccount"

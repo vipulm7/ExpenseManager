@@ -33,16 +33,25 @@ public class TransactionRepo
         new UpdateNoteASyncTask(transactionDAO).execute(transaction);
     }
 
-    public LiveData<List<Transaction>> getAllTransactions(int month, int year)
+    public LiveData<List<Transaction>> getAllTransactionsMONTH(int month, int year)
     {
-        transactions=transactionDAO.getAllTransactions(month, year);
-        return transactions;
+        return transactionDAO.getAllTransactionsMONTH(month, year);
     }
 
-    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
+    public LiveData<List<Transaction>> getAllTransactionsWEEK(int week, int year)
     {
-        transactionDAO.UpdateTrans(note, amount, amountDisplay,  accountID, catID, subCatID, description, type, date, dateTime, id);
+        return transactionDAO.getAllTransactionsWEEK(week, year);
     }
+
+    public LiveData<List<Transaction>> getAllTransactionsDAY(int month, int year)
+    {
+        return transactionDAO.getAllTransactionsDAY(month, year);
+    }
+
+//    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
+//    {
+//        transactionDAO.UpdateTrans(note, amount, amountDisplay, accountID, catID, subCatID, description, type, date, dateTime, id);
+//    }
 
 
     private static class InsertNoteASyncTask extends AsyncTask<Transaction,Void,Void>

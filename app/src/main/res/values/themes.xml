@@ -11,25 +11,9 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+
         <!-- Customize your theme here. -->
+        <item name="bottomSheetDialogTheme">@style/Theme.Design.Light.BottomSheetDialog</item>
     </style>
 
-<!--    <style name="BSDTheme" parent="Theme.Design.Light.BottomSheetDialog">-->
-<!--        <item name="bottomSheetStyle">@style/BSDStyle</item>-->
-<!--    </style>-->
-
-<!--    <style name="BSDStyle" parent="Widget.Design.BottomSheet.Modal">-->
-<!--        <item name="android:background">@android:color/transparent</item>-->
-<!--    </style>-->
-
-    <style name="Vip" >
-        <item name="cornerRadius">5dp</item>
-        <item name="selectableItemBackground">@color/purple_200</item>
-    </style>
-
-    <style name="BottomSheetDialog" parent="Theme.Material3.Dark.BottomSheetDialog">
-        <item name="android:background">@color/black</item>
-        <item name="android:colorBackground">@color/black</item>
-        <item name="colorBackgroundFloating">@color/black</item>
-    </style>
 </resources>
