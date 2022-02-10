@@ -48,8 +48,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 				holder.amount.setBackgroundColor(Color.CYAN);
 			}
 			else {
-				holder.name.setBackgroundColor(Color.WHITE);
-				holder.amount.setBackgroundColor(Color.WHITE);
+				holder.name.setBackgroundResource(R.drawable.bsd);
+				holder.amount.setBackgroundResource(R.drawable.bsd);
 			}
 			holder.name.setText(accounts.get(position).name);
 			if(amt<0) {

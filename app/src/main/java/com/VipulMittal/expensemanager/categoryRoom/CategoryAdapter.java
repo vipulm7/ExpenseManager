@@ -50,7 +50,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 			if (category.catId == cID)
 				holder.name.setBackgroundColor(Color.CYAN);
 			else
-				holder.name.setBackgroundColor(Color.WHITE);
+				holder.name.setBackgroundResource(R.drawable.bsd);
 
 			if (category.noOfSubCat == 0)
 				holder.arrow.setVisibility(View.INVISIBLE);

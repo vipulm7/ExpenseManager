@@ -49,7 +49,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 		if(subCategories.get(position).id== sID)
 			holder.name.setBackgroundColor(Color.CYAN);
 		else
-			holder.name.setBackgroundColor(Color.WHITE);
+			holder.name.setBackgroundResource(R.drawable.bsd);
 	}
 
 	@Override

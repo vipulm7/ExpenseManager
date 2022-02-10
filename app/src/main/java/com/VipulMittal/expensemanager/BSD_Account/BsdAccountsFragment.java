@@ -1,6 +1,7 @@
 package com.VipulMittal.expensemanager.BSD_Account;
 
 import android.app.AlertDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.MainActivity;
@@ -113,8 +116,20 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		EditText ETForAccN=accView.findViewById(R.id.ETDialogAccName);
 		EditText ETForAccIB=accView.findViewById(R.id.ETDialogAccBalance);
 
-		AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-		builder.setTitle("Add New Account")
+		TextView accTitle = new TextView(getContext());
+		accTitle.setText("Add New Account");
+		accTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+		accTitle.setPadding(2,16,2,10);
+		accTitle.setTextSize(22);
+		accTitle.setTypeface(null, Typeface.BOLD);
+
+		AlertDialog.Builder builder;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+		}
+		else
+			builder = new AlertDialog.Builder(getContext());
+		builder.setCustomTitle(accTitle)
 				.setNegativeButton("Cancel", (dialog, which) -> {
 
 				})
@@ -123,6 +138,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim())));
 				});
 		AlertDialog dialog = builder.create();
+		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
 		ETForAccN.addTextChangedListener(new TextWatcher() {
 			@Override

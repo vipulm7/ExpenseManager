@@ -1,6 +1,7 @@
 package com.VipulMittal.expensemanager.BSD_Cat;
 
 import android.app.AlertDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,11 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
@@ -125,8 +128,20 @@ public class BsdCategoryFragment extends Fragment {
 		EditText ETForCatN= catView.findViewById(R.id.ETDialogCatName);
 		EditText ETForCatIB= catView.findViewById(R.id.ETDialogCatBudget);
 
-		AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-		builder.setTitle("Add New Category")
+		TextView catTitle = new TextView(getContext());
+		catTitle.setText("Add New Category");
+		catTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+		catTitle.setPadding(2,16,2,10);
+		catTitle.setTextSize(22);
+		catTitle.setTypeface(null, Typeface.BOLD);
+
+		AlertDialog.Builder builder;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+		}
+		else
+			builder = new AlertDialog.Builder(getContext());
+		builder.setCustomTitle(catTitle)
 				.setNegativeButton("Cancel", (dialog, which) -> {
 
 				})
@@ -135,6 +150,7 @@ public class BsdCategoryFragment extends Fragment {
 					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type));
 				});
 		AlertDialog dialog = builder.create();
+		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
 		ETForCatN.addTextChangedListener(new TextWatcher() {
 			@Override

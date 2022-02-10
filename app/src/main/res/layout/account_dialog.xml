@@ -1,53 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp"
+    >
 
 
-    <TextView
-        android:id="@+id/TVDialogAN"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Account Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
-    <EditText
-        android:id="@+id/ETDialogAccName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter Account Name"
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TVDialogAN" />
+        <TextView
+            android:id="@+id/TVDialogAN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Account Name"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/TVDialogAB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Initial Balance"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ETDialogAccName"
-        />
+        <EditText
+            android:id="@+id/ETDialogAccName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter Account Name"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/TVDialogAN" />
 
-    <EditText
-        android:id="@+id/ETDialogAccBalance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter Initial balance"
-        android:inputType="numberSigned|number|phone"
-        android:singleLine="true"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TVDialogAB" />
+        <TextView
+            android:id="@+id/TVDialogAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Initial Balance"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ETDialogAccName" />
+
+        <EditText
+            android:id="@+id/ETDialogAccBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter Initial balance"
+            android:inputType="numberSigned|number|phone"
+            android:singleLine="true"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/TVDialogAB" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--    <Switch-->
 <!--        android:id="@+id/switch1"-->

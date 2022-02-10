@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SwitchPreferenceCompat
         android:key="notifs"
@@ -8,24 +9,32 @@
         android:summaryOn="You will be notified daily, to add Records"
         android:summaryOff="You will not be notified daily, to add Records"
         android:defaultValue="true"
+        app:order="1"
         />
 
 
-    <SwitchPreferenceCompat
+    <SwitchPreference
         android:key="passwordOnOff"
         android:title="Password"
         android:icon="@drawable/ic_key"
         android:summary="Set a password to protect your data"
         android:defaultValue="false"
+        app:order="2"
         />
 
     <EditTextPreference
         android:key="password"
         android:title="Set password"
-        android:inputType="numberPassword"
-        android:singleLine="true"
-        android:maxLines="1"
+        app:order="3"
         />
 
+    <SwitchPreference
+        android:key="fingerprint"
+        android:title="Fingerprint"
+        android:icon="@drawable/ic_fingerprint"
+        android:defaultValue="false"
+        android:summary="Unlock app with your fingerprint"
+        app:order="4"
+        />
 
 </PreferenceScreen>

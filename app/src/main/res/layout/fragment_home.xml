@@ -1,72 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AnalysisFragment"
-    >
+    android:background="?chipBackgroundColor"
+    tools:context=".AnalysisFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintDateChange"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="76dp"
-        tools:layout_editor_absoluteY="77dp"
-        app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/constraintDateChange"
-        >
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <TextView
             android:id="@+id/TVDateChange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="26sp"
-            tools:layout_editor_absoluteX="148dp"
-            tools:layout_editor_absoluteY="31dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:padding="3dp"
+            android:text="TextView"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/rounded_corner_10"
             />
 
         <TextView
             android:id="@+id/TVbefore"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:gravity="center|left"
+            android:layout_marginEnd="5dp"
+            android:gravity="center"
             android:padding="3dp"
             android:text="-1"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_constraintRight_toLeftOf="@id/TVDateChange"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="5dp"
+            android:background="@drawable/rc_circle"
             />
 
         <TextView
             android:id="@+id/TVafter"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:gravity="center|right"
+            android:layout_marginStart="5dp"
+            android:gravity="center"
             android:padding="3dp"
             android:text="+1"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_constraintLeft_toRightOf="@id/TVDateChange"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="5dp"
+            android:background="@drawable/rc_circle"
             />
 
         <TextView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/ic_filter"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/TVFilter"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:background="@drawable/ic_filter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             />
 
 
@@ -74,148 +72,147 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/constraintSummary"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintDateChange"
-        >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintDateChange">
+
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Expense"
-            android:layout_gravity="center"
-            android:gravity="center"
             android:id="@+id/TVExpense"
-            android:textAlignment="center"
+            android:layout_width="0dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/rounded_corner_10"
+            android:gravity="center"
             android:singleLine="true"
-            android:textSize="26sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:text="Expense"
+            android:textAlignment="center"
+            android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/TVIncome"
-            android:background="@drawable/rounded_corner"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/TVExpenseAmt"
             android:layout_width="0dp"
             android:layout_height="32dp"
-            android:autoSizeMaxTextSize="24sp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
+            android:autoSizeMaxTextSize="18sp"
             android:autoSizeMinTextSize="11sp"
             android:autoSizeStepGranularity="1px"
             android:autoSizeTextType="uniform"
-            android:background="@drawable/rounded_corner"
+            android:background="@drawable/rounded_corner_10"
             android:gravity="center"
             android:maxLines="1"
             android:paddingStart="7dp"
             android:paddingEnd="7dp"
-            android:text="\u20b99,99,99,99,99,99,99,99,99"
+            android:text="\u20b90"
             android:textColor="#FF0000"
             app:layout_constraintEnd_toStartOf="@id/TVIncomeAmt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/TVExpense" />
 
 
-
-
-
         <TextView
+            android:id="@+id/TVIncome"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Income"
-            android:layout_weight="1"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner_10"
             android:gravity="center"
-            android:id="@+id/TVIncome"
-            android:textAlignment="center"
             android:singleLine="true"
-            android:textSize="26sp"
-            app:layout_constraintStart_toEndOf="@+id/TVExpense"
-            app:layout_constraintTop_toTopOf="parent"
+            android:text="Income"
+            android:textAlignment="center"
+            android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@id/TVTotal"
-            android:background="@drawable/rounded_corner"
-            />
+            app:layout_constraintStart_toEndOf="@+id/TVExpense"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/TVIncomeAmt"
             android:layout_width="0dp"
             android:layout_height="32dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
             android:layout_weight="1"
-            android:autoSizeMaxTextSize="24sp"
+            android:autoSizeMaxTextSize="18sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
+            android:background="@drawable/rounded_corner_10"
             android:gravity="center"
+            android:maxLines="1"
             android:paddingStart="7dp"
             android:paddingEnd="7dp"
             android:text="\u20b90"
             android:textColor="#00FF00"
-            android:maxLines="1"
-            app:layout_constraintStart_toEndOf="@id/TVExpenseAmt"
-            app:layout_constraintTop_toBottomOf="@+id/TVIncome"
             app:layout_constraintEnd_toStartOf="@id/TVTotalAmt"
-            android:background="@drawable/rounded_corner"
-            />
-
-
-
-
+            app:layout_constraintStart_toEndOf="@id/TVExpenseAmt"
+            app:layout_constraintTop_toBottomOf="@+id/TVIncome" />
 
 
         <TextView
             android:id="@+id/TVTotal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_weight="1"
+            android:background="@drawable/rounded_corner_10"
+            android:gravity="center"
+            android:singleLine="true"
             android:text="Total"
             android:textAlignment="center"
-            android:singleLine="true"
-            android:textSize="26sp"
-            app:layout_constraintStart_toEndOf="@id/TVIncome"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/rounded_corner"
-            />
+            app:layout_constraintStart_toEndOf="@id/TVIncome"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/TVTotalAmt"
             android:layout_width="0dp"
             android:layout_height="32dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:autoSizeMaxTextSize="24sp"
+            android:autoSizeMaxTextSize="18sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
+            android:background="@drawable/rounded_corner_10"
             android:gravity="center"
+            android:maxLines="1"
             android:paddingStart="7dp"
             android:paddingEnd="7dp"
             android:text="\u20b90"
             android:textAlignment="center"
             android:textSize="24sp"
-            android:maxLines="1"
-            app:layout_constraintStart_toEndOf="@id/TVIncomeAmt"
-            app:layout_constraintTop_toBottomOf="@+id/TVTotal"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/rounded_corner"
-            />
+            app:layout_constraintStart_toEndOf="@id/TVIncomeAmt"
+            app:layout_constraintTop_toBottomOf="@+id/TVTotal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerViewID"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintSummary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/RecyclerViewID"
         android:layout_marginTop="10dp"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraintSummary" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

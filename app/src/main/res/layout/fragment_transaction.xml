@@ -5,112 +5,190 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TransactionFragment"
+    android:background="#C6EFD6"
     >
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintDateTime"
-        android:id="@+id/constraintChooseType" >
-
-        <RadioGroup
-            android:id="@+id/RadioGroupType"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/constraint12"
+        android:background="@drawable/box"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:id="@+id/constraintDateTime"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="7dp"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/constraintDateTime2"
+                android:id="@+id/constraintDateTime1"
+                >
+
+                <TextView
+                    android:id="@+id/TVDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="date"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/item_sel"
+                    android:padding="3dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toEndOf="@id/constraintDateTime1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/constraintDateTime2"
+                >
+                <TextView
+                    android:id="@+id/TVTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="time"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="@drawable/item_sel"
+                    android:padding="3dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintDateTime"
+            android:id="@+id/constraintChooseType">
 
 
-            <RadioButton
-                android:id="@+id/radioCatIncome"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/RadioGroupType"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:button="@null"
-                android:padding="10dp"
-                android:text="Income"
-                android:textSize="27sp"
-                android:layout_marginEnd="5dp"
-                />
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:layout_width="2dp"
-                android:layout_height="20dp"
-                android:textSize="27dp"
-                android:background="@color/black" />
 
-            <RadioButton
-                android:id="@+id/radioCatExpense"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:padding="10dp"
-                android:text="Expense"
-                android:textSize="27sp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="5dp"
-                />
+                <RadioButton
+                    android:id="@+id/radioCatIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="Income"
+                    android:textSize="27sp"
+                    android:layout_marginEnd="5dp"
+                    />
 
-            <TextView
-                android:layout_width="2dp"
-                android:layout_height="20dp"
-                android:textSize="27dp"
-                android:background="@color/black"
-                />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="20dp"
+                    android:textSize="27dp"
+                    android:background="@color/black" />
 
-            <RadioButton
-                android:id="@+id/radioCatTransfer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:padding="10dp"
-                android:text="Transfer"
-                android:textSize="27sp"
-                android:layout_marginStart="5dp"
-                />
+                <RadioButton
+                    android:id="@+id/radioCatExpense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="Expense"
+                    android:textSize="27sp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    />
 
-        </RadioGroup>
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="20dp"
+                    android:textSize="27dp"
+                    android:background="@color/black"
+                    />
 
-        <!--        <Button-->
-        <!--            android:id="@+id/buttonCatIncome"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Income"-->
-        <!--            android:textSize="13sp"-->
-        <!--            app:layout_constraintEnd_toStartOf="@id/buttonCatExpense"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+                <RadioButton
+                    android:id="@+id/radioCatTransfer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="Transfer"
+                    android:textSize="27sp"
+                    android:layout_marginStart="5dp"
+                    />
 
-        <!--        <Button-->
-        <!--            android:id="@+id/buttonCatExpense"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Expense"-->
-        <!--            android:textSize="13sp"-->
-        <!--            app:layout_constraintEnd_toStartOf="@id/buttonCatTransfer"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/buttonCatIncome"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+            </RadioGroup>
 
-        <!--        <Button-->
-        <!--            android:id="@+id/buttonCatTransfer"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Transfer"-->
-        <!--            android:textSize="13sp"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/buttonCatExpense"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+            <!--        <Button-->
+            <!--            android:id="@+id/buttonCatIncome"-->
+            <!--            android:layout_width="0dp"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:text="Income"-->
+            <!--            android:textSize="13sp"-->
+            <!--            app:layout_constraintEnd_toStartOf="@id/buttonCatExpense"-->
+            <!--            app:layout_constraintStart_toStartOf="parent"-->
+            <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+            <!--        <Button-->
+            <!--            android:id="@+id/buttonCatExpense"-->
+            <!--            android:layout_width="0dp"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:text="Expense"-->
+            <!--            android:textSize="13sp"-->
+            <!--            app:layout_constraintEnd_toStartOf="@id/buttonCatTransfer"-->
+            <!--            app:layout_constraintStart_toEndOf="@+id/buttonCatIncome"-->
+            <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+            <!--        <Button-->
+            <!--            android:id="@+id/buttonCatTransfer"-->
+            <!--            android:layout_width="0dp"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:text="Transfer"-->
+            <!--            android:textSize="13sp"-->
+            <!--            app:layout_constraintEnd_toEndOf="parent"-->
+            <!--            app:layout_constraintStart_toEndOf="@+id/buttonCatExpense"-->
+            <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/constraintChooseCat"
-        app:layout_constraintTop_toBottomOf="@id/constraintChooseType"
+        app:layout_constraintTop_toBottomOf="@id/constraint12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         >
@@ -170,69 +248,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/constraintDateTime"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/constraintDateTime2"
-            android:id="@+id/constraintDateTime1"
-            >
-
-            <TextView
-                android:id="@+id/TVDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="date"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/item_sel"
-                android:padding="3dp"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toEndOf="@id/constraintDateTime1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/constraintDateTime2"
-            >
-            <TextView
-                android:id="@+id/TVTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="time"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/item_sel"
-                android:padding="3dp"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintChooseCat"
         android:id="@+id/constraintNoteDes"
@@ -243,11 +258,16 @@
             android:id="@+id/ETNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:hint="Enter title"
             android:singleLine="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/rounded_corner_10"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            />
 
         <EditText
             android:layout_width="match_parent"
@@ -256,8 +276,12 @@
             android:hint="Enter description"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ETNote"
+            android:background="@drawable/rounded_corner_10"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginTop="7dp"
             />
 
         <EditText
@@ -269,8 +293,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ETDes"
+            android:background="@drawable/rounded_corner_10"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginTop="7dp"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

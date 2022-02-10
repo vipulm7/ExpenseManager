@@ -73,9 +73,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             int y=calendar.get(Calendar.YEAR);
             String date=d+" "+getM(m)+", "+y;
             holder.TVCat.setText(date);
-            holder.TVSubCat.setText("\u20b9"+transactions.get(position).note);
+            holder.TVSubCat.setText("Income : \u20b9"+transactions.get(position).note);
             holder.TVSubCat.setTextColor(Color.GREEN);
-            holder.TVAmount.setText("\u20b9"+transactions.get(position).description);
+            holder.TVAmount.setText("Expense : \u20b9"+transactions.get(position).description);
             holder.TVAmount.setTextColor(Color.RED);
 
             Log.d(TAG, "onBindViewHolder: Tnote = "+transaction.note);
@@ -101,6 +101,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             Log.d(TAG, "onBindViewHolder: cat map = "+cat);
             Log.d(TAG, "onBindViewHolder: cat id "+transaction.catID);
             Log.d(TAG, "onBindViewHolder: cat from map "+cat.get(transaction.catID));
+
             if(transaction.type!=3) {
                 holder.TVCat.setText(cat.get(transaction.catID));
                 holder.TVAccount.setText(acc.get(transaction.accountID));
@@ -111,6 +112,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 holder.TVAmount.setTextColor(Color.BLUE);
                 holder.TVAmount.setText("\u20b9"+(-transaction.amount));
             }
+
+            if(position==transactions.size()-1 || transactions.get(position+1).catID==-1)
+                holder.view.setBackgroundResource(R.drawable.rc_below);
+            else
+                holder.view.setBackgroundResource(R.drawable.rc_mid);
         }
     }
 
@@ -138,6 +144,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public class TransViewHolder extends RecyclerView.ViewHolder
     {
         TextView TVCat, TVSubCat, TVNote, TVAccount, TVAmount;
+        View view;
         public TransViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
             Log.d(TAG, "TransViewHolder: getItemViewType = "+getItemViewType());
@@ -147,13 +154,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 TVCat = itemView.findViewById(R.id.TD_date_lpi);
                 TVSubCat = itemView.findViewById(R.id.TD_income_lpi);
                 TVAmount = itemView.findViewById(R.id.TD_expense_lpi);
-
             } else {
                 TVAmount = itemView.findViewById(R.id.TVLayAmt);
                 TVNote = itemView.findViewById(R.id.TVLayNote);
                 TVSubCat = itemView.findViewById(R.id.TVLaySubCat);
                 TVCat = itemView.findViewById(R.id.TVLayCat);
                 TVAccount = itemView.findViewById(R.id.TVLayAcc);
+                view = itemView;
 
                 itemView.setOnClickListener(view -> {
                     int position=getAdapterPosition();
@@ -185,7 +192,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             {
                 if (d != transactions.get(i).date)
                 {
-                    transactions.add(i+1,new Transaction(""+amt[0],0,"",0,-1,0,""+(-amt[1]),0,d,0));
+                    transactions.add(i+1,new Transaction(""+amt[0],0,0,-1,0,""+(-amt[1]),0,d,0));
                     d = transactions.get(i).date;
                     amt[0]=amt[1]=0;
                 }
@@ -200,7 +207,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                     ex+=transactions.get(i).amount;
                 }
             }
-            transactions.add(0,new Transaction(""+amt[0],0,"",0,-1,0,""+(-amt[1]),0,d,0));
+            transactions.add(0,new Transaction(""+amt[0],0,0,-1,0,""+(-amt[1]),0,d,0));
         }
         mainActivity.income=in;
         mainActivity.expense=ex;

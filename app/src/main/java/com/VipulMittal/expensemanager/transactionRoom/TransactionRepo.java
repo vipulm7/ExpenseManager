@@ -43,9 +43,9 @@ public class TransactionRepo
         return transactionDAO.getAllTransactionsWEEK(week, year);
     }
 
-    public LiveData<List<Transaction>> getAllTransactionsDAY(int month, int year)
+    public LiveData<List<Transaction>> getAllTransactionsDAY(int day, int month, int year)
     {
-        return transactionDAO.getAllTransactionsDAY(month, year);
+        return transactionDAO.getAllTransactionsDAY(day, month, year);
     }
 
 //    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)

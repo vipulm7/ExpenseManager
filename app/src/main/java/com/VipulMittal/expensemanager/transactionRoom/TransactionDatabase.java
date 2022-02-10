@@ -51,9 +51,26 @@ public abstract class TransactionDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            transactionDAO.Insert(new Transaction("Sample1", -100, "100",1,4,8,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()));
-            transactionDAO.Insert(new Transaction("Sample2", -302, "302",2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()));
-            transactionDAO.Insert(new Transaction("Sample3", -32, "302",3,7,12,"Des",2, getDateBefore(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000));
+//            transactionDAO.Insert(new Transaction("Sample1", -100, 1,4,8,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()));
+//            transactionDAO.Insert(new Transaction("Sample2", -302, 2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*2L));
+//            transactionDAO.Insert(new Transaction("Sample3", -32, 3,7,12,"Des",2, getDateBefore(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000));
+//            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*2L));
+//            transactionDAO.Insert(new Transaction("Sample5", -500,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*3L));
+//            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*4L));
+//            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*5L));
+
+            for(int i=-1;++i<30;) {
+                Calendar calendar=Calendar.getInstance();
+                calendar.add(Calendar.DATE, -2*i);
+                transactionDAO.Insert(new Transaction("Sample" + i, -(int) (Math.random() * 1000), 2, 7, 12, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i));
+            }
+
+            for(int i=-1;++i<30;) {
+                Calendar calendar=Calendar.getInstance();
+                calendar.add(Calendar.DATE, 2*i+1);
+                transactionDAO.Insert(new Transaction("Sample" + i, -(int) (Math.random() * 1000), 2, 7, 12, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() + 86400000L + 86400000 * 2L * i));
+            }
+
             return null;
         }
     }
@@ -64,9 +81,4 @@ public abstract class TransactionDatabase extends RoomDatabase {
         return a;
     }
 
-    public static long getDateBefore(Calendar calendar)
-    {
-        long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000-86400000;
-        return a;
-    }
 }

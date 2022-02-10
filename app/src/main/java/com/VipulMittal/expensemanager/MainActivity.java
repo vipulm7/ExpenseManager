@@ -8,8 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.biometric.BiometricPrompt;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -25,16 +27,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.accountRoom.Account;
@@ -46,6 +54,7 @@ import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
+import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -55,6 +64,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
@@ -95,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	boolean areNotifEnabled;
 	ActionBar actionBar;
 	public static PendingIntent pendingIntent;
+	int viewMode;
+
+	public Executor executor;
+	public BiometricPrompt biometricPrompt;
+	public BiometricPrompt.PromptInfo promptInfo;
 
 
 	@Override
@@ -127,13 +142,24 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		subCatROOM();
 		notification();
 
-		transactionAdapter=new TransactionAdapter(this);
+		Calendar calendar=Calendar.getInstance();
+		Log.d(TAG, "onCreate: telldate day = "+calendar.get(Calendar.DAY_OF_MONTH));
+		Log.d(TAG, "onCreate: telldate date = "+calendar.get(Calendar.DATE));
+		Log.d(TAG, "onCreate: telldate DAY_OF_WEEK = "+calendar.get(Calendar.DAY_OF_WEEK));
 
+		transactionAdapter=new TransactionAdapter(this);
 
 		Log.d(TAG, "onCreate: bn_home = "+R.id.bn_home);
 		Log.d(TAG, "onCreate: bn_accounts = "+R.id.bn_accounts);
 		Log.d(TAG, "onCreate: bn_cat = "+R.id.bn_cat);
 		Log.d(TAG, "onCreate: bn_analysis = "+R.id.bn_analysis);
+
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		viewMode=sharedPreferences.getInt("view", R.id.RBM);
+		Log.d(TAG, "onCreate: viewMode = "+viewMode);
+
+		if(sharedPreferences.getBoolean("fingerprint", false))
+			fingerprint();
 
 //		showFragment(R.id.bn_home);
 		actionBar=getSupportActionBar();
@@ -145,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			return true;
 		});
+
 
 		navigationBarView.setSelectedItemId(R.id.bn_home);
 
@@ -182,8 +209,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		EditText ETForAccN=accView.findViewById(R.id.ETDialogAccName);
 		EditText ETForAccIB=accView.findViewById(R.id.ETDialogAccBalance);
 
-		AlertDialog.Builder builder=new AlertDialog.Builder(this);
-		builder.setTitle("Add New Account")
+		TextView accTitle = new TextView(this);
+		accTitle.setText("Add New Account");
+		accTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+		accTitle.setPadding(2,16,2,10);
+		accTitle.setTextSize(22);
+		accTitle.setTypeface(null, Typeface.BOLD);
+
+		AlertDialog.Builder builder;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+			builder = new AlertDialog.Builder(this, android.R.style.ThemeOverlay_Material_Dialog);
+		}
+		else
+			builder = new AlertDialog.Builder(this);
+		builder.setCustomTitle(accTitle)
 				.setNegativeButton("Cancel", (dialog, which) -> {
 
 				})
@@ -192,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					accountViewModel.Insert(new Account(ETForAccN.getText().toString(),0, Integer.parseInt(ETForAccIB.getText().toString().trim())));
 				});
 		AlertDialog dialog = builder.create();
+		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
 		ETForAccN.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -239,8 +279,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		EditText ETForCatIB = catView.findViewById(R.id.ETDialogCatBudget);
 		rg_catDialog=catView.findViewById(R.id.RGCatDialog);
 
-		AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
-		builder2.setTitle("Add New Category")
+		TextView catTitle = new TextView(this);
+		catTitle.setText("Add New Category");
+		catTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+		catTitle.setPadding(2,2,2,10);
+		catTitle.setTextSize(22);
+		catTitle.setTypeface(null, Typeface.BOLD);
+
+		AlertDialog.Builder builder2;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+			builder2 = new AlertDialog.Builder(this, android.R.style.ThemeOverlay_Material_Dialog);
+		}
+		else
+			builder2 = new AlertDialog.Builder(this);
+		builder2.setCustomTitle(catTitle)
 				.setNegativeButton("Cancel", (dialog2, which) -> {
 
 				})
@@ -254,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type));
 				});
 		AlertDialog dialog2 = builder2.create();
+		dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
 		ETForCatN.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -326,8 +379,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 
 
-
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean showNotif=sharedPreferences.getBoolean("notifs", true);
 
 		sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -343,6 +394,47 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			}
 		});
 
+	}
+
+	private void fingerprint() {
+		executor= ContextCompat.getMainExecutor(this);
+		biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
+			@Override
+			public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+				super.onAuthenticationError(errorCode, errString);
+				if(toast!=null)
+					toast.cancel();
+				toast=Toast.makeText(getApplicationContext(), "Try again!", Toast.LENGTH_SHORT);
+				toast.show();
+			}
+
+			@Override
+			public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+				super.onAuthenticationSucceeded(result);
+				if(toast!=null)
+					toast.cancel();
+				toast=Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT);
+				toast.show();
+			}
+
+			@Override
+			public void onAuthenticationFailed() {
+				super.onAuthenticationFailed();
+				if(toast!=null)
+					toast.cancel();
+				toast=Toast.makeText(getApplicationContext(), "Not user!", Toast.LENGTH_SHORT);
+				toast.show();
+			}
+		});
+
+
+		promptInfo = new BiometricPrompt.PromptInfo.Builder()
+				.setTitle("Biometric Login")
+				.setSubtitle("Log in using your fingerprint")
+				.setNegativeButtonText("Use passcode")
+				.build();
+
+		biometricPrompt.authenticate(promptInfo);
 	}
 
 
@@ -441,24 +533,71 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	public void transactionROOM() {
+		int date=toShow.get(Calendar.DATE);
+		int week = toShow.get(Calendar.WEEK_OF_YEAR);
 		int month=toShow.get(Calendar.MONTH);
 		int year=toShow.get(Calendar.YEAR);
-		transactionViewModel.getAllTransactionsMONTH(month, year).observe(this, transactions -> {
-			transactionAdapter.setTransactions(transactions);
-			transactionAdapter.notifyDataSetChanged();
-			Log.d(TAG, "transactionROOM: transactions = "+transactions.size());
+		if(viewMode == R.id.RBM)
+		{
+			transactionViewModel.getAllTransactionsMONTH(month, year).observe(this, transactions -> {
+				transactionAdapter.setTransactions(transactions);
+				transactionAdapter.notifyDataSetChanged();
+				Log.d(TAG, "transactionROOM: transactions month = " + transactions.size());
 
-			homeFragment.TVMainIncome.setText("\u20b9"+income);
-			homeFragment.TVMainExpense.setText("\u20b9"+(-expense));
-			if(income+expense>=0) {
-				homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
-				homeFragment.TVMainTotal.setTextColor(Color.GREEN);
-			}
-			else {
-				homeFragment.TVMainTotal.setText("\u20b9" + -(income + expense));
-				homeFragment.TVMainTotal.setTextColor(Color.RED);
-			}
-		});
+				homeFragment.TVMainIncome.setText("\u20b9" + income);
+				homeFragment.TVMainExpense.setText("\u20b9" + (-expense));
+				if (income + expense >= 0) {
+					homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
+					homeFragment.TVMainTotal.setTextColor(Color.GREEN);
+				} else {
+					homeFragment.TVMainTotal.setText("\u20b9" + -(income + expense));
+					homeFragment.TVMainTotal.setTextColor(Color.RED);
+				}
+			});
+		}
+		else if(viewMode == R.id.RBW)
+		{
+			transactionViewModel.getAllTransactionsWEEK(week, year).observe(this, new Observer<List<Transaction>>() {
+				@Override
+				public void onChanged(List<Transaction> transactions) {
+					transactionAdapter.setTransactions(transactions);
+					transactionAdapter.notifyDataSetChanged();
+					Log.d(TAG, "transactionROOM: transactions week = " + transactions.size());
+
+					homeFragment.TVMainIncome.setText("\u20b9" + income);
+					homeFragment.TVMainExpense.setText("\u20b9" + (-expense));
+					if (income + expense >= 0) {
+						homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
+						homeFragment.TVMainTotal.setTextColor(Color.GREEN);
+					} else {
+						homeFragment.TVMainTotal.setText("\u20b9" + -(income + expense));
+						homeFragment.TVMainTotal.setTextColor(Color.RED);
+					}
+				}
+			});
+		}
+		else if(viewMode == R.id.RBD)
+		{
+			tellDate();
+			transactionViewModel.getAllTransactionsDAY(date, month, year).observe(this, new Observer<List<Transaction>>() {
+				@Override
+				public void onChanged(List<Transaction> transactions) {
+					transactionAdapter.setTransactions(transactions);
+					transactionAdapter.notifyDataSetChanged();
+					Log.d(TAG, "transactionROOM: transactions week = " + transactions.size());
+
+					homeFragment.TVMainIncome.setText("\u20b9" + income);
+					homeFragment.TVMainExpense.setText("\u20b9" + (-expense));
+					if (income + expense >= 0) {
+						homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
+						homeFragment.TVMainTotal.setTextColor(Color.GREEN);
+					} else {
+						homeFragment.TVMainTotal.setText("\u20b9" + -(income + expense));
+						homeFragment.TVMainTotal.setTextColor(Color.RED);
+					}
+				}
+			});
+		}
 	}
 
 	public void subCategoryROOM(int catID) {
@@ -668,6 +807,22 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			fragmentTransaction.addToBackStack("settings");
 			fragmentTransaction.replace(R.id.layoutForFragment, new SettingsFragment())
 					.commit();
+
+			FABAdd.hide();
+			navigationBarView.setVisibility(View.INVISIBLE);
+			return true;
+		}
+		else if(id == R.id.action_backup)
+		{
+			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+			fragmentTransaction.addToBackStack("backup");
+			fragmentTransaction.replace(R.id.layoutForFragment, new SettingsFragment())
+					.commit();
+
+			FABAdd.hide();
+			navigationBarView.setVisibility(View.INVISIBLE);
+
+			return true;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -676,11 +831,25 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	private int posCat(List<Category> newCategories, List<Category> oldCategories) {
 
 		int i=-1;
-		for(;++i<oldCategories.size();)
-		{
+		while (++i<oldCategories.size()) {
 			if(newCategories.get(i) != oldCategories.get(i))
 				return i;
 		}
 		return i;
+	}
+
+	public void tellDate(){
+		Log.d(TAG, "tellDate: DATE = "+toShow.get(Calendar.DATE));
+		Log.d(TAG, "tellDate: WEEK_OF_YEAR = "+toShow.get(Calendar.WEEK_OF_YEAR));
+		Log.d(TAG, "tellDate: DAY_OF_WEEK = "+toShow.get(Calendar.DAY_OF_WEEK));
+		Log.d(TAG, "tellDate: MONTH = "+toShow.get(Calendar.MONTH));
+	}
+
+	@Override
+	protected void onDestroy() {
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		sharedPreferences.unregisterOnSharedPreferenceChangeListener(null);
+
+		super.onDestroy();
 	}
 }

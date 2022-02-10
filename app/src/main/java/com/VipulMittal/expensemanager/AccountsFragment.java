@@ -1,6 +1,7 @@
 package com.VipulMittal.expensemanager;
 
 import android.app.AlertDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,12 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
@@ -61,8 +65,20 @@ public class AccountsFragment extends Fragment {
 				EditText ETForAccN=accView.findViewById(R.id.ETDialogAccName);
 				EditText ETForAccIB=accView.findViewById(R.id.ETDialogAccBalance);
 
-				AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-				builder.setTitle("Update Account")
+				TextView accTitle = new TextView(getContext());
+				accTitle.setText("Update Account");
+				accTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+				accTitle.setPadding(2,16,2,10);
+				accTitle.setTextSize(22);
+				accTitle.setTypeface(null, Typeface.BOLD);
+
+				AlertDialog.Builder builder;
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+					builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+				}
+				else
+					builder = new AlertDialog.Builder(getContext());
+				builder.setCustomTitle(accTitle)
 						.setNegativeButton("Cancel", (dialog, which) -> {
 
 						})
@@ -73,6 +89,7 @@ public class AccountsFragment extends Fragment {
 							accountViewModel.Update(account);
 						});
 				AlertDialog dialog = builder.create();
+				dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
 				ETForAccN.addTextChangedListener(new TextWatcher() {
 					@Override

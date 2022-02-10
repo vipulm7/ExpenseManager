@@ -61,6 +61,9 @@ public class TransactionFragment extends Fragment {
 		dateArray[5]=calendar.get(Calendar.SECOND);
 		dateArray[6]=calendar.get(Calendar.MILLISECOND);
 		amountCame=amount;
+		cIDCame=cID;
+		sIDCame=sID;
+		aIDCame=aID;
 		Log.d(TAG, "TransactionFragment: aid="+aID+" cid="+cID+" sid="+sID);
 	}
 
@@ -70,7 +73,8 @@ public class TransactionFragment extends Fragment {
 	RadioGroup radioGroup;
 	RadioButton RBIncome, RBExpense, RBTransfer;
 	Toast toast;
-	public int type, amount, request, cID, sID, aID, amountCame, id;
+	public int type, amount, request, cID, sID, aID, id;
+	public int amountCame, cIDCame, sIDCame, aIDCame;
 	String note, description;
 	Calendar calendar;
 	EditText ETNote, ETDes, ETAmt;
@@ -187,23 +191,36 @@ public class TransactionFragment extends Fragment {
 			Log.d(TAG, "enableDisableSaveButton: month = "+(dateArray[1]-1)+" y= "+dateArray[0]);
 			Log.d(TAG, "enableDisableSaveButton: starting");
 			if(request==1)
-				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L-dateArray[5]*1000L-dateArray[6], calendar.getTimeInMillis()));
+				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L-dateArray[5]*1000L-dateArray[6], calendar.getTimeInMillis()));
 			else {
-				Transaction transaction=new Transaction(ETNote.getText().toString().trim(), a, "", aID, cID, sID, ETDes.getText().toString().trim(), type, calendar.getTimeInMillis() - dateArray[3]*3600000L - dateArray[4]*60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis());
+				Transaction transaction=new Transaction(ETNote.getText().toString().trim(), a, aID, cID, sID, ETDes.getText().toString().trim(), type, calendar.getTimeInMillis() - dateArray[3]*3600000L - dateArray[4]*60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis());
 				transaction.id=id;
 				mainActivity.transactionViewModel.Update(transaction);
 			}
 			mainActivity.onBackPressed();
 			Log.d(TAG, "enableDisableSaveButton: ended");
-			mainActivity.accountViewModel.UpdateAmt(a-amountCame, aID);
+			if(aIDCame!=-1)
+				mainActivity.accountViewModel.UpdateAmt(-amountCame, aIDCame);
+			mainActivity.accountViewModel.UpdateAmt(a, aID);
 			if(type!=3)
 			{
-				mainActivity.categoryViewModel.UpdateAmt(a - amountCame, cID);
+				if(cIDCame!=-1)
+					mainActivity.categoryViewModel.UpdateAmt(-amountCame, cIDCame);
+				mainActivity.categoryViewModel.UpdateAmt(a, cID);
+
+
+				if(sIDCame !=-1)
+					mainActivity.subCategoryViewModel.UpdateAmt(-amountCame, sIDCame);
 				if (sID != -1)
-					mainActivity.subCategoryViewModel.UpdateAmt(a - amountCame, sID);
+					mainActivity.subCategoryViewModel.UpdateAmt(a, sID);
+
 			}
-			else
-				mainActivity.accountViewModel.UpdateAmt(amountCame-a, cID);//cid has aid2 data
+			else {
+				//amountCame - a
+				if(cIDCame!=-1)
+					mainActivity.accountViewModel.UpdateAmt(amountCame, cIDCame);//cid has aid2 data
+				mainActivity.accountViewModel.UpdateAmt(-a, cID);//cid has aid2 data
+			}
 		});
 
 		repeat.setOnClickListener(v->{
@@ -216,9 +233,9 @@ public class TransactionFragment extends Fragment {
 			calendar.set(Calendar.MILLISECOND, dateArray[6]);
 
 			if(request==1)
-				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, "", aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis()));
+				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a,  aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis()));
 			else {
-				Transaction transaction=new Transaction(ETNote.getText().toString().trim(), a, "", aID, cID, sID, ETDes.getText().toString().trim(), type, calendar.getTimeInMillis() - dateArray[3] * 3600000L - dateArray[4] * 60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis());
+				Transaction transaction=new Transaction(ETNote.getText().toString().trim(), a, aID, cID, sID, ETDes.getText().toString().trim(), type, calendar.getTimeInMillis() - dateArray[3] * 3600000L - dateArray[4] * 60000L -dateArray[5]*1000L - dateArray[6], calendar.getTimeInMillis());
 				transaction.id=id;
 				mainActivity.transactionViewModel.Update(transaction);
 			}

@@ -17,9 +17,9 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monthly"
+            android:text="Daily"
             android:button="@drawable/ic_done"
-            android:id="@+id/RBM"
+            android:id="@+id/RBD"
             />
         <RadioButton
             android:layout_width="wrap_content"
@@ -31,10 +31,11 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Daily"
+            android:text="Monthly"
             android:button="@drawable/ic_done"
-            android:id="@+id/RBD"
+            android:id="@+id/RBM"
             />
+
 
     </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

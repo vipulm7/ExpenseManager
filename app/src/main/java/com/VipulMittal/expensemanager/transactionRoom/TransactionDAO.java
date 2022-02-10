@@ -29,8 +29,8 @@ public interface TransactionDAO {
     @Query("SELECT * FROM transaction_table WHERE week=:week AND year=:year ORDER BY dateTime DESC")
     LiveData<List<Transaction>> getAllTransactionsWEEK(int week, int year);
 
-    @Query("SELECT * FROM transaction_table WHERE week=:week AND year=:year ORDER BY dateTime DESC")
-    LiveData<List<Transaction>> getAllTransactionsDAY(int week, int year);
+    @Query("SELECT * FROM transaction_table WHERE dateOfMonth=:day AND month=:month AND year=:year ORDER BY dateTime DESC")
+    LiveData<List<Transaction>> getAllTransactionsDAY(int day, int month, int year);
 
 //    @Query("UPDATE transaction_table SET note=:note, amount=:amount, amountDisplay=:amountDisplay, accountID=:accountID, catID=:catID, subCatID=:subCatID, description=:description, type=:type, date=:date, dateTime=:dateTime WHERE id=:id")
 //    void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id);
