@@ -32,7 +32,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
 		setPreferencesFromResource(R.xml.main, rootKey);
 
-		EditTextPreference editTextPreference= findPreference("password");
+		EditTextPreference editTextPreference = findPreference("password");
 		SwitchPreference passwordSwitch = findPreference("passwordOnOff");
 		SwitchPreference fingerprintSwitch = findPreference("fingerprint");
 		editTextPreference.setVisible(passwordSwitch.isChecked());
@@ -42,25 +42,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 		abc = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
 			@Override
 			public void onActivityResult(ActivityResult result) {
-				biometricManager = BiometricManager.from(getContext());
+//				biometricManager = BiometricManager.from(getContext());
 				switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
-//					case BiometricManager.BIOMETRIC_SUCCESS:
-//						Log.d(TAG, "Biometric: success");
-//						fingerprintSwitch.setOnPreferenceChangeListener(null);
-//						fingerprintSwitch.setChecked(true);
-//						fingerprintSwitch.setOnPreferenceChangeListener(listener);
-//						break;
 					case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-//						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-//							Intent addFingerIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
-//							addFingerIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED, BiometricManager.Authenticators.BIOMETRIC_STRONG);
-//
-//							abc.launch(addFingerIntent);
-//						}
-//						fingerprintSwitch.setOnPreferenceChangeListener(null);
-//						fingerprintSwitch.setChecked(false);
-//						fingerprintSwitch.setOnPreferenceChangeListener(fps_listener);
-						Log.d(TAG, "Biometric: None enrolled");
+						Log.d(TAG, "Biometric: None enrolled again");
 						break;
 					case BiometricManager.BIOMETRIC_SUCCESS:
 						fingerprintSwitch.setChecked(true);
@@ -69,52 +54,66 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			}
 		});
 
-		passwordSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
-				boolean on=(boolean) newValue;
-				editTextPreference.setVisible(on);
-				fingerprintSwitch.setVisible(on);
+		passwordSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+			boolean on = (boolean) newValue;
+			editTextPreference.setVisible(on);
+			fingerprintSwitch.setVisible(on);
 
-				if(on) {
-					biometricManager = BiometricManager.from(getContext());
-					fingerprintSwitch.setEnabled(true);
-					switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
-						case BiometricManager.BIOMETRIC_SUCCESS:
-							Log.d(TAG, "Biometric: success");
-							break;
-						case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-							Log.d(TAG, "Biometric: No Hardware");
-							fingerprintSwitch.setEnabled(false);
-							break;
-						case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-							Log.d(TAG, "Biometric: None enrolled");
-							break;
-					}
+			if(on) {
+				biometricManager = BiometricManager.from(getContext());
+				fingerprintSwitch.setEnabled(true);
+				switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+					case BiometricManager.BIOMETRIC_SUCCESS:
+						Log.d(TAG, "Biometric: success");
+						break;
+					case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+						Log.d(TAG, "Biometric: No Hardware");
+						fingerprintSwitch.setEnabled(false);
+						break;
+					case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+						Log.d(TAG, "Biometric: None enrolled");
+						fingerprintSwitch.setChecked(false);
+						break;
+					default:
+						Log.d(TAG, "Biometric: Default Error in fingerprint setup");
+						fingerprintSwitch.setEnabled(false);
 				}
-
-				Log.d(TAG, "onPreferenceChange:  on = "+on);
-				return true;
 			}
+
+//				Log.d(TAG, "onPreferenceChange:  on = "+on);
+			return true;
 		});
 
 		fps_listener = new Preference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+				Log.d(TAG, "onPreferenceChange: newValue = "+newValue);
 				boolean checked=(boolean) newValue;
 
-				fingerprintSwitch.setOnPreferenceChangeListener(null);
-				fingerprintSwitch.setChecked(false);
-				fingerprintSwitch.setOnPreferenceChangeListener(fps_listener);
+//				fingerprintSwitch.setOnPreferenceChangeListener(null);
+//				fingerprintSwitch.setChecked(false);
+//				fingerprintSwitch.setOnPreferenceChangeListener(fps_listener);
 
 				if(checked)
 				{
 					biometricManager = BiometricManager.from(getContext());
-					if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED) {
-						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+					if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED)
+					{
+						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+						{
 							Intent addFingerIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
 							addFingerIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED, BiometricManager.Authenticators.BIOMETRIC_STRONG);
 
+							abc.launch(addFingerIntent);
+						}
+						else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P)
+						{
+							Intent addFingerIntent = new Intent(Settings.ACTION_FINGERPRINT_ENROLL);
+							abc.launch(addFingerIntent);
+						}
+						else
+						{
+							Intent addFingerIntent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
 							abc.launch(addFingerIntent);
 						}
 					}
@@ -126,7 +125,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 								super.onAuthenticationError(errorCode, errString);
 								if (mainActivity.toast != null)
 									mainActivity.toast.cancel();
-								mainActivity.toast = Toast.makeText(getContext(), "Try again!", Toast.LENGTH_SHORT);
+								mainActivity.toast = Toast.makeText(getContext(), "Cancelled!", Toast.LENGTH_SHORT);
 								mainActivity.toast.show();
 							}
 
@@ -135,32 +134,37 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 								super.onAuthenticationSucceeded(result);
 								if (mainActivity.toast != null)
 									mainActivity.toast.cancel();
-								mainActivity.toast = Toast.makeText(getContext(), "Fingerprint set!", Toast.LENGTH_SHORT);
+								mainActivity.toast = Toast.makeText(getContext(), "Fingerprint setup completed!", Toast.LENGTH_SHORT);
 								mainActivity.toast.show();
+
+//								fingerprintSwitch.setOnPreferenceChangeListener(null);
+//								Log.d(TAG, "onAuthenticationSucceeded: "+fingerprintSwitch.isChecked());
+								fingerprintSwitch.setChecked(true);
+//								Log.d(TAG, "onAuthenticationSucceeded: "+fingerprintSwitch.isChecked());
+//								fingerprintSwitch.setOnPreferenceChangeListener(fps_listener);
 							}
 
 							@Override
 							public void onAuthenticationFailed() {
 								super.onAuthenticationFailed();
-								if (mainActivity.toast != null)
-									mainActivity.toast.cancel();
-								mainActivity.toast = Toast.makeText(getContext(), "Not user!", Toast.LENGTH_SHORT);
-								mainActivity.toast.show();
+//								if (mainActivity.toast != null)
+//									mainActivity.toast.cancel();
+//								mainActivity.toast = Toast.makeText(getContext(), "Not user!", Toast.LENGTH_SHORT);
+//								mainActivity.toast.show();
 							}
 						});
 
-
 						mainActivity.promptInfo = new BiometricPrompt.PromptInfo.Builder()
 								.setTitle("Confirm fingerprint")
-								.setSubtitle("Touch fingerprint sensor!")
 								.setNegativeButtonText("Cancel")
 								.build();
 
 						mainActivity.biometricPrompt.authenticate(mainActivity.promptInfo);
 					}
+					return false;
 				}
-
-				return true;
+				else
+					return true;
 			}
 		};
 

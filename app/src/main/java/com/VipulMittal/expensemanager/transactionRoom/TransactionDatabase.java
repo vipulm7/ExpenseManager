@@ -9,6 +9,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.VipulMittal.expensemanager.MainActivity;
+
 import java.util.Calendar;
 
 @Database(entities = Transaction.class, version = 1)
@@ -59,17 +61,17 @@ public abstract class TransactionDatabase extends RoomDatabase {
 //            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*4L));
 //            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*5L));
 
-            for(int i=-1;++i<30;) {
+            for(int i=-1;++i<10;) {
                 Calendar calendar=Calendar.getInstance();
                 calendar.add(Calendar.DATE, -2*i);
-                transactionDAO.Insert(new Transaction("Sample" + i, -(int) (Math.random() * 1000), 2, 7, 12, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i));
+                transactionDAO.Insert(new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 12, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i));
             }
 
-            for(int i=-1;++i<30;) {
-                Calendar calendar=Calendar.getInstance();
-                calendar.add(Calendar.DATE, 2*i+1);
-                transactionDAO.Insert(new Transaction("Sample" + i, -(int) (Math.random() * 1000), 2, 7, 12, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() + 86400000L + 86400000 * 2L * i));
-            }
+//            for(int i=-1;++i<30;) {
+//                Calendar calendar=Calendar.getInstance();
+//                calendar.add(Calendar.DATE, 2*i+1);
+//                transactionDAO.Insert(new Transaction("Sample" + i, -(int) (Math.random() * 1000), 2, 7, 12, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() + 86400000L + 86400000 * 2L * i));
+//            }
 
             return null;
         }

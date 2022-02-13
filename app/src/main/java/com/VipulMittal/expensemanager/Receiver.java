@@ -46,20 +46,32 @@ public class Receiver extends BroadcastReceiver {
 
 			Intent intent = new Intent(context, MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+			PendingIntent pendingIntent;
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+				pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+			else
+				pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			builder.setContentIntent(pendingIntent);
 			builder.setAutoCancel(true);
 
 			Intent snoozeIntent = new Intent(context, IntentService1.class);
 			snoozeIntent.setAction(ACTION_SNOOZE);
-			PendingIntent snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, 0);
+			PendingIntent snoozePendingIntent;
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+				snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+			else
+				snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			NotificationCompat.Action snoozeAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
 					"Snooze!", snoozePendingIntent).build();
 
 
 			Intent dismissIntent = new Intent(context, IntentService1.class);
 			dismissIntent.setAction(ACTION_DISMISS);
-			PendingIntent dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, 0);
+			PendingIntent dismissPendingIntent;
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+				dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+			else
+				dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			NotificationCompat.Action dismissAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
 					"Nothing today!", dismissPendingIntent).build();
 

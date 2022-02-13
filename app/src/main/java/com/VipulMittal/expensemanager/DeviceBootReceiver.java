@@ -19,7 +19,10 @@ public class DeviceBootReceiver extends BroadcastReceiver {
 			calendar.set(Calendar.SECOND, 0);
 			calendar.set(Calendar.MILLISECOND, 0);
 			Intent intent1 = new Intent(context, Receiver.class);
-			MainActivity.pendingIntent = PendingIntent.getBroadcast(context, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+				MainActivity.pendingIntent = PendingIntent.getBroadcast(context, 0, intent1, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+			else
+				MainActivity.pendingIntent = PendingIntent.getBroadcast(context, 0, intent1, PendingIntent.FLAG_ONE_SHOT);
 			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			if(alarmManager != null) {
 				alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, MainActivity.pendingIntent);

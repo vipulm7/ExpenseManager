@@ -9,6 +9,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 
 import java.util.Calendar;
@@ -62,13 +63,13 @@ public abstract class SubCategoryDatabase extends RoomDatabase {
 
             subCategoryDAO.Insert(new SubCategory("Lunch",0,0,4,2));
             subCategoryDAO.Insert(new SubCategory("BreakFast",0,0,4,2));
-            subCategoryDAO.Insert(new SubCategory("Dinner",-100,0,4,2));
+            subCategoryDAO.Insert(new SubCategory("Dinner",0,0,4,2));
             subCategoryDAO.Insert(new SubCategory("Restaurant",0,0,4,2));
 
             subCategoryDAO.Insert(new SubCategory("Bus",0,0,5,2));
             subCategoryDAO.Insert(new SubCategory("Petrol",0,0,5,2));
 
-            subCategoryDAO.Insert(new SubCategory("Medicine",-334,0,7,2));
+            subCategoryDAO.Insert(new SubCategory("Medicine", MainActivity.sum_amounts,0,7,2));
             subCategoryDAO.Insert(new SubCategory("Insurance",0,0,7,2));
             return null;
         }

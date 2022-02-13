@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AccountViewModel extends AndroidViewModel {
 
-    private AccountRepo repo;
+    public AccountRepo repo;
     private LiveData<List<Account>> accounts;
 
     public AccountViewModel(@NonNull Application application) {

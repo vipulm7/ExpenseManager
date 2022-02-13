@@ -10,10 +10,11 @@ import java.util.List;
 public class AccountRepo
 {
     private AccountDAO accountDAO;
+    public AccountDatabase accountDatabase;
 
     public AccountRepo(Application application)
     {
-        AccountDatabase accountDatabase = AccountDatabase.getInstance(application);
+        accountDatabase = AccountDatabase.getInstance(application);
         accountDAO = accountDatabase.accountDAO();
     }
 

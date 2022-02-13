@@ -93,7 +93,11 @@ public class IntentService1 extends IntentService {
 		// Normal notification's intent
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		PendingIntent pendingIntent=PendingIntent.getActivity(this,0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendingIntent;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+			pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+		else
+			pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(pendingIntent);
 		builder.setAutoCancel(true); //notif is removed when user clicks on it. works only when intent is passed to builder.
 
@@ -101,12 +105,20 @@ public class IntentService1 extends IntentService {
 		//Notification to snooze
 		Intent snoozeIntent = new Intent(this, IntentService1.class);
 		snoozeIntent.setAction(ACTION_SNOOZE);
-		PendingIntent snoozePendingIntent=PendingIntent.getService(this,0,snoozeIntent,0);
+		PendingIntent snoozePendingIntent;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+			snoozePendingIntent = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+		else
+			snoozePendingIntent = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Action snoozeAction=new NotificationCompat.Action.Builder(R.drawable.ic_notifications, "Snooze it!", snoozePendingIntent).build();
 
 		Intent dismissIntent = new Intent(this, IntentService1.class);
 		dismissIntent.setAction(ACTION_DISMISS);
-		PendingIntent dismissPendingIntent = PendingIntent.getService(this, 0, dismissIntent, 0);
+		PendingIntent dismissPendingIntent;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+			dismissPendingIntent = PendingIntent.getService(this, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+		else
+			dismissPendingIntent = PendingIntent.getService(this, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Action dismissAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications, "Nothing today!", dismissPendingIntent).build();
 
 		builder.addAction(snoozeAction);

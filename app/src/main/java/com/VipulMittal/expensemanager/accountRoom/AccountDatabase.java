@@ -9,6 +9,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.VipulMittal.expensemanager.MainActivity;
+
 import java.util.Calendar;
 
 @Database(entities = Account.class, version = 2)
@@ -25,6 +27,7 @@ public abstract class AccountDatabase extends RoomDatabase {
                     AccountDatabase.class, "account_database")
                     .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
+                    .setJournalMode(JournalMode.TRUNCATE)
                     .addCallback(roomCallback).build();
 
         return instance;
@@ -51,9 +54,9 @@ public abstract class AccountDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            accountDAO.Insert(new Account("Cash",-100,0));
-            accountDAO.Insert(new Account("Credit Card",-302,0));
-            accountDAO.Insert(new Account("E-Wallet",-32,0));
+            accountDAO.Insert(new Account("Cash",0,0));
+            accountDAO.Insert(new Account("Credit Card", MainActivity.sum_amounts,0));
+            accountDAO.Insert(new Account("E-Wallet",0,0));
             return null;
         }
     }

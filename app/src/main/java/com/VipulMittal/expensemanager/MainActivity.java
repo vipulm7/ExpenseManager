@@ -24,6 +24,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -95,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	boolean b1, b2, b3, b4;
 	RadioGroup rg_catDialog;
 	public long systemTimeInMillies;
+	boolean first_time;
+	public static int[] amount;
+	public static int sum_amounts;
 
 	public static NotificationManagerCompat notificationManager;
 	public static final String ACTION_SNOOZE="com.example.android.wearable.wear.wearnotifications.handlers.action.SNOOZE";
@@ -106,14 +110,18 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	ActionBar actionBar;
 	public static PendingIntent pendingIntent;
 	int viewMode;
+	boolean exit, login;
+
 
 	public Executor executor;
 	public BiometricPrompt biometricPrompt;
 	public BiometricPrompt.PromptInfo promptInfo;
+	SharedPreferences sharedPreferences;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate: called ");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -128,6 +136,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		categoryAdapter2 = new CategoryAdapter();
 		allSubcats=new ArrayList<>();
 		toShow=Calendar.getInstance();
+
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		viewMode=sharedPreferences.getInt("view", R.id.RBM);
+		first_time= sharedPreferences.getBoolean("first_time", true);
+		Log.d(TAG, "onCreate: viewMode = "+viewMode);
+		if(first_time)
+		{
+			amount = new int[10];
+			for(int i=-1;++i<10;) {
+				amount[i] = -(int) (Math.random() * 1000);
+				sum_amounts+=amount[i];
+			}
+
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putBoolean("first_time", false);
+			editor.apply();
+		}
 
 
 		accountViewModel=new ViewModelProvider(this).get(AccountViewModel.class);
@@ -154,11 +179,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		Log.d(TAG, "onCreate: bn_cat = "+R.id.bn_cat);
 		Log.d(TAG, "onCreate: bn_analysis = "+R.id.bn_analysis);
 
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		viewMode=sharedPreferences.getInt("view", R.id.RBM);
-		Log.d(TAG, "onCreate: viewMode = "+viewMode);
 
-		if(sharedPreferences.getBoolean("fingerprint", false))
+		if(sharedPreferences.getBoolean("passwordOnOff", false) && sharedPreferences.getBoolean("fingerprint", false))
 			fingerprint();
 
 //		showFragment(R.id.bn_home);
@@ -379,21 +401,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 
 
-		boolean showNotif=sharedPreferences.getBoolean("notifs", true);
+		boolean showNotif = sharedPreferences.getBoolean("notifs", true);
 
-		sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-			@Override
-			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-				if(key.equals("notifs"))
-				{
-					if(sharedPreferences.getBoolean(key, true))
-						createNotif();
-					else
-						stopNotif();
-				}
+		sharedPreferences.registerOnSharedPreferenceChangeListener((sharedPreferences1, key) -> {
+			if(key.equals("notifs"))
+			{
+				if(sharedPreferences1.getBoolean(key, true))
+					createNotif();
+				else
+					stopNotif();
 			}
 		});
-
 	}
 
 	private void fingerprint() {
@@ -404,8 +422,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				super.onAuthenticationError(errorCode, errString);
 				if(toast!=null)
 					toast.cancel();
-				toast=Toast.makeText(getApplicationContext(), "Try again!", Toast.LENGTH_SHORT);
+				toast=Toast.makeText(getApplicationContext(), "User not identified!", Toast.LENGTH_SHORT);
 				toast.show();
+
+				systemTimeInMillies = System.currentTimeMillis();
+				exit = true;
+				onBackPressed();
 			}
 
 			@Override
@@ -415,23 +437,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					toast.cancel();
 				toast=Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT);
 				toast.show();
+				login = true;
 			}
 
 			@Override
 			public void onAuthenticationFailed() {
 				super.onAuthenticationFailed();
-				if(toast!=null)
-					toast.cancel();
-				toast=Toast.makeText(getApplicationContext(), "Not user!", Toast.LENGTH_SHORT);
-				toast.show();
+//				if(toast!=null)
+//					toast.cancel();
+//				toast=Toast.makeText(getApplicationContext(), "Not user!", Toast.LENGTH_SHORT);
+//				toast.show();
 			}
 		});
 
-
 		promptInfo = new BiometricPrompt.PromptInfo.Builder()
 				.setTitle("Biometric Login")
-				.setSubtitle("Log in using your fingerprint")
-				.setNegativeButtonText("Use passcode")
+				.setSubtitle("Log in using your biometrics")
+				.setNegativeButtonText("Exit")
 				.build();
 
 		biometricPrompt.authenticate(promptInfo);
@@ -466,7 +488,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		Intent intent = new Intent(this, Receiver.class);
-		pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		if(alarmManager != null) {
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
@@ -515,9 +537,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			navigationBarView.setVisibility(View.VISIBLE);
 			setActionBarTitle("Expense Manager");
 		}
-		else {
+		else
+		{
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
-				if(System.currentTimeMillis() - systemTimeInMillies<2000)
+				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = "+(System.currentTimeMillis() - systemTimeInMillies));
+				if(exit  ||  System.currentTimeMillis() - systemTimeInMillies<2000)
 					super.onBackPressed();
 				else {
 					systemTimeInMillies = System.currentTimeMillis();
@@ -816,7 +840,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		{
 			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 			fragmentTransaction.addToBackStack("backup");
-			fragmentTransaction.replace(R.id.layoutForFragment, new SettingsFragment())
+			fragmentTransaction.replace(R.id.layoutForFragment, new BackupRestoreFragment())
 					.commit();
 
 			FABAdd.hide();
@@ -851,5 +875,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		sharedPreferences.unregisterOnSharedPreferenceChangeListener(null);
 
 		super.onDestroy();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "onResume: called");
+
+		if(!login && sharedPreferences.getBoolean("passwordOnOff", false) &&  sharedPreferences.getBoolean("fingerprint", false))
+			fingerprint();
 	}
 }
