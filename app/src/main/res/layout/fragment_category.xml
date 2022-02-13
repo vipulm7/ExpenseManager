@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".CategoryFragment">
+    tools:context=".CategoryFragment"
+    android:background="#C6EFD6"
+    >
     
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -27,6 +29,16 @@
                 android:textSize="20sp"
                 android:text="Income Categories"
                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/TVCat_expense"
+                android:textSize="20sp"
+                android:text="Expense Categories"
+                />
             
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -34,24 +46,6 @@
                 android:id="@+id/RVCat_income"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/TVCat_income"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/RVCat_income"
-                android:id="@+id/TVCat_expense"
-                android:textSize="20sp"
-                android:text="Expense Categories"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/RVCat_expense"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/TVCat_expense"
                 />
             
         </androidx.constraintlayout.widget.ConstraintLayout>

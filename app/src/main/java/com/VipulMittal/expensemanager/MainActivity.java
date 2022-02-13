@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.work.WorkRequest;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -29,6 +30,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	FloatingActionButton FABAdd;
 
 	public TransactionAdapter transactionAdapter;
-	public TransactionViewModel transactionViewModel;
+	public TransactionViewModel transactionViewModel, transactionViewModel2;
 	public AccountAdapter accountAdapter;
 	public AccountViewModel accountViewModel;
 	public CategoryAdapter categoryAdapter, categoryAdapter2;
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	ActionBar actionBar;
 	public static PendingIntent pendingIntent;
 	int viewMode;
-	boolean exit, login;
+	boolean exit, login, menuShow;
 
 
 	public Executor executor;
@@ -139,19 +141,33 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		viewMode=sharedPreferences.getInt("view", R.id.RBM);
-		first_time= sharedPreferences.getBoolean("first_time", true);
+		first_time = sharedPreferences.getBoolean("first_time", true);
 		Log.d(TAG, "onCreate: viewMode = "+viewMode);
+		menuShow = true;
+
 		if(first_time)
 		{
 			amount = new int[10];
-			for(int i=-1;++i<10;) {
-				amount[i] = -(int) (Math.random() * 1000);
+			for(int i=-1;++i<10;)
+			{
+				amount[i] = -(int) (Math.random() * 10000);
 				sum_amounts+=amount[i];
 			}
 
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			editor.putBoolean("first_time", false);
+
+
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.HOUR_OF_DAY, 20);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+
+			editor.putLong("notifTime", calendar.getTimeInMillis());
 			editor.apply();
+
+			Log.d(TAG, "createNotif: notiftime = "+sharedPreferences.getLong("notifTime", -1));
 		}
 
 
@@ -160,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		categoryViewModel2=new ViewModelProvider(this).get(CategoryViewModel.class);
 		subCategoryViewModel=new ViewModelProvider(this).get(SubCategoryViewModel.class);
 		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
+		transactionViewModel2=new ViewModelProvider(this).get(TransactionViewModel.class);
 
 		accountROOM();
 		categoryROOM();
@@ -380,6 +397,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 				FABAdd.hide();
 				navigationBarView.setVisibility(View.INVISIBLE);
+				hideMenu();
 			}
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
 			{
@@ -406,6 +424,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		sharedPreferences.registerOnSharedPreferenceChangeListener((sharedPreferences1, key) -> {
 			if(key.equals("notifs"))
 			{
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+
+				Calendar calendar1 = Calendar.getInstance();
+				calendar1.set(Calendar.HOUR_OF_DAY, 20);
+				calendar1.set(Calendar.MINUTE, 0);
+				calendar1.set(Calendar.SECOND, 0);
+				calendar1.set(Calendar.MILLISECOND, 0);
+
+				editor.putLong("notifTime", calendar1.getTimeInMillis());
+				editor.apply();
+
 				if(sharedPreferences1.getBoolean(key, true))
 					createNotif();
 				else
@@ -481,17 +510,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	private void createNotif() {
-		Calendar calendar=Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, 20);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
 
 		Intent intent = new Intent(this, Receiver.class);
-		pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+			pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+		else
+			pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		if(alarmManager != null) {
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, sharedPreferences.getLong("notifTime", -1), AlarmManager.INTERVAL_DAY, pendingIntent);
+			Log.d(TAG, "createNotif: notiftime = "+sharedPreferences.getLong("notifTime", -1));
 		}
 	}
 
@@ -536,13 +565,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			FABAdd.show();
 			navigationBarView.setVisibility(View.VISIBLE);
 			setActionBarTitle("Expense Manager");
+			showMenu();
 		}
 		else
 		{
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
 				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = "+(System.currentTimeMillis() - systemTimeInMillies));
-				if(exit  ||  System.currentTimeMillis() - systemTimeInMillies<2000)
+				if(exit  ||  System.currentTimeMillis() - systemTimeInMillies<2000) {
 					super.onBackPressed();
+				}
 				else {
 					systemTimeInMillies = System.currentTimeMillis();
 					if(toast!=null)
@@ -551,8 +582,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					toast.show();
 				}
 			}
-			else
+			else {
 				navigationBarView.setSelectedItemId(R.id.bn_home);
+				setActionBarTitle("Expense Tracker");
+			}
 		}
 	}
 
@@ -567,14 +600,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				transactionAdapter.setTransactions(transactions);
 				transactionAdapter.notifyDataSetChanged();
 				Log.d(TAG, "transactionROOM: transactions month = " + transactions.size());
+				tellDate();
 
-				homeFragment.TVMainIncome.setText("\u20b9" + income);
-				homeFragment.TVMainExpense.setText("\u20b9" + (-expense));
+				homeFragment.TVMainIncome.setText("\u20b9" + moneyToString(income));
+				homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
 				if (income + expense >= 0) {
-					homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
+					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
 					homeFragment.TVMainTotal.setTextColor(Color.GREEN);
 				} else {
-					homeFragment.TVMainTotal.setText("\u20b9" + -(income + expense));
+					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 					homeFragment.TVMainTotal.setTextColor(Color.RED);
 				}
 			});
@@ -588,13 +622,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					transactionAdapter.notifyDataSetChanged();
 					Log.d(TAG, "transactionROOM: transactions week = " + transactions.size());
 
-					homeFragment.TVMainIncome.setText("\u20b9" + income);
-					homeFragment.TVMainExpense.setText("\u20b9" + (-expense));
+					homeFragment.TVMainIncome.setText("\u20b9" + moneyToString(income));
+					homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
 					if (income + expense >= 0) {
-						homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
+						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
 						homeFragment.TVMainTotal.setTextColor(Color.GREEN);
 					} else {
-						homeFragment.TVMainTotal.setText("\u20b9" + -(income + expense));
+						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 						homeFragment.TVMainTotal.setTextColor(Color.RED);
 					}
 				}
@@ -610,13 +644,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					transactionAdapter.notifyDataSetChanged();
 					Log.d(TAG, "transactionROOM: transactions week = " + transactions.size());
 
-					homeFragment.TVMainIncome.setText("\u20b9" + income);
-					homeFragment.TVMainExpense.setText("\u20b9" + (-expense));
+					homeFragment.TVMainIncome.setText("\u20b9" + moneyToString(income));
+					homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
 					if (income + expense >= 0) {
-						homeFragment.TVMainTotal.setText("\u20b9" + (income + expense));
+						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
 						homeFragment.TVMainTotal.setTextColor(Color.GREEN);
 					} else {
-						homeFragment.TVMainTotal.setText("\u20b9" + -(income + expense));
+						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 						homeFragment.TVMainTotal.setTextColor(Color.RED);
 					}
 				}
@@ -727,24 +761,28 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			homeFragment=new HomeFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, homeFragment).commit();
 			Log.d(TAG, "showFragment: home");
+			setActionBarTitle("Expense Tracker");
 		}
 		else if(id==R.id.bn_cat) {
 			categoryFragment=new CategoryFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, categoryFragment).commit();
 			Log.d(TAG, "showFragment: category");
 			systemTimeInMillies=0;
+			setActionBarTitle("Categories");
 		}
 		else if(id==R.id.bn_accounts) {
 			accountsFragment=new AccountsFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, accountsFragment).commit();
 			Log.d(TAG, "showFragment: accounts");
 			systemTimeInMillies=0;
+			setActionBarTitle("Expense Tracker");
 		}
 		else if(id==R.id.bn_analysis) {
 			analysisFragment=new AnalysisFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, analysisFragment).commit();
 			Log.d(TAG, "showFragment: analysis");
 			systemTimeInMillies=0;
+			setActionBarTitle("Expense Tracker");
 		}
 		else {
 			Log.d(TAG, "showFragment: else");
@@ -755,7 +793,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		}
 	}
 
-	private String moneyToString(long money) {
+	public String moneyToString(long money) {
 		int a=countDigits(money);
 		if(a<4)
 			return ""+money;
@@ -786,7 +824,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			return s;
 		}
 	}
-
 
 	int countDigits(long l) {
 		if (l >= 1000000000000000000L) return 19;
@@ -819,7 +856,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		return menuShow;
 	}
 
 	@Override
@@ -834,6 +871,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			FABAdd.hide();
 			navigationBarView.setVisibility(View.INVISIBLE);
+			hideMenu();
+			setActionBarTitle("Settings");
+
 			return true;
 		}
 		else if(id == R.id.action_backup)
@@ -845,6 +885,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			FABAdd.hide();
 			navigationBarView.setVisibility(View.INVISIBLE);
+			hideMenu();
+			setActionBarTitle("Backup and Restore");
 
 			return true;
 		}
@@ -864,9 +906,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public void tellDate(){
 		Log.d(TAG, "tellDate: DATE = "+toShow.get(Calendar.DATE));
-		Log.d(TAG, "tellDate: WEEK_OF_YEAR = "+toShow.get(Calendar.WEEK_OF_YEAR));
-		Log.d(TAG, "tellDate: DAY_OF_WEEK = "+toShow.get(Calendar.DAY_OF_WEEK));
 		Log.d(TAG, "tellDate: MONTH = "+toShow.get(Calendar.MONTH));
+		Log.d(TAG, "tellDate: WEEK_OF_YEAR = "+toShow.get(Calendar.WEEK_OF_YEAR));
+		Log.d(TAG, "tellDate: ================================================================");
+//		Log.d(TAG, "tellDate: DAY_OF_WEEK = "+toShow.get(Calendar.DAY_OF_WEEK));
 	}
 
 	@Override
@@ -884,5 +927,29 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		if(!login && sharedPreferences.getBoolean("passwordOnOff", false) &&  sharedPreferences.getBoolean("fingerprint", false))
 			fingerprint();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG, "onStop: ");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "onPause: ");
+	}
+
+	public void hideMenu()
+	{
+		menuShow = false;
+		invalidateOptionsMenu();
+	}
+
+	public void showMenu()
+	{
+		menuShow=true;
+		invalidateOptionsMenu();
 	}
 }

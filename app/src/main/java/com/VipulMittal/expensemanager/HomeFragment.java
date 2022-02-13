@@ -2,6 +2,7 @@ package com.VipulMittal.expensemanager;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +58,6 @@ public class HomeFragment extends Fragment {
 
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 
-
-
 		mainActivity.transactionROOM();
 		setDate();
 
@@ -83,6 +83,7 @@ public class HomeFragment extends Fragment {
 
 				mainActivity.FABAdd.hide();
 				mainActivity.systemTimeInMillies=0;
+				mainActivity.hideMenu();
 			}
 		};
 
@@ -114,8 +115,20 @@ public class HomeFragment extends Fragment {
 		View filterView = inflater.inflate(R.layout.filter_dialog, null);
 		rg_Filter =filterView.findViewById(R.id.RGFilter);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setTitle("View Mode")
+		TextView viewTitle = new TextView(getContext());
+		viewTitle.setText("View Mode");
+		viewTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+		viewTitle.setPadding(2,16,2,10);
+		viewTitle.setTextSize(22);
+		viewTitle.setTypeface(null, Typeface.BOLD);
+
+		AlertDialog.Builder builder;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+		}
+		else
+			builder = new AlertDialog.Builder(getContext());
+		builder.setCustomTitle(viewTitle)
 				.setView(filterView);
 		AlertDialog dialog = builder.create();
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);

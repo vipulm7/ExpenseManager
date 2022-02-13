@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/rounded_corner_10"
+    android:layout_margin="5dp"
+    >
 
     <ImageView
         android:layout_width="61dp"
@@ -87,5 +90,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/IVCat_image"
+        app:layout_constraintEnd_toEndOf="@id/TVCat_ARROW"
+        app:layout_constraintTop_toBottomOf="@id/TVCat_BUDGET"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -83,6 +83,10 @@ public class Receiver extends BroadcastReceiver {
 			notificationManager.notify(notifID, builder.build());
 			Intent intent1 = new Intent(context, IntentService1.class);
 			context.startService(intent1);
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			long notifTime = sharedPreferences.getLong("notifTime", -1);
+			editor.putLong("notifTime", notifTime+AlarmManager.INTERVAL_DAY);
+			editor.apply();
 		}
 	}
 }

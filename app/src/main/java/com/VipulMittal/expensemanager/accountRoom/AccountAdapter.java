@@ -54,11 +54,11 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 			holder.name.setText(accounts.get(position).name);
 			if(amt<0) {
 				holder.amount.setTextColor(Color.RED);
-				holder.amount.setText("- \u20b9"+(-amt));
+				holder.amount.setText("- \u20b9"+moneyToString(-amt));
 			}
 			else {
 				holder.amount.setTextColor(Color.GREEN);
-				holder.amount.setText("  \u20b9"+amt);
+				holder.amount.setText("  \u20b9"+moneyToString(amt));
 			}
 		}
 		else
@@ -68,11 +68,11 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 
 			if(amt<0) {
 				holder.amount.setTextColor(Color.RED);
-				holder.amount.setText("- \u20b9 "+(-amt));
+				holder.amount.setText("- \u20b9 "+moneyToString(-amt));
 			}
 			else {
 				holder.amount.setTextColor(Color.GREEN);
-				holder.amount.setText("  \u20b9 "+amt);
+				holder.amount.setText("  \u20b9 "+moneyToString(amt));
 			}
 //			holder.amount.setText("\u20b91234567890123456789012345678901234567890");
 
@@ -125,6 +125,62 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 	{
 		void onItemClick(AccViewHolder viewHolder);
 	}
+
+
+	public String moneyToString(long money) {
+		int a=countDigits(money);
+		if(a<4)
+			return ""+money;
+		else
+		{
+			char c[]=new char[27];
+			for(int i=-1;++i<3;)
+			{
+				c[i]=(char)(money%10+48);
+				money/=10;
+			}
+			a-=3;
+
+			int b=0;
+			int index=3;
+			for(;a>0;)
+			{
+				if(b==0)
+					c[index++]=',';
+				c[index++]=(char)(money%10+48);
+				money/=10;
+				b^=1;
+				a--;
+			}
+			String s="";
+			for(int i=-1;++i<index;)
+				s=c[i]+s;
+			return s;
+		}
+	}
+
+	int countDigits(long l) {
+		if (l >= 1000000000000000000L) return 19;
+		if (l >= 100000000000000000L) return 18;
+		if (l >= 10000000000000000L) return 17;
+		if (l >= 1000000000000000L) return 16;
+		if (l >= 100000000000000L) return 15;
+		if (l >= 10000000000000L) return 14;
+		if (l >= 1000000000000L) return 13;
+		if (l >= 100000000000L) return 12;
+		if (l >= 10000000000L) return 11;
+		if (l >= 1000000000L) return 10;
+		if (l >= 100000000L) return 9;
+		if (l >= 10000000L) return 8;
+		if (l >= 1000000L) return 7;
+		if (l >= 100000L) return 6;
+		if (l >= 10000L) return 5;
+		if (l >= 1000L) return 4;
+		if (l >= 100L) return 3;
+		if (l >= 10L) return 2;
+		return 1;
+	}
+
 
 	public void setAccounts(List<Account> accounts)
 	{

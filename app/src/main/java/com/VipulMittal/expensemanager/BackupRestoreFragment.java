@@ -12,6 +12,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.room.util.FileUtil;
 
+import android.os.Environment;
 import android.os.FileUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,9 +44,16 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 
 //				File(mainActivity.accountViewModel.repo.accountDatabase.getOpenHelper().getWritableDatabase().getPath())
 
+
 				int permission = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
 				if(permission == PackageManager.PERMISSION_GRANTED)
 				{
+					File folder = new File (Environment.getExternalStorageDirectory() + File.separator + "Expense Tracker");
+
+					if(!folder.exists())
+						folder.mkdirs();
+
+
 //
 //					File db= mainActivity.getDatabasePath("account_database");
 //					File dbShm = new File(db.getParent(), "dbShm");

@@ -73,9 +73,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             int y=calendar.get(Calendar.YEAR);
             String date=d+" "+getM(m)+", "+y;
             holder.TVCat.setText(date);
-            holder.TVSubCat.setText("Income : \u20b9"+transactions.get(position).note);
+            if(!transactions.get(position).note.equals("0"))
+                holder.TVSubCat.setText("Income : \u20b9"+transactions.get(position).note);
+            else
+                holder.TVSubCat.setText("");
             holder.TVSubCat.setTextColor(Color.GREEN);
-            holder.TVAmount.setText("Expense : \u20b9"+transactions.get(position).description);
+
+            if(!transactions.get(position).description.equals("0"))
+                holder.TVAmount.setText("Expense : \u20b9"+transactions.get(position).description);
+            else
+                holder.TVAmount.setText("");
             holder.TVAmount.setTextColor(Color.RED);
 
             Log.d(TAG, "onBindViewHolder: Tnote = "+transaction.note);
@@ -89,12 +96,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 holder.TVSubCat.setText("");
             holder.TVNote.setText(transaction.note);
             if(transaction.amount>=0) {
-                holder.TVAmount.setText("\u20b9"+transaction.amount);
+                holder.TVAmount.setText("\u20b9"+mainActivity.moneyToString(transaction.amount));
                 holder.TVAmount.setTextColor(Color.GREEN);
             }
             else
             {
-                holder.TVAmount.setText("- \u20b9"+(-transaction.amount));
+                holder.TVAmount.setText("- \u20b9"+mainActivity.moneyToString(-transaction.amount));
                 holder.TVAmount.setTextColor(Color.RED);
             }
             Log.d(TAG, "onBindViewHolder: note = "+transaction.note);
@@ -110,7 +117,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 holder.TVCat.setText("Transfer");
                 holder.TVAccount.setText(acc.get(transaction.accountID) +" -> "+acc.get(transaction.catID));
                 holder.TVAmount.setTextColor(Color.BLUE);
-                holder.TVAmount.setText("\u20b9"+(-transaction.amount));
+                holder.TVAmount.setText("\u20b9"+mainActivity.moneyToString(-transaction.amount));
             }
 
             if(position==transactions.size()-1 || transactions.get(position+1).catID==-1)
@@ -192,7 +199,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             {
                 if (d != transactions.get(i).date)
                 {
-                    transactions.add(i+1,new Transaction(""+amt[0],0,0,-1,0,""+(-amt[1]),0,d,0));
+                    transactions.add(i+1,new Transaction(""+mainActivity.moneyToString(amt[0]),0,0,-1,0,""+mainActivity.moneyToString(-amt[1]),0,d,0));
                     d = transactions.get(i).date;
                     amt[0]=amt[1]=0;
                 }
@@ -207,7 +214,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                     ex+=transactions.get(i).amount;
                 }
             }
-            transactions.add(0,new Transaction(""+amt[0],0,0,-1,0,""+(-amt[1]),0,d,0));
+            transactions.add(0,new Transaction(""+mainActivity.moneyToString(amt[0]),0,0,-1,0,""+mainActivity.moneyToString(-amt[1]),0,d,0));
         }
         mainActivity.income=in;
         mainActivity.expense=ex;

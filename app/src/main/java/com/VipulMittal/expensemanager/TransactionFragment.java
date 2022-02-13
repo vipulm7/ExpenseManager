@@ -351,6 +351,8 @@ public class TransactionFragment extends Fragment {
 				cID=-1;
 				sID=-1;
 				BCat=false;
+				save.setEnabled(false);
+				repeat.setEnabled(false);
 			}
 			else if(i==R.id.radioCatExpense)
 			{
@@ -362,6 +364,8 @@ public class TransactionFragment extends Fragment {
 				cID=-1;
 				sID=-1;
 				BCat=false;
+				save.setEnabled(false);
+				repeat.setEnabled(false);
 			}
 			else if(i==R.id.radioCatTransfer)
 			{
@@ -373,6 +377,8 @@ public class TransactionFragment extends Fragment {
 				cID=-1;
 				sID=-1;
 				BCat=false;
+				save.setEnabled(false);
+				repeat.setEnabled(false);
 			}
 		});
 	}

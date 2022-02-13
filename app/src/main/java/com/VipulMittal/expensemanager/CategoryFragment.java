@@ -2,20 +2,16 @@ package com.VipulMittal.expensemanager;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
@@ -30,9 +26,10 @@ public class CategoryFragment extends Fragment {
 		// Required empty public constructor
 	}
 
-	RecyclerView RVIncomeCats, RVExpenseCats;
+	RecyclerView RVCats;
 	CategoryAdapter categoryAdapter;
 	MainActivity mainActivity;
+	TextView TVIncome, TVExpense;
 
 	CategoryAdapter categoryAdapter2;
 	CategoryViewModel categoryViewModel2;
@@ -46,27 +43,31 @@ public class CategoryFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.fragment_category, container, false);
 
-		RVExpenseCats=view.findViewById(R.id.RVCat_expense);
-		RVIncomeCats=view.findViewById(R.id.RVCat_income);
+		RVCats =view.findViewById(R.id.RVCat_income);
+		TVIncome = view.findViewById(R.id.TVCat_income);
+		TVExpense = view.findViewById(R.id.TVCat_expense);
 
 
 		categoryAdapter=mainActivity.categoryAdapter;
-//		mainActivity.categoryROOM(1);
 		categoryAdapter.listener=null;
 		categoryAdapter.who=2;
 		categoryAdapter.cID=-1;
-		RVIncomeCats.setAdapter(categoryAdapter);
-		RVIncomeCats.setLayoutManager(new LinearLayoutManager(getContext()));
-		RVIncomeCats.setNestedScrollingEnabled(false);
+		RVCats.setAdapter(categoryAdapter);
+		RVCats.setLayoutManager(new LinearLayoutManager(getContext()));
+		RVCats.setNestedScrollingEnabled(false);
 
 		categoryAdapter2= mainActivity.categoryAdapter2;
 		categoryAdapter2.listener=null;
 		categoryAdapter2.who=2;
 		categoryAdapter2.cID=-1;
 
-		RVExpenseCats.setAdapter(categoryAdapter2);
-		RVExpenseCats.setLayoutManager(new LinearLayoutManager(getContext()));
-		RVExpenseCats.setNestedScrollingEnabled(false);
+		TVIncome.setOnClickListener(v->{
+			RVCats.setAdapter(categoryAdapter);
+		});
+
+		TVExpense.setOnClickListener(v->{
+			RVCats.setAdapter(categoryAdapter2);
+		});
 
 		return view;
 	}
