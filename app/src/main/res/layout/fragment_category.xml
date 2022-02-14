@@ -7,49 +7,49 @@
     tools:context=".CategoryFragment"
     android:background="#C6EFD6"
     >
-    
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-        
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/TVCat_income"
-                android:textSize="20sp"
-                android:text="Income Categories"
-                />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/TVCat_expense"
-                android:textSize="20sp"
-                android:text="Expense Categories"
-                />
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/catTabLayout"
+            app:tabInlineLabel="true"
+            app:tabTextColor="@color/cyan"
+            app:tabSelectedTextColor="@color/cyan_dark"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Small"
+            />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/catTabLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/catViewPager"
+            android:layout_marginTop="10dp"
+            />
             
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/RVCat_income"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/TVCat_income"
-                />
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                android:id="@+id/TVCat_income"-->
+<!--                android:textSize="20sp"-->
+<!--                android:text="Income Categories"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                android:id="@+id/TVCat_expense"-->
+<!--                android:textSize="20sp"-->
+<!--                android:text="Expense Categories"-->
+<!--                />-->
             
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        
-    </androidx.core.widget.NestedScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
