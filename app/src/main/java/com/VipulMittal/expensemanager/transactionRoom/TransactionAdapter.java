@@ -33,6 +33,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public Map<Integer, String> acc;
     public Map<Integer, String> cat;
     public Map<Integer, String> subcat;
+    public int dates;
 
     public TransactionAdapter(MainActivity mainActivity) {
         transactions = new ArrayList<>();
@@ -190,6 +191,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void setTransactions(List<Transaction> transactions)
     {
         this.transactions=transactions;
+        dates=0;
 
         int ex=0,in=0;
         if(transactions.size()>0) {
@@ -200,6 +202,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 if (d != transactions.get(i).date)
                 {
                     transactions.add(i+1,new Transaction(""+mainActivity.moneyToString(amt[0]),0,0,-1,0,""+mainActivity.moneyToString(-amt[1]),0,d,0));
+                    dates++;
                     d = transactions.get(i).date;
                     amt[0]=amt[1]=0;
                 }
@@ -215,6 +218,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 }
             }
             transactions.add(0,new Transaction(""+mainActivity.moneyToString(amt[0]),0,0,-1,0,""+mainActivity.moneyToString(-amt[1]),0,d,0));
+            dates++;
         }
         mainActivity.income=in;
         mainActivity.expense=ex;

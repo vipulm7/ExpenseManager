@@ -14,11 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
+import androidx.preference.SwitchPreferenceCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -28,10 +30,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 	MainActivity mainActivity;
 	Preference.OnPreferenceChangeListener fps_listener;
 
+	SwitchPreference notif;
+
 	@Override
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
 		setPreferencesFromResource(R.xml.main, rootKey);
-
+		Log.d(TAG, "onCreatePreferences: rootKey = "+rootKey);
+		Log.d(TAG, "onCreatePreferences: savedInstanceState = "+savedInstanceState);
+		notif = findPreference("notifs");
 		EditTextPreference editTextPreference = findPreference("password");
 		SwitchPreference passwordSwitch = findPreference("passwordOnOff");
 		SwitchPreference fingerprintSwitch = findPreference("fingerprint");
@@ -82,6 +88,30 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 //				Log.d(TAG, "onPreferenceChange:  on = "+on);
 			return true;
+		});
+
+		notif.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+				boolean on = (boolean) newValue;
+
+				if(on) {
+
+					MainActivity.notificationManager= NotificationManagerCompat.from(mainActivity.getApplicationContext());
+					mainActivity.createNotificationChannelForOreoAndAbove();
+					mainActivity.areNotifAllowed =MainActivity.notificationManager.areNotificationsEnabled();
+
+					if(!mainActivity.areNotifAllowed) {
+						mainActivity.openNotifSettings(notif);
+						Log.d(TAG, "onPreferenceChange: mainActivity.areNotifAllowed = "+mainActivity.areNotifAllowed);
+						return false;
+					}
+					else
+						return true;
+				}
+				else
+					return true;
+			}
 		});
 
 		fps_listener = new Preference.OnPreferenceChangeListener() {

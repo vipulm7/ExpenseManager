@@ -1,31 +1,45 @@
 package com.VipulMittal.expensemanager.categoryRoom;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
+import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCatViewHolder> {
 
-	public ClickListener listener;
+	public ClickListener cardListener, arrowListener;
 	public List<Category> categories;
 	public int cID;
 	String TAG="Vipul_tag";
 	public int who;
+	MainActivity mainActivity;
 
-	public CategoryAdapter() {
+
+	public CategoryAdapter(MainActivity mainActivity) {
 		categories=new ArrayList<>();
+		this.mainActivity = mainActivity;
 	}
 
 	@NonNull
@@ -61,9 +75,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 		{
 			holder.name.setText(category.catName);
 			if(category.catAmount>=0)
-				holder.amt.setText(""+moneyToString(category.catAmount));
+				holder.amt.setText("\u20b9"+moneyToString(category.catAmount));
 			else
-				holder.amt.setText(""+moneyToString(-category.catAmount));
+				holder.amt.setText("\u20b9"+moneyToString(-category.catAmount));
 
 			if(category.type==1)
 				holder.amt.setTextColor(Color.GREEN);
@@ -71,11 +85,36 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				holder.amt.setTextColor(Color.RED);
 
 
-			holder.bgt.setText(""+moneyToString(category.catBudget));
+			holder.bgt.setText("\u20b9"+moneyToString(category.catBudget));
 			if(category.noOfSubCat>0)
 				holder.arrow.setVisibility(View.VISIBLE);
 			else
-				holder.arrow.setVisibility(View.GONE);
+				holder.arrow.setVisibility(View.INVISIBLE);
+
+			if(category.type == 1)
+			{
+				holder.bgt.setVisibility(View.GONE);
+				holder.bgt2.setVisibility(View.GONE);
+				holder.progressBar.setVisibility(View.GONE);
+			}
+
+			if(category.catBudget!=0) {
+				int progress = (int)((-100L*category.catAmount)/category.catBudget);
+				Log.d(TAG, "onBindViewHolder: catName = "+category.catName+" progress = "+progress);
+				if(progress>100)
+					progress = 100;
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+					holder.progressBar.setProgress(progress);
+				else
+					holder.progressBar.setProgress(progress);
+			}
+			else
+			{
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+					holder.progressBar.setProgress(0, true);
+				else
+					holder.progressBar.setProgress(0);
+			}
 		}
 	}
 
@@ -89,8 +128,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 	public class BSDCatViewHolder extends RecyclerView.ViewHolder
 	{
-		TextView name,arrow, bgt,amt;
+		public TextView name,arrow, bgt,amt, amt2, bgt2;
 		ImageView imageView;
+		ProgressBar progressBar;
+
+		RecyclerView rv_subcatList;
+		public SubCategoryAdapter subCategoryAdapter;
+		boolean b3, b4;
+		public boolean open;
+
 		public BSDCatViewHolder(@NonNull View itemView) {
 			super(itemView);
 			if(who==1)
@@ -101,9 +147,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				itemView.setOnClickListener(view -> {
 					int position = getAdapterPosition();
 					Log.d(TAG, "BSDCatViewHolder: pos for who1 = " + position);
-//				if(listener!=null && position!=-1)
-					if (listener != null)
-						listener.onItemClick(this);
+					if (cardListener != null)
+						cardListener.onItemClick(this);
 				});
 			}
 			else if(who==2)
@@ -113,12 +158,126 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				arrow=itemView.findViewById(R.id.TVCat_ARROW);
 				bgt=itemView.findViewById(R.id.TVCat_budget);
 				amt=itemView.findViewById(R.id.TVCat_amt);
+				bgt2=itemView.findViewById(R.id.TVCat_BUDGET);
+				amt2=itemView.findViewById(R.id.TVCat_AMOUNT);
+				rv_subcatList= itemView.findViewById(R.id.rv_SubcatList);
+				progressBar = itemView.findViewById(R.id.progressBar);
+
+				subCategoryAdapter = new SubCategoryAdapter();
+				subCategoryAdapter.who =2;
+				subCategoryAdapter.cID=-1;
+				subCategoryAdapter.sID=-1;
+
+				SubCategoryAdapter.ClickListener listenerS = new SubCategoryAdapter.ClickListener() {
+					@Override
+					public void onItemClick(SubCategoryAdapter.BSDSubCatViewHolder viewHolder) {
+						int pos = viewHolder.getAdapterPosition();
+
+						SubCategory subCategorySelected = subCategoryAdapter.subCategories.get(pos);
+						TabLayout catTabLayout = mainActivity.categoryFragment.catTabLayout;
+
+						View catView = mainActivity.inflater.inflate(R.layout.category_dialog, null);
+
+						EditText ETForCatN = catView.findViewById(R.id.ETDialogCatName);
+						EditText ETForCatIB = catView.findViewById(R.id.ETDialogCatBudget);
+//						rg_catDialog=catView.findViewById(R.id.RGCatDialog);
+
+						TextView catTitle = catView.findViewById(R.id.TVDialogCT);
+						catTitle.setText("Update SubCategory");
+
+						AlertDialog.Builder builder2;
+						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+							builder2 = new AlertDialog.Builder(mainActivity, android.R.style.ThemeOverlay_Material_Dialog);
+						}
+						else
+							builder2 = new AlertDialog.Builder(mainActivity);
+						builder2.setNegativeButton("Cancel", (dialog2, which) -> {
+
+						})
+								.setView(catView)
+								.setPositiveButton("Update", (dialog2, which) -> {
+									int type=catTabLayout.getSelectedTabPosition()+1;
+									SubCategory subCategory = new SubCategory(ETForCatN.getText().toString().trim(), subCategorySelected.subCatAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), subCategorySelected.categoryID, type);
+									subCategory.id = subCategorySelected.id;
+									mainActivity.subCategoryViewModel.Update(subCategory);
+								});
+						AlertDialog dialog2 = builder2.create();
+						dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+
+						ETForCatN.addTextChangedListener(new TextWatcher() {
+							@Override
+							public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+							}
+
+							@Override
+							public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+								b3 = charSequence.toString().trim().length() != 0;
+								dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b3 && b4);
+							}
+
+							@Override
+							public void afterTextChanged(Editable editable) {
+							}
+						});
+
+						ETForCatIB.addTextChangedListener(new TextWatcher() {
+							@Override
+							public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+							}
+
+							@Override
+							public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+								b4 = charSequence.toString().trim().length() != 0;
+								dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b3 && b4);
+							}
+
+							@Override
+							public void afterTextChanged(Editable editable) {
+							}
+						});
+
+
+						dialog2.show();
+						dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+						ETForCatN.setText(subCategorySelected.name);
+						ETForCatIB.setText(""+subCategorySelected.subCatBudget);
+						ETForCatN.requestFocus();
+
+
+						int posT = catTabLayout.getSelectedTabPosition();
+						if(posT==0)
+						{
+							ETForCatIB.setVisibility(View.GONE);
+							catView.findViewById(R.id.TVDialogCB).setVisibility(View.GONE);
+						}
+						else if(posT == 1)
+						{
+							ETForCatIB.setVisibility(View.VISIBLE);
+							catView.findViewById(R.id.TVDialogCB).setVisibility(View.VISIBLE);
+						}
+
+						Log.d(TAG, "onItemClick: card clicked "+pos);
+					}
+				};
+
+				subCategoryAdapter.listener = listenerS;
+
+				rv_subcatList.setNestedScrollingEnabled(false);
+				rv_subcatList.setLayoutManager(new LinearLayoutManager(mainActivity.getApplicationContext()));
+				rv_subcatList.setAdapter(subCategoryAdapter);
 
 				itemView.setOnClickListener(v->{
 					int position = getAdapterPosition();
 					Log.d(TAG, "BSDCatViewHolder: pos for who2 = " + position);
-					if(listener!=null)
-						listener.onItemClick(this);
+					if(cardListener !=null)
+						cardListener.onItemClick(this);
+				});
+
+				arrow.setOnClickListener(v->{
+					if(arrowListener != null)
+						arrowListener.onItemClick(this);
 				});
 			}
 		}

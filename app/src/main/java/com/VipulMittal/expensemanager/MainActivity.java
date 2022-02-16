@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
-import androidx.work.WorkRequest;
+import androidx.preference.SwitchPreference;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -25,7 +25,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -40,9 +39,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -66,7 +62,9 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	HomeFragment homeFragment;
 	AccountsFragment accountsFragment;
 	AnalysisFragment analysisFragment;
-	CategoryFragment categoryFragment;
+	public CategoryFragment categoryFragment;
 	View accView, catView;
 	boolean b1, b2, b3, b4;
 	RadioGroup rg_catDialog;
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public final String CHANNEL_ID="1";
 	public static final int notifID=2;
 	ActivityResultLauncher<Intent> abc;
-	boolean areNotifEnabled;
+	boolean areNotifAllowed;
 	ActionBar actionBar;
 	public static PendingIntent pendingIntent;
 	int viewMode;
@@ -119,6 +117,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public BiometricPrompt biometricPrompt;
 	public BiometricPrompt.PromptInfo promptInfo;
 	SharedPreferences sharedPreferences;
+	SwitchPreference notifSwitchPreference;
+	SettingsFragment settingsFragment;
+	public LayoutInflater inflater;
+
+	Map<Integer, List<SubCategory>> subcategoriesMap;
 
 
 	@Override
@@ -131,13 +134,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		FABAdd=findViewById(R.id.FABAdd);
 		navigationBarView=findViewById(R.id.BottomNavigation);
 		layoutForFragment=findViewById(R.id.layoutForFragment);
+		settingsFragment = new SettingsFragment();
+		notifSwitchPreference = settingsFragment.notif;
 
 		subCategoryAdapter=new SubCategoryAdapter();
 		accountAdapter=new AccountAdapter();
-		categoryAdapter=new CategoryAdapter();
-		categoryAdapter2 = new CategoryAdapter();
+		categoryAdapter=new CategoryAdapter(this);
+		categoryAdapter2 = new CategoryAdapter(this);
 		allSubcats=new ArrayList<>();
 		toShow=Calendar.getInstance();
+		subcategoriesMap = new HashMap<>();
+		inflater = LayoutInflater.from(this);
 
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		viewMode=sharedPreferences.getInt("view", R.id.RBM);
@@ -312,18 +319,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 
-		catView = layoutInflater.inflate(R.layout.category_dialog_main, null);
+		catView = layoutInflater.inflate(R.layout.category_dialog, null);
 
 		EditText ETForCatN = catView.findViewById(R.id.ETDialogCatName);
 		EditText ETForCatIB = catView.findViewById(R.id.ETDialogCatBudget);
-		rg_catDialog=catView.findViewById(R.id.RGCatDialog);
+//		rg_catDialog=catView.findViewById(R.id.RGCatDialog);
 
-		TextView catTitle = new TextView(this);
-		catTitle.setText("Add New Category");
-		catTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-		catTitle.setPadding(2,2,2,10);
-		catTitle.setTextSize(22);
-		catTitle.setTypeface(null, Typeface.BOLD);
+		TextView catTitle = catView.findViewById(R.id.TVDialogCT);
+//		TextView catTitle = new TextView(this);
+//		catTitle.setText("Add New Category");
+//		catTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+//		catTitle.setPadding(2,2,2,10);
+//		catTitle.setTextSize(22);
+//		catTitle.setTypeface(null, Typeface.BOLD);
 
 		AlertDialog.Builder builder2;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -331,17 +339,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		}
 		else
 			builder2 = new AlertDialog.Builder(this);
-		builder2.setCustomTitle(catTitle)
-				.setNegativeButton("Cancel", (dialog2, which) -> {
+		builder2.setNegativeButton("Cancel", (dialog2, which) -> {
 
 				})
 				.setView(catView)
 				.setPositiveButton("Add", (dialog2, which) -> {
-					int type=-1;
-					if(rg_catDialog.getCheckedRadioButtonId()==R.id.RBE)
-						type = 2;
-					else if(rg_catDialog.getCheckedRadioButtonId()==R.id.RBI)
-						type=1;
+					int type=categoryFragment.catTabLayout.getSelectedTabPosition()+1;
 					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type));
 				});
 		AlertDialog dialog2 = builder2.create();
@@ -350,6 +353,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		ETForCatN.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
 			}
 
 			@Override
@@ -412,8 +416,24 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				dialog2.show();
 				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 				ETForCatN.setText("");
-				ETForCatIB.setText("");
+				ETForCatIB.setText("0");
 				ETForCatN.requestFocus();
+
+
+				int pos = categoryFragment.catTabLayout.getSelectedTabPosition();
+				if(pos==0)
+				{
+					catTitle.setText("Add New Income Category");
+					ETForCatIB.setVisibility(View.GONE);
+					catView.findViewById(R.id.TVDialogCB).setVisibility(View.GONE);
+				}
+				else if(pos == 1)
+				{
+					catTitle.setText("Add New Expense Category");
+					ETForCatIB.setVisibility(View.VISIBLE);
+					catView.findViewById(R.id.TVDialogCB).setVisibility(View.VISIBLE);
+				}
+
 				Log.d(TAG, "onCreateView: dialog created");
 			}
 		});
@@ -495,16 +515,24 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			public void onActivityResult(ActivityResult result) {
 				notificationManager=NotificationManagerCompat.from(getApplicationContext());
 				createNotificationChannelForOreoAndAbove();
-				areNotifEnabled=notificationManager.areNotificationsEnabled();
+				areNotifAllowed =notificationManager.areNotificationsEnabled();
+
+				if(areNotifAllowed)
+					notifSwitchPreference.setChecked(true);
+				else
+					notifSwitchPreference.setChecked(false);
 			}
 		});
 
 		notificationManager=NotificationManagerCompat.from(this);
 		createNotificationChannelForOreoAndAbove();
-		areNotifEnabled=notificationManager.areNotificationsEnabled();
+		areNotifAllowed =notificationManager.areNotificationsEnabled();
 
-		if(!areNotifEnabled)
-			openNotifSettings();
+		if(!areNotifAllowed) {
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putBoolean("notifs", false);
+			editor.apply();
+		}
 		else
 			createNotif();
 	}
@@ -534,17 +562,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		toast.show();
 	}
 
-	private void openNotifSettings() {
+	public void openNotifSettings(SwitchPreference notifSwitchPreference) {
 		Intent intent=new Intent();
 		intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
 		intent.putExtra("app_package", getPackageName());
 		intent.putExtra("app_uid", getApplicationInfo().uid);
 
 		intent.putExtra("android.provider.extra.APP_PACKAGE",getPackageName());
+
+		this.notifSwitchPreference = notifSwitchPreference;
 		abc.launch(intent);
 	}
 
-	private void createNotificationChannelForOreoAndAbove() {
+	public void createNotificationChannelForOreoAndAbove() {
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Notif", NotificationManager.IMPORTANCE_DEFAULT);
 			channel.setDescription("DesForNotifChannel");
@@ -597,9 +627,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		if(viewMode == R.id.RBM)
 		{
 			transactionViewModel.getAllTransactionsMONTH(month, year).observe(this, transactions -> {
+				Log.d(TAG, "transactionROOM: transactions month before = " + transactionAdapter.transactions.size());
+				int a=transactionAdapter.transactions.size();
 				transactionAdapter.setTransactions(transactions);
 				transactionAdapter.notifyDataSetChanged();
+				Log.d(TAG, "transactionROOM: transactions month a = " + a);
+//				showTransactions(transactions);
 				Log.d(TAG, "transactionROOM: transactions month = " + transactions.size());
+//				Log.d(TAG, "transactionROOM: transactions month dates = " + transactionAdapter.dates);
 				tellDate();
 
 				homeFragment.TVMainIncome.setText("\u20b9" + moneyToString(income));
@@ -607,7 +642,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				if (income + expense >= 0) {
 					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
 					homeFragment.TVMainTotal.setTextColor(Color.GREEN);
-				} else {
+				}
+				else
+				{
 					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 					homeFragment.TVMainTotal.setTextColor(Color.RED);
 				}
@@ -658,6 +695,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		}
 	}
 
+	private void showTransactions(List<Transaction> transactions) {
+		for(int i=-1;++i<transactions.size();)
+			Log.d(TAG, "transactionROOM: "+i+" "+transactions.get(i).note);
+		Log.d(TAG, "transactionROOM: =======================================================================");
+	}
+
 	public void subCategoryROOM(int catID) {
 		subCategoryViewModel.getSubcategories(catID).observe(this, new Observer<List<SubCategory>>() {
 			@Override
@@ -691,6 +734,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			@Override
 			public void onChanged(List<SubCategory> subCategories) {
 				subCategoryAdapter.setAllSubCats(subCategories);
+
+				subcategoriesMap.clear();
+				for(int i=-1;++i<subCategories.size();)
+				{
+					if(!subcategoriesMap.containsKey(subCategories.get(i).categoryID))
+						subcategoriesMap.put(subCategories.get(i).categoryID, new ArrayList<>());
+
+					subcategoriesMap.get(subCategories.get(i).categoryID).add(subCategories.get(i));
+				}
 
 				transactionAdapter.setSubcat();
 				transactionAdapter.notifyDataSetChanged();
@@ -768,7 +820,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			fragmentTransaction.replace(R.id.layoutForFragment, categoryFragment).commit();
 			Log.d(TAG, "showFragment: category");
 			systemTimeInMillies=0;
-			setActionBarTitle("Categories");
+			setActionBarTitle("Categories ->");
 		}
 		else if(id==R.id.bn_accounts) {
 			accountsFragment=new AccountsFragment();
@@ -866,7 +918,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		{
 			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 			fragmentTransaction.addToBackStack("settings");
-			fragmentTransaction.replace(R.id.layoutForFragment, new SettingsFragment())
+			fragmentTransaction.replace(R.id.layoutForFragment, settingsFragment)
 					.commit();
 
 			FABAdd.hide();
@@ -927,12 +979,24 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		if(!login && sharedPreferences.getBoolean("passwordOnOff", false) &&  sharedPreferences.getBoolean("fingerprint", false))
 			fingerprint();
+
+		notificationManager=NotificationManagerCompat.from(getApplicationContext());
+		createNotificationChannelForOreoAndAbove();
+		areNotifAllowed =notificationManager.areNotificationsEnabled();
+
+//		if(!areNotifAllowed)
+//			notifSwitchPreference.setChecked(false);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 		Log.d(TAG, "onStop: ");
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 	}
 
 	@Override

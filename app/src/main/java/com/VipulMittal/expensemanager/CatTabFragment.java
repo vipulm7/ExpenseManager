@@ -30,6 +30,8 @@ public class CatTabFragment extends Fragment {
 
 		rv_cat =view.findViewById(R.id.RV_cat);
 
+
+
 		rv_cat.setAdapter(adapter);
 		rv_cat.setLayoutManager(new LinearLayoutManager(getContext()));
 		rv_cat.setNestedScrollingEnabled(false);

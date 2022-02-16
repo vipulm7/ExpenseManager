@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.TransactionFragment;
-import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
@@ -97,7 +96,7 @@ public class BsdCategoryFragment extends Fragment {
 			}
 		};
 		categoryAdapter.cID = cID;
-		categoryAdapter.listener=listener;
+		categoryAdapter.cardListener =listener;
 
 //		Log.d(TAG, "onCreateView: adapter after = "+categoryAdapter);
 
