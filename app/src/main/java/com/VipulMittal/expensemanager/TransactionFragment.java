@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -82,6 +83,7 @@ public class TransactionFragment extends Fragment {
 	Button save, repeat;
 	int dateArray[]=new int[7];
 	MainActivity mainActivity;
+	ImageView iv_acc;
 
 
 	@Override
@@ -103,10 +105,12 @@ public class TransactionFragment extends Fragment {
 		ETAmt=view.findViewById(R.id.ETAmount);
 		save=view.findViewById(R.id.transaction_save_button);
 		repeat=view.findViewById(R.id.transaction_repeat_button);
+		iv_acc = view.findViewById(R.id.IVAccounts);
 		save.setEnabled(request != 1);
 		repeat.setEnabled(request != 1);
 		mainActivity=(MainActivity) getActivity();
 
+		iv_acc.setImageResource(R.drawable.ic_account);
 
 		setRadioButton(type);
 		doColoring();
@@ -120,6 +124,7 @@ public class TransactionFragment extends Fragment {
 			Log.d(TAG, "onCreateView: account name = "+account.name);
 			TVAccount.setText(account.name);
 			BAcc=true;
+			iv_acc.setImageResource(account.imageId);	//icon
 		}
 
 		if(cID!=-1)
@@ -302,11 +307,12 @@ public class TransactionFragment extends Fragment {
 
 	}
 
-	public void saveSelectedAccount(int aID, String name)
+	public void saveSelectedAccount(int aID, Account accountSelected)
 	{
 		this.aID = aID;
-		TVAccount.setText(name);
+		TVAccount.setText(accountSelected.name);
 		BAcc = true;
+		iv_acc.setImageResource(accountSelected.imageId);
 
 		save.setEnabled(BNote && BAmt && BAcc && BCat);
 		repeat.setEnabled(BNote && BAmt && BAcc && BCat);

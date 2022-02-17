@@ -203,12 +203,22 @@
             android:id="@+id/constraintChooseType1"
             >
 
+            <ImageView
+                android:id="@+id/IVAccounts"
+                android:layout_width="57dp"
+                android:layout_height="36dp"
+                android:padding="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/TVAccount"
+                />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Account "
                 android:id="@+id/TVAccount"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/IVAccounts"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:textSize="18sp"

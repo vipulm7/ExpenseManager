@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,6 +72,7 @@ public class AccountsFragment extends Fragment {
 				accTitle.setPadding(2,16,2,10);
 				accTitle.setTextSize(22);
 				accTitle.setTypeface(null, Typeface.BOLD);
+				IconsAdapter iconsAdapter = new IconsAdapter(mainActivity.icon_account);
 
 				AlertDialog.Builder builder;
 				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -84,7 +86,7 @@ public class AccountsFragment extends Fragment {
 						})
 						.setView(accView)
 						.setPositiveButton("Update", (dialog, which) -> {
-							Account account=new Account(ETForAccN.getText().toString().trim(),accountSelected.amount, Integer.parseInt(ETForAccIB.getText().toString().trim()), R.drawable.ia_google_pay);
+							Account account=new Account(ETForAccN.getText().toString().trim(),accountSelected.amount, Integer.parseInt(ETForAccIB.getText().toString().trim()), mainActivity.icon_account[iconsAdapter.selected]);
 							account.id=accountSelected.id;
 							accountViewModel.Update(account);
 						});
@@ -129,6 +131,24 @@ public class AccountsFragment extends Fragment {
 				ETForAccN.setText(accountSelected.name);
 				ETForAccIB.setText(""+accountSelected.initialBalance);
 				ETForAccN.requestFocus();
+
+
+				RecyclerView recyclerView = accView.findViewById(R.id.rv_icons_account);
+
+				IconsAdapter.ClickListener listener = viewHolder1 -> {
+					int pos=viewHolder1.getAdapterPosition();
+
+					int a=iconsAdapter.selected;
+					iconsAdapter.selected=pos;
+
+					iconsAdapter.notifyItemChanged(a);
+					iconsAdapter.notifyItemChanged(pos);
+				};
+
+				iconsAdapter.selected = findIndex(mainActivity.icon_account, accountSelected.imageId);
+				iconsAdapter.listener = listener;
+				recyclerView.setAdapter(iconsAdapter);
+				recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false));
 			}
 		};
 
@@ -140,5 +160,13 @@ public class AccountsFragment extends Fragment {
 		RVAccount.setNestedScrollingEnabled(false);
 
 		return view;
+	}
+
+	private int findIndex(int[] icon_account, int imageId) {
+		for(int i=-1;++i<icon_account.length;)
+			if(icon_account[i] == imageId)
+				return i;
+
+		return -1;
 	}
 }

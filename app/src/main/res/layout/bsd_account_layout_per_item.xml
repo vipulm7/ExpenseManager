@@ -6,36 +6,67 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bsd_layout_ID">
 
-    <TextView
-        android:id="@+id/BSD_Acc"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="7dp"
-        android:text="Acc1"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/BSD_Acc_amt"
-        app:layout_constraintHorizontal_weight="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/constraintIV"
+        >
 
-    <TextView
-        android:id="@+id/BSD_Acc_amt"
+        <ImageView
+            android:id="@+id/IVAccountsLPI"
+            android:layout_width="57dp"
+            android:layout_height="36dp"
+            android:padding="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="#FFFF00"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:autoSizeMaxTextSize="24sp"
-        android:autoSizeMinTextSize="10sp"
-        android:autoSizeStepGranularity="1sp"
-        android:autoSizeTextType="uniform"
-        android:maxLines="1"
-        android:padding="7dp"
-        android:text="\u20b90"
-        android:textAlignment="textEnd"
-        android:paddingEnd="10dp"
-        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/constraintIV"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="0.25"
-        app:layout_constraintStart_toEndOf="@+id/BSD_Acc"
-        app:layout_constraintTop_toTopOf="parent" />
+        >
+
+        <TextView
+            android:id="@+id/BSD_Acc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="7dp"
+            android:text="Acc1"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/BSD_Acc_amt"
+            app:layout_constraintHorizontal_weight="0.75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/BSD_Acc_amt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autoSizeMaxTextSize="24sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:padding="7dp"
+            android:text="\u20b90"
+            android:textAlignment="textEnd"
+            android:paddingEnd="10dp"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="0.25"
+            app:layout_constraintStart_toEndOf="@+id/BSD_Acc"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.VipulMittal.expensemanager.IconsAdapter;
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.TransactionFragment;
@@ -48,6 +50,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	int aID, aType, other, type;
 	TransactionFragment transactionFragment;
 	List<Account> accounts;
+	MainActivity mainActivity;
 	View accView;
 	boolean b1=false, b2=false;
 
@@ -60,7 +63,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		RVAccounts =view.findViewById(R.id.bsd_rv_accounts);
 		addNew=view.findViewById(R.id.BSD_BaddAccount);
 
-		MainActivity mainActivity=(MainActivity)getActivity();
+		mainActivity=(MainActivity)getActivity();
 		accountAdapter=mainActivity.accountAdapter;
 		accounts=accountAdapter.accounts;
 		accountAdapter.aID = aID;
@@ -88,7 +91,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 				}
 				else {
 					if (aType == 1)
-						transactionFragment.saveSelectedAccount(aID, accounts.get(pos).name); //bsdAccountsFragment.selected can also be used
+						transactionFragment.saveSelectedAccount(aID, accounts.get(pos)); //bsdAccountsFragment.selected can also be used
 					else
 						transactionFragment.saveSelectedCategoryWithName(aID, accounts.get(pos).name);
 					dismiss();
@@ -122,6 +125,8 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		accTitle.setPadding(2,16,2,10);
 		accTitle.setTextSize(22);
 		accTitle.setTypeface(null, Typeface.BOLD);
+		IconsAdapter iconsAdapter = new IconsAdapter(mainActivity.icon_account);
+
 
 		AlertDialog.Builder builder;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -135,7 +140,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 				})
 				.setView(accView)
 				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), R.drawable.ia_google_pay));
+					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), mainActivity.icon_account[iconsAdapter.selected]));
 				});
 		AlertDialog dialog = builder.create();
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -183,7 +188,26 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 			ETForAccN.setText("");
 			ETForAccIB.setText("");
 			ETForAccN.requestFocus();
+
+			RecyclerView recyclerView = accView.findViewById(R.id.rv_icons_account);
+
+			IconsAdapter.ClickListener listener = viewHolder1 -> {
+				int pos=viewHolder1.getAdapterPosition();
+
+				int a=iconsAdapter.selected;
+				iconsAdapter.selected=pos;
+
+				iconsAdapter.notifyItemChanged(a);
+				iconsAdapter.notifyItemChanged(pos);
+			};
+			iconsAdapter.listener = listener;
+			recyclerView.setAdapter(iconsAdapter);
+			recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false));
+
 			Log.d(TAG, "onCreateView: dialog created");
+
 		});
 	}
+
+
 }

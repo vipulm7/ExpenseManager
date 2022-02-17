@@ -220,6 +220,7 @@ public class BsdCategoryFragment extends Fragment {
 				@Override
 				public void onChanged(List<SubCategory> subCategories) {
 					mainActivity.subCategoryAdapter.setSubCategories(subCategories);
+					mainActivity.subCategoryAdapter.who=1;
 					mainActivity.subCategoryAdapter.notifyDataSetChanged();
 					bsdCatFragment.showSubCatFragment(cID,sID, type, categorySelected);
 				}

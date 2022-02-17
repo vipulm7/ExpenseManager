@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public static PendingIntent pendingIntent;
 	int viewMode;
 	boolean exit, login, menuShow;
-	int icon_account [];
+	public int icon_account [];
 
 
 	public Executor executor;
@@ -153,13 +153,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		subcategoriesMap = new HashMap<>();
 		inflater = LayoutInflater.from(this);
 		icon_account= new int[]{R.drawable.ia_airtel_money, R.drawable.ia_amazon, R.drawable.ia_american_express, R.drawable.ia_apple_pay,
-				R.drawable.ia_bitcoin_cash, R.drawable.ia_cash, R.drawable.ia_deutschebank, R.drawable.ia_dogecoin,
-				R.drawable.ia_ethereum, R.drawable.ia_facebook_pay, R.drawable.ia_freecharge, R.drawable.ia_gift_card,
-				R.drawable.ia_google_pay, R.drawable.ia_google_wallet, R.drawable.ia_hsbc, R.drawable.ia_litecoin,
-				R.drawable.ia_maestro, R.drawable.ia_master, R.drawable.ia_mobikwik, R.drawable.ia_ola_money,
-				R.drawable.ia_paypal, R.drawable.ia_paytm, R.drawable.ia_payu, R.drawable.ia_payzapp,
-				R.drawable.ia_rupay, R.drawable.ia_samsung_pay, R.drawable.ia_standardchartered, R.drawable.ia_uaevisa,
-				R.drawable.ia_visa};
+				R.drawable.ia_bitcoin_cash, R.drawable.ia_cash, R.drawable.ia_dogecoin, R.drawable.ia_ethereum,
+				R.drawable.ia_facebook_pay, R.drawable.ia_freecharge, R.drawable.ia_gift_card, R.drawable.ia_google_pay,
+				R.drawable.ia_google_wallet, R.drawable.ia_litecoin, R.drawable.ia_maestro, R.drawable.ia_master,
+				R.drawable.ia_mobikwik, R.drawable.ia_ola_money, R.drawable.ia_paypal, R.drawable.ia_paytm,
+				R.drawable.ia_payu, R.drawable.ia_payzapp, R.drawable.ia_rupay, R.drawable.ia_samsung_pay,
+				R.drawable.ia_uaevisa, R.drawable.ia_visa};
 
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		viewMode=sharedPreferences.getInt("view", R.id.RBM);

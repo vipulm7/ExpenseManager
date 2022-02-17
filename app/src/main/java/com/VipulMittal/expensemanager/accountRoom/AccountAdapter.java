@@ -46,10 +46,12 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 			if (accounts.get(position).id == aID) {
 				holder.name.setBackgroundColor(Color.CYAN);
 				holder.amount.setBackgroundColor(Color.CYAN);
+//				holder.imageView.setBackgroundColor(Color.CYAN);
 			}
 			else {
 				holder.name.setBackgroundResource(R.drawable.bsd);
 				holder.amount.setBackgroundResource(R.drawable.bsd);
+//				holder.imageView.setBackgroundResource(R.drawable.bsd);
 			}
 			holder.name.setText(accounts.get(position).name);
 			if(amt<0) {
@@ -75,9 +77,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 				holder.amount.setText("  \u20b9 "+moneyToString(amt));
 			}
 //			holder.amount.setText("\u20b91234567890123456789012345678901234567890");
-
-			holder.imageView.setImageResource(accounts.get(position).imageId);
 		}
+		holder.imageView.setImageResource(accounts.get(position).imageId);
 	}
 
 	@Override
@@ -95,6 +96,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 			if(who==1) {
 				name = itemView.findViewById(R.id.BSD_Acc);
 				amount=itemView.findViewById(R.id.BSD_Acc_amt);
+				imageView=itemView.findViewById(R.id.IVAccountsLPI);
 
 				itemView.setOnClickListener(v -> {
 					int position = getAdapterPosition();

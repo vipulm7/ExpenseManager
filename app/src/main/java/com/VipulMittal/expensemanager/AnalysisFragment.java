@@ -1,16 +1,15 @@
 package com.VipulMittal.expensemanager;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.Gravity;
@@ -24,9 +23,7 @@ import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
-import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
-import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -37,13 +34,12 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class AnalysisFragment extends Fragment {
 
@@ -60,6 +56,9 @@ public class AnalysisFragment extends Fragment {
 	int viewMode;
 	Map <Integer, Integer> catAmount;
 	RadioGroup rg_Filter;
+	RecyclerView rv_analysis;
+	int totalIncome, totalExpense;
+	AnalysisAdapter analysisAdapter;
 
 	public AnalysisFragment() {
 		// Required empty public constructor
@@ -80,6 +79,7 @@ public class AnalysisFragment extends Fragment {
 		TVPeriodShown =view.findViewById(R.id.TVDateChange);
 		toShow = Calendar.getInstance();
 		TVFilter=view.findViewById(R.id.TVFilter);
+		rv_analysis=view.findViewById(R.id.rv_analysis);
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 		viewMode = sharedPreferences.getInt("viewAnalysis", R.id.RBM);
 		SharedPreferences.Editor editor= sharedPreferences.edit();
@@ -87,6 +87,19 @@ public class AnalysisFragment extends Fragment {
 		toast=mainActivity.toast;
 		RBE=view.findViewById(R.id.radioCatExpenseChart);
 		RBI=view.findViewById(R.id.radioCatIncomeChart);
+		analysisAdapter = new AnalysisAdapter();
+
+		AnalysisAdapter.ClickListener listener = new AnalysisAdapter.ClickListener() {
+			@Override
+			public void OnItemClick(AnalysisAdapter.AnalysisViewHolder viewHolder) {
+				int pos = viewHolder.getAdapterPosition();
+
+			}
+		};
+
+		rv_analysis.setAdapter(analysisAdapter);
+		rv_analysis.setNestedScrollingEnabled(false);
+		rv_analysis.setLayoutManager(new LinearLayoutManager(getContext()));
 
 		radioGroupSetListener();
 		setRadioButton(2);
@@ -172,6 +185,7 @@ public class AnalysisFragment extends Fragment {
 		pieChart.setHighlightPerTapEnabled(true);
 		pieChart.setEntryLabelTextSize(12);
 
+
 		pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 			@Override
 			public void onValueSelected(Entry e, Highlight h) {
@@ -183,6 +197,9 @@ public class AnalysisFragment extends Fragment {
 
 			}
 		});
+
+
+
 
 		return view;
 	}
@@ -235,13 +252,28 @@ public class AnalysisFragment extends Fragment {
 		pieEntries=new ArrayList<>();
 
 		List<Integer> cat = new ArrayList<>(catAmount.keySet());
+		double s=0;
+		List<Cat> percent = new ArrayList<>();
+		DecimalFormat df = new DecimalFormat("0.00");
+		double a=0;
+
 		if(type ==1)
 		{
 			for(int i=-1;++i<cat.size();) {
 				Category category = mainActivity.categoryViewModel.getCat(cat.get(i));
-				if(catAmount.get(cat.get(i))>0)
+				if(catAmount.get(cat.get(i))>0) {
 					pieEntries.add(new PieEntry(catAmount.get(cat.get(i)), category.catName));
+					a = (double)catAmount.get(cat.get(i)) / totalIncome;
+					s+=a;
+					percent.add(new Cat(a, category.catName));
+				}
 				Log.d(TAG, "pieData: amt = "+catAmount.get(cat.get(i))+" name = "+category.catName);
+			}
+
+			if(percent.size()!=0) {
+				s -= a;
+				a = 1 - s;
+				percent.set(percent.size() - 1, new Cat(a, percent.get(percent.size() - 1).catName));
 			}
 
 			pieChart.setNoDataText("No Income Entries");
@@ -250,12 +282,25 @@ public class AnalysisFragment extends Fragment {
 		{
 			for(int i=-1;++i<cat.size();) {
 				Category category = mainActivity.categoryViewModel.getCat(cat.get(i));
-				if(catAmount.get(cat.get(i))<0)
+				if(catAmount.get(cat.get(i))<0) {
 					pieEntries.add(new PieEntry(-catAmount.get(cat.get(i)), category.catName));
+					a = (double)catAmount.get(cat.get(i)) / totalExpense;
+					s+=a;
+					percent.add(new Cat(a, category.catName));
+				}
+			}
+
+			if(percent.size()!=0) {
+				s -= a;
+				a = 1 - s;
+				percent.set(percent.size() - 1, new Cat(a, percent.get(percent.size() - 1).catName));
 			}
 
 			pieChart.setNoDataText("No Expense Entries");
 		}
+
+		analysisAdapter.percent = percent;
+		analysisAdapter.notifyDataSetChanged();
 
 		Log.d(TAG, "radioGroupSetListener: pie size="+pieEntries.size());
 
@@ -319,6 +364,8 @@ public class AnalysisFragment extends Fragment {
 	public void setCatAmount(List<Transaction> transactions)
 	{
 		catAmount.clear();
+		totalExpense = 0;
+		totalIncome = 0;
 
 		for(int i=-1;++i<transactions.size();)
 		{
@@ -330,6 +377,10 @@ public class AnalysisFragment extends Fragment {
 			Integer a=catAmount.get(transactions.get(i).catID);
 			a+=transactions.get(i).amount;
 			catAmount.put(transactions.get(i).catID, a);
+			if(transactions.get(i).type ==1)
+				totalIncome+=transactions.get(i).amount;
+			else
+				totalExpense+=transactions.get(i).amount;
 		}
 	}
 
