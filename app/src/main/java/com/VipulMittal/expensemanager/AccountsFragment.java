@@ -84,7 +84,7 @@ public class AccountsFragment extends Fragment {
 						})
 						.setView(accView)
 						.setPositiveButton("Update", (dialog, which) -> {
-							Account account=new Account(ETForAccN.getText().toString().trim(),accountSelected.amount, Integer.parseInt(ETForAccIB.getText().toString().trim()));
+							Account account=new Account(ETForAccN.getText().toString().trim(),accountSelected.amount, Integer.parseInt(ETForAccIB.getText().toString().trim()), R.drawable.ia_google_pay);
 							account.id=accountSelected.id;
 							accountViewModel.Update(account);
 						});

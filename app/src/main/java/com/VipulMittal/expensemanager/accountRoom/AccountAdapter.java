@@ -76,6 +76,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 			}
 //			holder.amount.setText("\u20b91234567890123456789012345678901234567890");
 
+			holder.imageView.setImageResource(accounts.get(position).imageId);
 		}
 	}
 

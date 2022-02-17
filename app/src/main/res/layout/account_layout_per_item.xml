@@ -11,24 +11,25 @@
     >
 
     <ImageView
+        android:id="@+id/IVAccountsLPI"
         android:layout_width="54dp"
         android:layout_height="54dp"
+        android:padding="9dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/IVAccountsLPI"
-
+        android:background="#FFFF00"
         />
+
     <TextView
         android:id="@+id/TVAccounts_nameLPI"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Account name"
-        app:layout_constraintStart_toEndOf="@+id/IVAccountsLPI"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:padding="2dp"
+        android:text="Account name"
         android:textSize="18sp"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/IVAccountsLPI"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/TVAccounts_AMOUNT_LPI"

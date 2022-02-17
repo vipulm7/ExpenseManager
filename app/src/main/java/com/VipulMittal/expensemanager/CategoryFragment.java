@@ -186,8 +186,8 @@ public class CategoryFragment extends Fragment {
 //					viewHolder.subCategoryAdapter.notifyItemRangeInserted(0, subCategories.size());
 					for(int i=-1;++i<subCategories.size();)
 					{
-						viewHolder.subCategoryAdapter.subCategories.add(subCategories.get(i));
-						viewHolder.subCategoryAdapter.notifyItemInserted(i);
+						viewHolder.subCategoryAdapter.subCategories.add(0, subCategories.get(i));
+						viewHolder.subCategoryAdapter.notifyItemInserted(0);
 					}
 					viewHolder.open=true;
 					viewHolder.arrow.setBackgroundResource(R.drawable.ic_arrow_drop_up);

@@ -135,7 +135,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 				})
 				.setView(accView)
 				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim())));
+					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), R.drawable.ia_google_pay));
 				});
 		AlertDialog dialog = builder.create();
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);

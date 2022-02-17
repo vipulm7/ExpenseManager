@@ -34,6 +34,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public Map<Integer, String> cat;
     public Map<Integer, String> subcat;
     public int dates;
+    LayoutInflater inflater;
 
     public TransactionAdapter(MainActivity mainActivity) {
         transactions = new ArrayList<>();
@@ -51,10 +52,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         View view;
         Log.d(TAG, "onCreateViewHolder: viewType = "+viewType);
 
+        if(inflater==null)
+            inflater = LayoutInflater.from(parent.getContext());
+
         if(viewType == 1)
-            view= LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_date_layout_per_item, parent, false);
+            view= inflater.inflate(R.layout.transaction_date_layout_per_item, parent, false);
         else
-            view= LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_layout_per_item, parent, false);
+            view= inflater.inflate(R.layout.transaction_layout_per_item, parent, false);
         return new TransViewHolder(view, viewType);
     }
 

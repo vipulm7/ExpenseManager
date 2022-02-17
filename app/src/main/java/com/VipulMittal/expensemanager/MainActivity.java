@@ -14,10 +14,14 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.gridlayout.widget.GridLayout;
+import androidx.leanback.widget.HorizontalGridView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -39,7 +43,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public static PendingIntent pendingIntent;
 	int viewMode;
 	boolean exit, login, menuShow;
+	int icon_account [];
 
 
 	public Executor executor;
@@ -145,6 +152,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		toShow=Calendar.getInstance();
 		subcategoriesMap = new HashMap<>();
 		inflater = LayoutInflater.from(this);
+		icon_account= new int[]{R.drawable.ia_airtel_money, R.drawable.ia_amazon, R.drawable.ia_american_express, R.drawable.ia_apple_pay,
+				R.drawable.ia_bitcoin_cash, R.drawable.ia_cash, R.drawable.ia_deutschebank, R.drawable.ia_dogecoin,
+				R.drawable.ia_ethereum, R.drawable.ia_facebook_pay, R.drawable.ia_freecharge, R.drawable.ia_gift_card,
+				R.drawable.ia_google_pay, R.drawable.ia_google_wallet, R.drawable.ia_hsbc, R.drawable.ia_litecoin,
+				R.drawable.ia_maestro, R.drawable.ia_master, R.drawable.ia_mobikwik, R.drawable.ia_ola_money,
+				R.drawable.ia_paypal, R.drawable.ia_paytm, R.drawable.ia_payu, R.drawable.ia_payzapp,
+				R.drawable.ia_rupay, R.drawable.ia_samsung_pay, R.drawable.ia_standardchartered, R.drawable.ia_uaevisa,
+				R.drawable.ia_visa};
 
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		viewMode=sharedPreferences.getInt("view", R.id.RBM);
@@ -248,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		accView=layoutInflater.inflate(R.layout.account_dialog, null);
 
 
-
 //
 //		EditText ETForAccN=new EditText(this);
 //		EditText ETForAccIB=new EditText(this);
@@ -274,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				})
 				.setView(accView)
 				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(ETForAccN.getText().toString(),0, Integer.parseInt(ETForAccIB.getText().toString().trim())));
+					accountViewModel.Insert(new Account(ETForAccN.getText().toString(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), R.drawable.ia_google_pay));
 				});
 		AlertDialog dialog = builder.create();
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -352,35 +366,37 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		ETForCatN.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
 			}
 
 			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				b3 = charSequence.toString().trim().length() != 0;
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				b3 = s.toString().trim().length() != 0;
 				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b3 && b4);
 			}
 
 			@Override
-			public void afterTextChanged(Editable editable) {
+			public void afterTextChanged(Editable s) {
+
 			}
 		});
 
 		ETForCatIB.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
 			}
 
 			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				b4 = charSequence.toString().trim().length() != 0;
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				b4 = s.toString().trim().length() != 0;
 				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b3 && b4);
 			}
 
 			@Override
-			public void afterTextChanged(Editable editable) {
+			public void afterTextChanged(Editable s) {
+
 			}
 		});
 
@@ -410,6 +426,22 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				ETForAccN.setText("");
 				ETForAccIB.setText("");
 				ETForAccN.requestFocus();
+
+				IconsAdapter iconsAdapter = new IconsAdapter(icon_account);
+				RecyclerView recyclerView = accView.findViewById(R.id.rv_icons_account);
+
+				IconsAdapter.ClickListener listener = viewHolder -> {
+					int pos=viewHolder.getAdapterPosition();
+
+					int a=iconsAdapter.selected;
+					iconsAdapter.selected=pos;
+
+					iconsAdapter.notifyItemChanged(a);
+					iconsAdapter.notifyItemChanged(pos);
+				};
+				iconsAdapter.listener = listener;
+				recyclerView.setAdapter(iconsAdapter);
+				recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false));
 			}
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_cat)
 			{

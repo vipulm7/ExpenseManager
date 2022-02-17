@@ -10,15 +10,17 @@ public class Account {
 
     public String name;
     public int amount, initialBalance;
+    public int imageId;
 
 
     public int getId() {
         return id;
     }
 
-    public Account(String name, int amount, int initialBalance) {
+    public Account(String name, int amount, int initialBalance, int imageId) {
         this.name = name;
         this.amount = amount;
         this.initialBalance = initialBalance;
+        this.imageId=imageId;
     }
 }

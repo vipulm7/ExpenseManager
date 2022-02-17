@@ -2,6 +2,7 @@ package com.VipulMittal.expensemanager.categoryRoom;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -104,7 +105,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				if(progress>100)
 					progress = 100;
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-					holder.progressBar.setProgress(progress);
+					holder.progressBar.setProgress(progress, true);
 				else
 					holder.progressBar.setProgress(progress);
 			}
@@ -162,6 +163,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				amt2=itemView.findViewById(R.id.TVCat_AMOUNT);
 				rv_subcatList= itemView.findViewById(R.id.rv_SubcatList);
 				progressBar = itemView.findViewById(R.id.progressBar);
+				progressBar.setProgressDrawable(mainActivity.getDrawable(R.drawable.progress_bar));
 
 				subCategoryAdapter = new SubCategoryAdapter();
 				subCategoryAdapter.who =2;

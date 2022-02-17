@@ -12,9 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="8dp"
+        >
 
 
         <TextView
@@ -29,6 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="?android:textColor"
             android:background="?cardBackgroundColor"
             android:textAlignment="center"
@@ -44,6 +46,7 @@
             android:textSize="20sp"
             app:layout_constraintRight_toLeftOf="@id/TVDateChange"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/rc_left"
             android:textAlignment="center"
             />
@@ -58,6 +61,7 @@
             android:textSize="20sp"
             app:layout_constraintLeft_toRightOf="@id/TVDateChange"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/rc_right"
             android:textAlignment="center"
             />
@@ -81,7 +85,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintDateChange">
+        app:layout_constraintTop_toBottomOf="@+id/constraintDateChange"
+
+        >
 
         <TextView
             android:id="@+id/TVExpense"
@@ -207,16 +213,24 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraintSummary"
+        android:id="@+id/viewShadow1"
+        android:background="@drawable/shadow"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RecyclerViewID"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintSummary" />
+        app:layout_constraintTop_toBottomOf="@id/viewShadow1" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
