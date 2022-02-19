@@ -8,6 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity"
     app:layout_scrollFlags="scroll|enterAlways"
+    android:background="?backgroundSplit"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout

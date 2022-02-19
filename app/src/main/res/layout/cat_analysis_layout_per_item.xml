@@ -3,33 +3,39 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content"
+	android:layout_margin="3dp"
+	android:background="@drawable/rounded_corner_10"
+	android:padding="3dp"
+	>
 
 	<androidx.appcompat.widget.AppCompatImageView
 		android:layout_width="57dp"
 		android:layout_height="36dp"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
 		android:id="@+id/iv_icon"
-		android:background="@drawable/icon_account_not_selected"
+		android:background="@color/purple_500"
 		/>
-
 
 	<TextView
 		android:id="@+id/TVCatName"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:text="Cat Name"
 		app:layout_constraintStart_toEndOf="@id/iv_icon"
+		app:layout_constraintEnd_toStartOf="@id/TVpercent"
 		app:layout_constraintTop_toTopOf="parent"
-
+		android:layout_marginStart="8dp"
+		android:textSize="16dp"
 		/>
 
 	<TextView
 		android:id="@+id/TVpercent"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="TextView"
+		android:text="Percent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		/>
@@ -42,6 +48,7 @@
 		app:layout_constraintStart_toStartOf="@id/TVCatName"
 		app:layout_constraintTop_toBottomOf="@id/TVCatName"
 		app:layout_constraintEnd_toStartOf="@id/TVpercent"
+		android:layout_marginEnd="4dp"
 		/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

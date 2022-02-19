@@ -2,25 +2,36 @@ package com.VipulMittal.expensemanager;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
+import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 
 import java.util.Calendar;
 
@@ -31,12 +42,17 @@ public class HomeFragment extends Fragment {
 	}
 	public static final String TAG="Vipul_tag";
 
-	TextView TVMainExpense,TVMainIncome,TVMainTotal, TVBefore, TVAfter, TVPeriodShown, TVFilter;
+	TextView TVMainExpense,TVMainIncome,TVMainTotal, TVBefore, TVAfter, TVPeriodShown, TVFilter, TVNoTransFound;
 	RecyclerView RVTransactions;
-	TransactionAdapter transactionAdapter;
 	RadioGroup rg_Filter;
 
 	MainActivity mainActivity;
+	TransactionAdapter transactionAdapter;
+	AccountViewModel accountViewModel;
+	TransactionViewModel transactionViewModel;
+	CategoryViewModel categoryViewModel;
+	SubCategoryViewModel subCategoryViewModel;
+	public ActionMode actionMode;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,9 +67,14 @@ public class HomeFragment extends Fragment {
 		TVAfter=view.findViewById(R.id.TVafter);
 		TVBefore=view.findViewById(R.id.TVbefore);
 		TVPeriodShown =view.findViewById(R.id.TVDateChange);
+		TVNoTransFound = view.findViewById(R.id.TVNoTransactionsFound);
 		TVFilter=view.findViewById(R.id.TVFilter);
 		mainActivity=(MainActivity) getActivity();
 		transactionAdapter= mainActivity.transactionAdapter;
+		accountViewModel= mainActivity.accountViewModel;
+		transactionViewModel = mainActivity.transactionViewModel;
+		categoryViewModel = mainActivity.categoryViewModel;
+		subCategoryViewModel = mainActivity.subCategoryViewModel;
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 		SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -65,30 +86,113 @@ public class HomeFragment extends Fragment {
 		TVBefore.setText("<");
 
 
-		TransactionAdapter.CLickListener listener=new TransactionAdapter.CLickListener() {
-			@Override
-			public void onItemClick(TransactionAdapter.TransViewHolder viewHolder) {
-				int position=viewHolder.getAdapterPosition();
+		TransactionAdapter.CLickListener listener= viewHolder -> {
+			int position=viewHolder.getAdapterPosition();
 
-				Calendar calendar=Calendar.getInstance();
-				Transaction transaction=transactionAdapter.transactions.get(position);
+			if(!transactionAdapter.selectionModeOn)
+			{
+				Calendar calendar = Calendar.getInstance();
+				Transaction transaction = transactionAdapter.transactions.get(position);
 				calendar.setTimeInMillis(transaction.dateTime);
 
-				TransactionFragment transactionFragment=new TransactionFragment(transaction.amount,transaction.note,transaction.description,calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2,transaction.type, transaction.id);
-				FragmentTransaction fragmentTransaction=mainActivity.getSupportFragmentManager().beginTransaction();
+				TransactionFragment transactionFragment = new TransactionFragment(transaction.amount, transaction.note, transaction.description, calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2, transaction.type, transaction.id);
+				FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
 				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
 				fragmentTransaction.addToBackStack("home_page");
 				fragmentTransaction.commit();
 
 				mainActivity.FABAdd.hide();
-				mainActivity.systemTimeInMillies=0;
+				mainActivity.systemTimeInMillies = 0;
 				mainActivity.hideMenu();
+			}
+			else
+			{
+				viewHolder.changeSelection();
 			}
 		};
 
+//		TransactionAdapter.CLickListener longListener = viewHolder -> {
+//			if(!transactionAdapter.selectionModeOn) {
+//				transactionAdapter.selectionModeOn = true;
+//				transactionAdapter.transactionsToBeDeleted.clear();
+//
+//
+//
+//				ActionMode.Callback callback = new ActionMode.Callback() {
+//					@Override
+//					public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+//						MenuInflater inflater1 = mode.getMenuInflater();
+//						inflater1.inflate(R.menu.selection_menu, menu);
+//						mainActivity.FABAdd.hide();
+//						mainActivity.navigationBarView.setVisibility(View.INVISIBLE);
+//						actionMode = mode;
+//
+//						return true;
+//					}
+//
+//					@Override
+//					public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+//
+//						return true;
+//					}
+//
+//					@Override
+//					public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+//						int id = item.getItemId();
+//						switch (id){
+//							case R.id.menuSelectDelete:
+//								for(int i=-1;++i<transactionAdapter.transactionsToBeDeleted.size();)
+//								{
+//									Transaction transaction = transactionAdapter.transactionsToBeDeleted.get(i);
+//
+//									transactionViewModel.Delete(transaction);
+//									accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
+//									if(transaction.type == 3)
+//										accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
+//									else {
+//										categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
+//										if(transaction.subCatID!=-1)
+//											subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
+//									}
+//								}
+//								transactionAdapter.notifyDataSetChanged();
+//								break;
+//
+//							case R.id.menuSelectAll:
+//
+//								if(!transactionAdapter.selectAllOn) {
+//									transactionAdapter.transactionsToBeDeleted.clear();
+//									transactionAdapter.transactionsToBeDeleted.addAll(transactionAdapter.transactions);
+//								} else {
+//									transactionAdapter.transactionsToBeDeleted.clear();
+//								}
+//						}
+//						mode.finish();
+//						return true;
+//					}
+//
+//					@Override
+//					public void onDestroyActionMode(ActionMode mode) {
+//						transactionAdapter.selectionModeOn = false;
+//						transactionAdapter.transactionsToBeDeleted.clear();
+////						transactionAdapter.selectAll();
+//						transactionAdapter.notifyDataSetChanged();
+//						mainActivity.FABAdd.show();
+//						mainActivity.navigationBarView.setVisibility(View.VISIBLE);
+//						actionMode = null;
+//					}
+//				};
+//
+//				((AppCompatActivity)view.getContext()).startActionMode(callback);
+//			}
+//			viewHolder.changeSelection();
+//
+//		};
+
 
 		transactionAdapter.listener=listener;
+//		transactionAdapter.longListener = longListener;
 
 		TVBefore.setOnClickListener(v->{
 			if(mainActivity.viewMode == R.id.RBM)

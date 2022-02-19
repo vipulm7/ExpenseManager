@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public Toast toast;
 	Calendar toShow;
 	public int expense, income;
-	HomeFragment homeFragment;
+	public HomeFragment homeFragment;
 	AccountsFragment accountsFragment;
 	AnalysisFragment analysisFragment;
 	public CategoryFragment categoryFragment;
@@ -679,6 +679,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 					homeFragment.TVMainTotal.setTextColor(Color.RED);
 				}
+
+				if(transactions.size() == 0)
+					homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
+				else
+					homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
 			});
 		}
 		else if(viewMode == R.id.RBW)
@@ -699,6 +704,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 						homeFragment.TVMainTotal.setTextColor(Color.RED);
 					}
+
+					if(transactions.size() == 0)
+						homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
+					else
+						homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
 				}
 			});
 		}
@@ -721,6 +731,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 						homeFragment.TVMainTotal.setTextColor(Color.RED);
 					}
+					if(transactions.size() == 0)
+						homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
+					else
+						homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
 				}
 			});
 		}

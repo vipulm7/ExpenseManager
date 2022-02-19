@@ -328,12 +328,14 @@ public class CategoryFragment extends Fragment {
 						viewHolder.subCategoryAdapter.notifyItemInserted(i);
 					}
 					viewHolder.open=true;
+					viewHolder.arrow.setBackgroundResource(R.drawable.ic_arrow_drop_up);
 				}
 				else
 				{
 					viewHolder.subCategoryAdapter.subCategories.clear();
 					viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, subCategories.size());
 					viewHolder.open=false;
+					viewHolder.arrow.setBackgroundResource(R.drawable.ic_arrow_drop_down);
 				}
 
 				Log.d(TAG, "onItemClick: arrow clicked "+position);

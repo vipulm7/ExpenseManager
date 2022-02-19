@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewHolder> {
-	public ClickListener listener;
+	public ClickListener listener, deleteListener;
 	public List<Account> accounts;
 	String TAG="Vipul_tag";
 	public int aID;
@@ -89,7 +90,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 
 	public class AccViewHolder extends RecyclerView.ViewHolder
 	{
-		TextView name, amount;
+		TextView name, amount, accDel;
 		ImageView imageView;
 		public AccViewHolder(@NonNull View itemView) {
 			super(itemView);
@@ -113,13 +114,20 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 				name=itemView.findViewById(R.id.TVAccounts_nameLPI);
 				amount=itemView.findViewById(R.id.TVAccounts_amountLPI);
 				imageView=itemView.findViewById(R.id.IVAccountsLPI);
+				accDel = itemView.findViewById(R.id.BAccDel);
 
 				itemView.setOnClickListener(v -> {
 					if (listener != null) {
 						listener.onItemClick(this);
 					}
 				});
-//				itemView.setOnClickListener();
+
+				accDel.setOnClickListener(v->{
+					if(deleteListener != null)
+						deleteListener.onItemClick(this);
+				});
+
+
 			}
 		}
 	}

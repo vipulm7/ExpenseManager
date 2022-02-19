@@ -48,6 +48,11 @@ public class TransactionRepo
         return transactionDAO.getAllTransactionsDAY(day, month, year);
     }
 
+    public List<Transaction> getAllTransactionsAcc(int accountID)
+    {
+        return transactionDAO.getAllTransactionsAcc(accountID);
+    }
+
 //    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
 //    {
 //        transactionDAO.UpdateTrans(note, amount, amountDisplay, accountID, catID, subCatID, description, type, date, dateTime, id);

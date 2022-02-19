@@ -1,6 +1,7 @@
 package com.VipulMittal.expensemanager;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -24,6 +25,12 @@ import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountDAO;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
+import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
+import com.VipulMittal.expensemanager.transactionRoom.Transaction;
+import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
+
+import java.util.List;
 
 public class AccountsFragment extends Fragment {
 
@@ -34,6 +41,9 @@ public class AccountsFragment extends Fragment {
 	RecyclerView RVAccount;
 	AccountAdapter accountAdapter;
 	AccountViewModel accountViewModel;
+	TransactionViewModel transactionViewModel;
+	CategoryViewModel categoryViewModel;
+	SubCategoryViewModel subCategoryViewModel;
 	View accView;
 	boolean b1=false, b2=false;
 
@@ -50,6 +60,9 @@ public class AccountsFragment extends Fragment {
 		accountAdapter.who=2;
 		accountAdapter.aID =-1;
 		accountViewModel= mainActivity.accountViewModel;
+		transactionViewModel = mainActivity.transactionViewModel;
+		categoryViewModel = mainActivity.categoryViewModel;
+		subCategoryViewModel = mainActivity.subCategoryViewModel;
 
 
 
@@ -112,6 +125,7 @@ public class AccountsFragment extends Fragment {
 				ETForAccIB.addTextChangedListener(new TextWatcher() {
 					@Override
 					public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
 					}
 
 					@Override
@@ -132,7 +146,6 @@ public class AccountsFragment extends Fragment {
 				ETForAccIB.setText(""+accountSelected.initialBalance);
 				ETForAccN.requestFocus();
 
-
 				RecyclerView recyclerView = accView.findViewById(R.id.rv_icons_account);
 
 				IconsAdapter.ClickListener listener = viewHolder1 -> {
@@ -152,8 +165,76 @@ public class AccountsFragment extends Fragment {
 			}
 		};
 
+		AccountAdapter.ClickListener deleteListener = new AccountAdapter.ClickListener() {
+			@Override
+			public void onItemClick(AccountAdapter.AccViewHolder viewHolder) {
+				int position = viewHolder.getAdapterPosition();
+				Account account = accountAdapter.accounts.get(position);
+
+				List<Transaction>transactionsToBeDeleted = transactionViewModel.getAllTransactionsAcc(account.id);
+
+				AlertDialog.Builder builder;
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+					builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+				}
+				else
+					builder = new AlertDialog.Builder(getContext());
+				builder.setTitle("Delete Account")
+						.setMessage("Are you sure want to delete this account!")
+						.setNegativeButton("Cancel", (dialog, which) -> {
+
+						})
+						.setPositiveButton("Delete", null);
+				final AlertDialog[] dialog = {builder.create()};
+				dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+//				dialog.getWindow().getAttributes().windowAnimations = R.style.
+
+				dialog[0].show();
+				Dialog dialog1 = dialog[0];
+
+				Button del = dialog[0].getButton(AlertDialog.BUTTON_POSITIVE);
+				del.setOnClickListener(v->{
+					if(transactionsToBeDeleted.size()==0)
+						accountViewModel.Delete(account);
+					else
+					{
+						builder.setTitle("")
+								.setMessage("There are "+transactionsToBeDeleted.size()+" transactions with done using this account. What to do with them")
+								.setPositiveButton("Delete those transaction", (dialog2, which2) -> {
+									for(int i=-1;++i<transactionsToBeDeleted.size();)
+									{
+										Transaction transaction = transactionsToBeDeleted.get(i);
+
+										transactionViewModel.Delete(transaction);
+										accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
+										if(transaction.type == 3)
+											accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
+										else {
+											categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
+											if(transaction.subCatID!=-1)
+												subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
+										}
+									}
+									mainActivity.transactionAdapter.notifyDataSetChanged();
+									accountViewModel.Delete(account);
+								})
+								.setNegativeButton("Choose New Account", (dialog2, which2) -> {
+
+								});
+						dialog[0] = builder.create();
+						dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+//				dialog.getWindow().getAttributes().windowAnimations = R.style.
+
+						dialog[0].show();
+					}
+					dialog1.dismiss();
+				});
+			}
+		};
+
 
 		accountAdapter.listener=listener;
+		accountAdapter.deleteListener = deleteListener;
 
 		RVAccount.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVAccount.setAdapter(accountAdapter);

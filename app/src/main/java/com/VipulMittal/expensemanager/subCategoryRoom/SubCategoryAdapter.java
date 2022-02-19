@@ -53,6 +53,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 	public void onBindViewHolder(@NonNull BSDSubCatViewHolder holder, int position) {
 //		holder.name.setText(subCats.get(position).name);
 		SubCategory subCategory = subCategories.get(position);
+
 		if(who == 1) {
 			Log.d(TAG, "onBindViewHolder: subCat name = " + subCategories.get(position).name + " id = " + subCategories.get(position).id);
 			holder.name.setText(subCategories.get(position).name);

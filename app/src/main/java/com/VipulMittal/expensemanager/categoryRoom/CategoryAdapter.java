@@ -87,10 +87,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 
 			holder.bgt.setText("\u20b9"+moneyToString(category.catBudget));
-			if(category.noOfSubCat>0)
+			if(category.noOfSubCat>0) {
 				holder.arrow.setVisibility(View.VISIBLE);
-			else
+			}
+			else {
 				holder.arrow.setVisibility(View.INVISIBLE);
+			}
 
 			if(category.type == 1)
 			{
@@ -163,7 +165,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				amt2=itemView.findViewById(R.id.TVCat_AMOUNT);
 				rv_subcatList= itemView.findViewById(R.id.rv_SubcatList);
 				progressBar = itemView.findViewById(R.id.progressBar);
-				progressBar.setProgressDrawable(mainActivity.getDrawable(R.drawable.progress_bar));
 
 				subCategoryAdapter = new SubCategoryAdapter();
 				subCategoryAdapter.who =2;

@@ -48,8 +48,8 @@ public class TransactionViewModel extends AndroidViewModel {
         return repo.getAllTransactionsDAY(day, month, year);
     }
 
-//    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
-//    {
-//        repo.UpdateTrans(note, amount, amountDisplay,  accountID, catID, subCatID, description, type, date, dateTime, id);
-//    }
+    public List<Transaction> getAllTransactionsAcc(int accountID)
+    {
+        return repo.getAllTransactionsAcc(accountID);
+    }
 }
