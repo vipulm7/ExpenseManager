@@ -381,6 +381,7 @@ public class TransactionFragment extends Fragment {
 				BCat=false;
 				save.setEnabled(false);
 				repeat.setEnabled(false);
+				iv_cat.setImageResource(R.drawable.ic_category);
 			}
 			else if(i==R.id.radioCatExpense)
 			{
@@ -394,6 +395,7 @@ public class TransactionFragment extends Fragment {
 				BCat=false;
 				save.setEnabled(false);
 				repeat.setEnabled(false);
+				iv_cat.setImageResource(R.drawable.ic_category);
 			}
 			else if(i==R.id.radioCatTransfer)
 			{
@@ -407,6 +409,7 @@ public class TransactionFragment extends Fragment {
 				BCat=false;
 				save.setEnabled(false);
 				repeat.setEnabled(false);
+				iv_cat.setImageResource(R.drawable.ic_account);
 			}
 		});
 	}

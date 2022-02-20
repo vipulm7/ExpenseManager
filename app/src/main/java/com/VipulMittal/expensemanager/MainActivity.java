@@ -179,7 +179,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				R.drawable.is_umbrella, R.drawable.is_vegetarian_food, R.drawable.is_wallet, R.drawable.is_wallet2,
 				R.drawable.is_wardrobe, R.drawable.is_washing_machine, R.drawable.is_cafe, R.drawable.is_eggs,
 				R.drawable.is_pills, R.drawable.is_mcdonalds, R.drawable.is_swiggy, R.drawable.is_zomato,
-				R.drawable.is_tea};
+				R.drawable.is_tea,
+
+				R.drawable.ia_airtel_money, R.drawable.ia_amazon, R.drawable.ia_american_express, R.drawable.ia_apple_pay,
+				R.drawable.ia_bitcoin_cash, R.drawable.ia_cash, R.drawable.ia_dogecoin, R.drawable.ia_ethereum,
+				R.drawable.ia_facebook_pay, R.drawable.ia_freecharge, R.drawable.ia_gift_card, R.drawable.ia_google_pay,
+				R.drawable.ia_google_wallet, R.drawable.ia_litecoin, R.drawable.ia_maestro, R.drawable.ia_master,
+				R.drawable.ia_mobikwik, R.drawable.ia_ola_money, R.drawable.ia_paypal, R.drawable.ia_paytm,
+				R.drawable.ia_payu, R.drawable.ia_payzapp, R.drawable.ia_rupay, R.drawable.ia_samsung_pay,
+				R.drawable.ia_uaevisa, R.drawable.ia_visa};
 
 		icon_category_expense = new int[]{};
 
@@ -471,7 +479,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				dialog2.show();
 				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 				ETForCatN.setText("");
-				ETForCatIB.setText("0");
+				ETForCatIB.setText("");
 				ETForCatN.requestFocus();
 
 
@@ -480,6 +488,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				{
 					catTitle.setText("Add New Income Category");
 					ETForCatIB.setVisibility(View.GONE);
+					ETForCatIB.setText("0");
 					catView.findViewById(R.id.TVDialogCB).setVisibility(View.GONE);
 
 					iconsAdapterCat = new IconsAdapter(icon_category_income);
@@ -849,6 +858,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 				transactionAdapter.setSubcat();
 				transactionAdapter.notifyDataSetChanged();
+				categoryAdapter.notifyDataSetChanged();
 			}
 		});
 	}

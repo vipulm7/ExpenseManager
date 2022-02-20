@@ -37,6 +37,16 @@ public class CategoryRepo
         return categoryDAO.getAllCategories(type);
     }
 
+    public void catAdded(int catID)
+    {
+        categoryDAO.catAdded(catID);
+    }
+
+    public void catDeleted(int catID)
+    {
+        categoryDAO.catDeleted(catID);
+    }
+
     public Category getCat(int catID)
     {
         return categoryDAO.getCat(catID);

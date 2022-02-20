@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHolder> {
 	LayoutInflater inflater;
-	int[] icons;
+	public int[] icons;
 	public int selected;
 	public ClickListener listener;
 

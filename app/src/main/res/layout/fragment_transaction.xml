@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/constraint12"
         android:background="@drawable/box"
+        android:layout_marginTop="15dp"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -191,6 +192,7 @@
         app:layout_constraintTop_toBottomOf="@id/constraint12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
         >
 
 
@@ -203,28 +205,40 @@
             android:id="@+id/constraintChooseType1"
             >
 
-            <ImageView
-                android:id="@+id/IVAccounts"
-                android:layout_width="57dp"
-                android:layout_height="36dp"
-                android:padding="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/TVAccount"
-                />
-
-            <TextView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Account "
-                android:id="@+id/TVAccount"
-                app:layout_constraintStart_toEndOf="@+id/IVAccounts"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:textSize="18sp"
-                android:padding="5dp"
-                android:background="@drawable/item_sel"
-                />
+                >
+
+                <ImageView
+                    android:id="@+id/IVAccounts"
+                    android:layout_width="57dp"
+                    android:layout_height="36dp"
+                    android:padding="5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/TVAccount"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Account "
+                    android:id="@+id/TVAccount"
+                    app:layout_constraintStart_toEndOf="@+id/IVAccounts"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textSize="18sp"
+                    android:padding="5dp"
+                    android:background="@drawable/item_sel"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -237,28 +251,38 @@
             android:id="@+id/constraintChooseType2"
             >
 
-            <ImageView
-                android:id="@+id/IVCategory"
-                android:layout_width="57dp"
-                android:layout_height="36dp"
-                android:padding="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/TVCategory"
-                />
-
-            <TextView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Category"
-                android:id="@+id/TVCategory"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/IVCategory"
-                android:textSize="18sp"
-                android:padding="5dp"
-                android:background="@drawable/item_sel"
-                />
+                app:layout_constraintTop_toTopOf="parent"
+                >
+
+                <ImageView
+                    android:id="@+id/IVCategory"
+                    android:layout_width="57dp"
+                    android:layout_height="36dp"
+                    android:padding="5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/TVCategory"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:id="@+id/TVCategory"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/IVCategory"
+                    android:textSize="18sp"
+                    android:padding="5dp"
+                    android:background="@drawable/item_sel"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -271,7 +295,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintChooseCat"
         android:id="@+id/constraintNoteDes"
-
+        android:layout_marginTop="10dp"
         >
 
         <EditText
@@ -301,7 +325,7 @@
             android:paddingBottom="5dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="14dp"
             />
 
         <EditText
@@ -318,7 +342,7 @@
             android:paddingBottom="5dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="14dp"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

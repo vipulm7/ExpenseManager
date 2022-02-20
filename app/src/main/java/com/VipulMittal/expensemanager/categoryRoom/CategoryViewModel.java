@@ -47,4 +47,14 @@ public class CategoryViewModel extends AndroidViewModel {
         repo.UpdateAmt(increment, cID);
     }
 
+    public void catAdded(int catID)
+    {
+        repo.catAdded(catID);
+    }
+
+    public void catDeleted(int catID)
+    {
+        repo.catDeleted(catID);
+    }
+
 }

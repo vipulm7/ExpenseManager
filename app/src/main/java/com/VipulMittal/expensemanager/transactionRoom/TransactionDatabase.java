@@ -64,7 +64,7 @@ public abstract class TransactionDatabase extends RoomDatabase {
             for(int i=-1;++i<10;) {
                 Calendar calendar=Calendar.getInstance();
                 calendar.add(Calendar.DATE, -2*i);
-                transactionDAO.Insert(new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 12, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i));
+                transactionDAO.Insert(new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 13, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i));
             }
 
 //            for(int i=-1;++i<30;) {

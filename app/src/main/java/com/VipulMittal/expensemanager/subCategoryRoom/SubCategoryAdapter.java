@@ -53,6 +53,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 	public void onBindViewHolder(@NonNull BSDSubCatViewHolder holder, int position) {
 //		holder.name.setText(subCats.get(position).name);
 		SubCategory subCategory = subCategories.get(position);
+		Log.d(TAG, "onBindViewHolder: subCategoryv = "+subCategory.name+" subCategory.id"+subCategory.id);
 
 		if(who == 1) {
 			Log.d(TAG, "onBindViewHolder: subCat name = " + subCategories.get(position).name + " id = " + subCategories.get(position).id);
@@ -84,22 +85,20 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 				holder.progressBar.setVisibility(View.GONE);
 			}
 
+			Log.d(TAG, "onBindViewHolder: subCat.name = "+subCategory.name);
+			Log.d(TAG, "onBindViewHolder: subCatAmount = "+subCategory.subCatAmount);
+			Log.d(TAG, "onBindViewHolder: subCatBudget = "+subCategory.subCatBudget);
+
 			if(subCategory.subCatBudget!=0) {
-				int progress = subCategory.subCatAmount/subCategory.subCatBudget;
+				int progress = (int)((-100L*subCategory.subCatAmount)/subCategory.subCatBudget);
+				Log.d(TAG, "onBindViewHolder: progress = "+progress);
 				if(progress>100)
 					progress = 100;
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-					holder.progressBar.setProgress(progress, true);
-				else
-					holder.progressBar.setProgress(progress);
+
+				holder.progressBar.setProgress(progress);
 			}
 			else
-			{
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-					holder.progressBar.setProgress(0, true);
-				else
-					holder.progressBar.setProgress(0);
-			}
+				holder.progressBar.setProgress(0);
 
 			holder.imageView.setImageResource(subCategory.subCatImageID);
 		}
