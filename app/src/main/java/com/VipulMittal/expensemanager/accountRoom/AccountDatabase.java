@@ -56,7 +56,7 @@ public abstract class AccountDatabase extends RoomDatabase {
         protected Void doInBackground(Void... voids) {
 
             accountDAO.Insert(new Account("Cash",0,0, R.drawable.ia_cash));
-            accountDAO.Insert(new Account("Credit Card", MainActivity.sum_amounts,0, R.drawable.ia_american_express));
+            accountDAO.Insert(new Account("Debit Card", MainActivity.sum_amounts,0, R.drawable.ia_visa));
             accountDAO.Insert(new Account("Paytm",0,0, R.drawable.ia_paytm));
             return null;
         }

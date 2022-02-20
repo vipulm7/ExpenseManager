@@ -64,6 +64,11 @@ public class SubCategoryRepo
         return subs;
     }
 
+    public List<SubCategory> getSubcats(int catID)
+    {
+        return subCategoryDAO.getSubcats(catID);
+    }
+
     public LiveData<List<SubCategory>> getAllSubcats()
     {
         allSubs= subCategoryDAO.getAllSubcats();

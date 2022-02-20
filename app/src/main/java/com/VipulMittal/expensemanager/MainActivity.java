@@ -14,8 +14,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.gridlayout.widget.GridLayout;
-import androidx.leanback.widget.HorizontalGridView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public static PendingIntent pendingIntent;
 	int viewMode;
 	boolean exit, login, menuShow;
-	public int icon_account [];
+	public int[] icon_account, icon_category_income, icon_category_expense;
 
 
 	public Executor executor;
@@ -129,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public LayoutInflater inflater;
 
 	Map<Integer, List<SubCategory>> subcategoriesMap;
+	IconsAdapter iconsAdapterCat;
 
 
 	@Override
@@ -159,6 +158,30 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				R.drawable.ia_mobikwik, R.drawable.ia_ola_money, R.drawable.ia_paypal, R.drawable.ia_paytm,
 				R.drawable.ia_payu, R.drawable.ia_payzapp, R.drawable.ia_rupay, R.drawable.ia_samsung_pay,
 				R.drawable.ia_uaevisa, R.drawable.ia_visa};
+
+		icon_category_income = new int[]{R.drawable.is_airport, R.drawable.is_android, R.drawable.is_apartment, R.drawable.is_app_store,
+				R.drawable.is_baby_stroller, R.drawable.is_bank, R.drawable.is_books, R.drawable.is_bread,
+				R.drawable.is_bus, R.drawable.is_cake, R.drawable.is_car, R.drawable.is_card,
+				R.drawable.is_cruise_ship, R.drawable.is_desk, R.drawable.is_discount, R.drawable.is_dish,
+				R.drawable.is_dishwasher, R.drawable.is_doctors_bag, R.drawable.is_electrical, R.drawable.is_energy_drink,
+				R.drawable.is_engine_oil, R.drawable.is_fill_color, R.drawable.is_fish, R.drawable.is_flip_flops,
+				R.drawable.is_food_wine, R.drawable.is_gas_station, R.drawable.is_glasses, R.drawable.is_hamburger,
+				R.drawable.is_headphones, R.drawable.is_home, R.drawable.is_ice_cream, R.drawable.is_iphone,
+				R.drawable.is_kebab, R.drawable.is_lipstick, R.drawable.is_maintenance, R.drawable.is_mannequin,
+				R.drawable.is_milk_bottle, R.drawable.is_money, R.drawable.is_motorcycle, R.drawable.is_netflix,
+				R.drawable.is_orange, R.drawable.is_paint_roller, R.drawable.is_parking_meter, R.drawable.is_perfume,
+				R.drawable.is_popcorn, R.drawable.is_potato, R.drawable.is_protection_mask, R.drawable.is_raquet,
+				R.drawable.is_refund, R.drawable.is_rent, R.drawable.is_roller, R.drawable.is_safe,
+				R.drawable.is_sale, R.drawable.is_sandals, R.drawable.is_shopping_cart, R.drawable.is_shirt,
+				R.drawable.is_soap_dispenser, R.drawable.is_soccer, R.drawable.is_sofa, R.drawable.is_subway,
+				R.drawable.is_taxi, R.drawable.is_tetra_pak, R.drawable.is_ticket, R.drawable.is_tie,
+				R.drawable.is_toilet_paper, R.drawable.is_treatment_list, R.drawable.is_tshirt, R.drawable.is_two_tickets,
+				R.drawable.is_umbrella, R.drawable.is_vegetarian_food, R.drawable.is_wallet, R.drawable.is_wallet2,
+				R.drawable.is_wardrobe, R.drawable.is_washing_machine, R.drawable.is_cafe, R.drawable.is_eggs,
+				R.drawable.is_pills, R.drawable.is_mcdonalds, R.drawable.is_swiggy, R.drawable.is_zomato,
+				R.drawable.is_tea};
+
+		icon_category_expense = new int[]{};
 
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		viewMode=sharedPreferences.getInt("view", R.id.RBM);
@@ -218,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		Log.d(TAG, "onCreate: bn_analysis = "+R.id.bn_analysis);
 
 
-		if(sharedPreferences.getBoolean("passwordOnOff", false) && sharedPreferences.getBoolean("fingerprint", false))
+		if(sharedPreferences.getBoolean("fingerprint", false))
 			fingerprint();
 
 //		showFragment(R.id.bn_home);
@@ -358,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				.setView(catView)
 				.setPositiveButton("Add", (dialog2, which) -> {
 					int type=categoryFragment.catTabLayout.getSelectedTabPosition()+1;
-					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type));
+					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type, icon_category_income[iconsAdapterCat.selected]));
 				});
 		AlertDialog dialog2 = builder2.create();
 		dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -439,6 +462,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					iconsAdapter.notifyItemChanged(pos);
 				};
 				iconsAdapter.listener = listener;
+				recyclerView.setHasFixedSize(true);
 				recyclerView.setAdapter(iconsAdapter);
 				recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false));
 			}
@@ -457,12 +481,46 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					catTitle.setText("Add New Income Category");
 					ETForCatIB.setVisibility(View.GONE);
 					catView.findViewById(R.id.TVDialogCB).setVisibility(View.GONE);
+
+					iconsAdapterCat = new IconsAdapter(icon_category_income);
+					RecyclerView recyclerView = catView.findViewById(R.id.rv_icons_category);
+
+					IconsAdapter.ClickListener listener = viewHolder -> {
+						int pos2 = viewHolder.getAdapterPosition();
+
+						int a=iconsAdapterCat.selected;
+						iconsAdapterCat.selected=pos2;
+
+						iconsAdapterCat.notifyItemChanged(a);
+						iconsAdapterCat.notifyItemChanged(pos2);
+					};
+					iconsAdapterCat.listener = listener;
+					recyclerView.setAdapter(iconsAdapterCat);
+					recyclerView.setHasFixedSize(true);
+					recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false));
 				}
 				else if(pos == 1)
 				{
 					catTitle.setText("Add New Expense Category");
 					ETForCatIB.setVisibility(View.VISIBLE);
 					catView.findViewById(R.id.TVDialogCB).setVisibility(View.VISIBLE);
+
+					iconsAdapterCat = new IconsAdapter(icon_category_income);
+					RecyclerView recyclerView = catView.findViewById(R.id.rv_icons_category);
+
+					IconsAdapter.ClickListener listener = viewHolder -> {
+						int pos2 = viewHolder.getAdapterPosition();
+
+						int a=iconsAdapterCat.selected;
+						iconsAdapterCat.selected=pos2;
+
+						iconsAdapterCat.notifyItemChanged(a);
+						iconsAdapterCat.notifyItemChanged(pos2);
+					};
+					iconsAdapterCat.listener = listener;
+					recyclerView.setAdapter(iconsAdapterCat);
+					recyclerView.setHasFixedSize(true);
+					recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false));
 				}
 
 				Log.d(TAG, "onCreateView: dialog created");
@@ -1022,7 +1080,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		super.onResume();
 		Log.d(TAG, "onResume: called");
 
-		if(!login && sharedPreferences.getBoolean("passwordOnOff", false) &&  sharedPreferences.getBoolean("fingerprint", false))
+		if(!login && sharedPreferences.getBoolean("fingerprint", false))
 			fingerprint();
 
 		notificationManager=NotificationManagerCompat.from(getApplicationContext());

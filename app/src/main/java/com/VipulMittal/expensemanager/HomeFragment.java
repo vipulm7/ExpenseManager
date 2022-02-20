@@ -2,7 +2,6 @@ package com.VipulMittal.expensemanager;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -10,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
@@ -33,6 +33,7 @@ import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
@@ -112,87 +113,121 @@ public class HomeFragment extends Fragment {
 			}
 		};
 
-//		TransactionAdapter.CLickListener longListener = viewHolder -> {
-//			if(!transactionAdapter.selectionModeOn) {
-//				transactionAdapter.selectionModeOn = true;
-//				transactionAdapter.transactionsToBeDeleted.clear();
-//
-//
-//
-//				ActionMode.Callback callback = new ActionMode.Callback() {
-//					@Override
-//					public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//						MenuInflater inflater1 = mode.getMenuInflater();
-//						inflater1.inflate(R.menu.selection_menu, menu);
-//						mainActivity.FABAdd.hide();
-//						mainActivity.navigationBarView.setVisibility(View.INVISIBLE);
-//						actionMode = mode;
-//
-//						return true;
-//					}
-//
-//					@Override
-//					public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//
-//						return true;
-//					}
-//
-//					@Override
-//					public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//						int id = item.getItemId();
-//						switch (id){
-//							case R.id.menuSelectDelete:
-//								for(int i=-1;++i<transactionAdapter.transactionsToBeDeleted.size();)
-//								{
-//									Transaction transaction = transactionAdapter.transactionsToBeDeleted.get(i);
-//
-//									transactionViewModel.Delete(transaction);
-//									accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
-//									if(transaction.type == 3)
-//										accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
-//									else {
-//										categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
-//										if(transaction.subCatID!=-1)
-//											subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
-//									}
-//								}
-//								transactionAdapter.notifyDataSetChanged();
-//								break;
-//
-//							case R.id.menuSelectAll:
-//
-//								if(!transactionAdapter.selectAllOn) {
-//									transactionAdapter.transactionsToBeDeleted.clear();
-//									transactionAdapter.transactionsToBeDeleted.addAll(transactionAdapter.transactions);
-//								} else {
-//									transactionAdapter.transactionsToBeDeleted.clear();
-//								}
-//						}
-//						mode.finish();
-//						return true;
-//					}
-//
-//					@Override
-//					public void onDestroyActionMode(ActionMode mode) {
-//						transactionAdapter.selectionModeOn = false;
-//						transactionAdapter.transactionsToBeDeleted.clear();
-////						transactionAdapter.selectAll();
-//						transactionAdapter.notifyDataSetChanged();
-//						mainActivity.FABAdd.show();
-//						mainActivity.navigationBarView.setVisibility(View.VISIBLE);
-//						actionMode = null;
-//					}
-//				};
-//
-//				((AppCompatActivity)view.getContext()).startActionMode(callback);
-//			}
-//			viewHolder.changeSelection();
-//
-//		};
+		TransactionAdapter.CLickListener longListener = viewHolder -> {
+			if(!transactionAdapter.selectionModeOn) {
+				transactionAdapter.selectionModeOn = true;
+				transactionAdapter.transactionsToBeDeleted.clear();
+				boolean select []=new boolean[transactionAdapter.transactions.size()];
+				transactionAdapter.select = select;
+				mainActivity.FABAdd.hide();
+				mainActivity.navigationBarView.setVisibility(View.INVISIBLE);
+
+
+				ActionMode.Callback callback = new ActionMode.Callback() {
+					@Override
+					public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+						MenuInflater inflater1 = mode.getMenuInflater();
+						inflater1.inflate(R.menu.selection_menu, menu);
+						actionMode = mode;
+
+						return true;
+					}
+
+					@Override
+					public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+
+						return true;
+					}
+
+					@Override
+					public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+						int id = item.getItemId();
+						switch (id){
+							case R.id.menuSelectDelete:
+
+								if(transactionAdapter.transactionsToBeDeleted.size() == 0) {
+									if (mainActivity.toast != null)
+										mainActivity.toast.cancel();
+
+									mainActivity.toast = Toast.makeText(mainActivity, "Select at least 1 transaction", Toast.LENGTH_LONG);
+									mainActivity.toast.show();
+								}
+								else
+								{
+									TextView delTitle = new TextView(getContext());
+									delTitle.setText("Delete Transaction(s)");
+									delTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+									delTitle.setPadding(2,16,2,10);
+									delTitle.setTextSize(22);
+									delTitle.setTypeface(null, Typeface.BOLD);
+
+									AlertDialog.Builder builder;
+									if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+										builder = new AlertDialog.Builder(mainActivity, android.R.style.ThemeOverlay_Material_Dialog);
+									else
+										builder = new AlertDialog.Builder(mainActivity);
+									builder.setCustomTitle(delTitle)
+											.setMessage("Are you sure to delete "+ transactionAdapter.transactionsToBeDeleted.size()+ " transaction(s)")
+											.setNegativeButton("Cancel", (dialog, which) -> {
+
+											})
+											.setPositiveButton("Delete", (dialog, which) -> {
+												for(int i=-1;++i<transactionAdapter.transactionsToBeDeleted.size();)
+												{
+													Transaction transaction = transactionAdapter.transactionsToBeDeleted.get(i);
+
+													transactionViewModel.Delete(transaction);
+													accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
+													if(transaction.type == 3)
+														accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
+													else
+													{
+														categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
+														if(transaction.subCatID!=-1)
+															subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
+													}
+												}
+												transactionAdapter.notifyDataSetChanged();
+												mode.finish();
+											});
+									AlertDialog dialog = builder.create();
+									dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+									builder.show();
+								}
+								break;
+							case R.id.menuSelectAll:
+								transactionAdapter.transactionsToBeDeleted.clear();
+								if(!allSelected())
+									transactionAdapter.transactionsToBeDeleted.addAll(transactionAdapter.transactions);
+								Arrays.fill(transactionAdapter.select, !allSelected());
+								transactionAdapter.notifyDataSetChanged();
+								mode.setTitle(""+transactionAdapter.transactionsToBeDeleted.size());
+						}
+						return true;
+					}
+
+					@Override
+					public void onDestroyActionMode(ActionMode mode) {
+						transactionAdapter.selectionModeOn = false;
+						transactionAdapter.transactionsToBeDeleted.clear();
+//						transactionAdapter.selectAll();
+						transactionAdapter.notifyDataSetChanged();
+						mainActivity.FABAdd.show();
+						mainActivity.navigationBarView.setVisibility(View.VISIBLE);
+						actionMode = null;
+						transactionAdapter.select = null;
+					}
+				};
+
+				((AppCompatActivity)view.getContext()).startActionMode(callback);
+			}
+			viewHolder.changeSelection();
+
+		};
 
 
 		transactionAdapter.listener=listener;
-//		transactionAdapter.longListener = longListener;
+		transactionAdapter.longListener = longListener;
 
 		TVBefore.setOnClickListener(v->{
 			if(mainActivity.viewMode == R.id.RBM)
@@ -267,6 +302,16 @@ public class HomeFragment extends Fragment {
 		RVTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVTransactions.setNestedScrollingEnabled(false);
 		return view;
+	}
+
+	private boolean allSelected() {
+		for(int i=-1;++i<transactionAdapter.select.length;) {
+			if(transactionAdapter.transactions.get(i).id == -1)
+				continue;
+			if (!transactionAdapter.select[i])
+				return false;
+		}
+		return true;
 	}
 
 	private void setDate() {

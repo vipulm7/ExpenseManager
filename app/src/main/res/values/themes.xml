@@ -18,6 +18,7 @@
         <item name="chipBackgroundColor">#C6E6E8</item>
         <item name="android:textColor">@color/black</item>
         <item name="backgroundSplit">#C6E6E8</item>
+        <item name="android:actionModeBackground">@color/cyan_dark</item>
 
     </style>
 

@@ -57,6 +57,11 @@ public class SubCategoryViewModel extends AndroidViewModel {
         return allSubs;
     }
 
+    public List<SubCategory> getSubcats(int catID)
+    {
+        return repo.getSubcats(catID);
+    }
+
     public SubCategory getSubCat(int sID)
     {
         return repo.getSubCat(sID);

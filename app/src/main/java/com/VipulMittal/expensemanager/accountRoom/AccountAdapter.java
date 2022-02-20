@@ -94,7 +94,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 		ImageView imageView;
 		public AccViewHolder(@NonNull View itemView) {
 			super(itemView);
-			if(who==1) {
+			if(who==1)
+			{
 				name = itemView.findViewById(R.id.BSD_Acc);
 				amount=itemView.findViewById(R.id.BSD_Acc_amt);
 				imageView=itemView.findViewById(R.id.IVAccountsLPI);

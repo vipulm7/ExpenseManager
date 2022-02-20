@@ -60,7 +60,7 @@ public class BsdSubCategoryFragment extends Fragment {
 			public void onItemClick(SubCategoryAdapter.BSDSubCatViewHolder viewHolder) {
 				int position=viewHolder.getAdapterPosition();
 				sID = subCategoryAdapter.subCategories.get(position).id;
-				transactionFragment.saveSelectedSubCategory(cID, sID, categorySelected.catName + " / " + subCategoryAdapter.subCategories.get(position).name);
+				transactionFragment.saveSelectedSubCategory(cID, sID, categorySelected.catName + " / " + subCategoryAdapter.subCategories.get(position).name, subCategoryAdapter.subCategories.get(position).subCatImageID);
 
 				bsdCatFragment.dismiss();
 			}

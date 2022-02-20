@@ -21,7 +21,7 @@ import java.util.List;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.BSDSubCatViewHolder> {
 
-	public ClickListener listener;
+	public ClickListener listener, deleteListener;
 	public int sID, cID;
 	public Category catSelected;
 	String TAG="Vipul_tag";
@@ -100,6 +100,8 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 				else
 					holder.progressBar.setProgress(0);
 			}
+
+			holder.imageView.setImageResource(subCategory.subCatImageID);
 		}
 	}
 

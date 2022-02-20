@@ -52,4 +52,14 @@ public class TransactionViewModel extends AndroidViewModel {
     {
         return repo.getAllTransactionsAcc(accountID);
     }
+
+    public List<Transaction> getAllTransactionsCat(int catID)
+    {
+        return repo.getAllTransactionsCat(catID);
+    }
+
+    public List<Transaction> getAllTransactionsSubCat(int subCatID)
+    {
+        return repo.getAllTransactionsSubCat(subCatID);
+    }
 }

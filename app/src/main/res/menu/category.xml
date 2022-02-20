@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@+id/m_add_new_subcat"
+		android:title="Add new Sub-Category"
+		/>
+
+	<item
+		android:id="@+id/m_delete_cat"
+		android:title="Delete Category"
+		/>
+
+	<item
+		android:id="@+id/m_edit_cat"
+		android:title="Edit Category"
+		/>
+
+
+</menu>

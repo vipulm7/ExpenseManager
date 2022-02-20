@@ -22,7 +22,6 @@
             android:padding="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="#FFFF00"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

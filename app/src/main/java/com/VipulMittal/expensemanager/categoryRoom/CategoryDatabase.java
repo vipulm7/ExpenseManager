@@ -10,6 +10,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.VipulMittal.expensemanager.MainActivity;
+import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 
 import java.util.Calendar;
@@ -54,14 +55,15 @@ public abstract class CategoryDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            categoryDAO.Insert(new Category("Salary",0,0,0,1));
-            categoryDAO.Insert(new Category("Cashback",0,0,3,1));
-            categoryDAO.Insert(new Category("Interest",0,0,2,1));
+            categoryDAO.Insert(new Category("Salary",0,0,0,1, R.drawable.is_money));
+            categoryDAO.Insert(new Category("Cashback",0,0,3,1, R.drawable.is_discount));
+            categoryDAO.Insert(new Category("Interest",0,0,2,1, R.drawable.is_refund));
 
-            categoryDAO.Insert(new Category("Food",0,0,4,2));
-            categoryDAO.Insert(new Category("Transport",0,0,2,2));
-            categoryDAO.Insert(new Category("Beauty",0,0,0,2));
-            categoryDAO.Insert(new Category("Health", MainActivity.sum_amounts,0,2,2));
+            categoryDAO.Insert(new Category("Food",0,0,4,2, R.drawable.is_dish));
+            categoryDAO.Insert(new Category("Transport",0,0,2,2, R.drawable.is_subway));
+            categoryDAO.Insert(new Category("Beauty",0,0,0,2, R.drawable.is_lipstick));
+            categoryDAO.Insert(new Category("Health", MainActivity.sum_amounts,0,2,2, R.drawable.is_treatment_list));
+            categoryDAO.Insert(new Category("Entertainment", 0,0,2,2, R.drawable.is_popcorn));
             return null;
         }
     }

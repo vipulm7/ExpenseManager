@@ -38,12 +38,31 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 		Log.d(TAG, "onCreatePreferences: rootKey = "+rootKey);
 		Log.d(TAG, "onCreatePreferences: savedInstanceState = "+savedInstanceState);
 		notif = findPreference("notifs");
-		EditTextPreference editTextPreference = findPreference("password");
-		SwitchPreference passwordSwitch = findPreference("passwordOnOff");
+//		EditTextPreference editTextPreference = findPreference("password");
+//		SwitchPreference passwordSwitch = findPreference("passwordOnOff");
 		SwitchPreference fingerprintSwitch = findPreference("fingerprint");
-		editTextPreference.setVisible(passwordSwitch.isChecked());
-		fingerprintSwitch.setVisible(passwordSwitch.isChecked());
+//		editTextPreference.setVisible(passwordSwitch.isChecked());
+//		fingerprintSwitch.setVisible(passwordSwitch.isChecked());
 		mainActivity = (MainActivity) getActivity();
+
+		biometricManager = BiometricManager.from(getContext());
+		fingerprintSwitch.setEnabled(true);
+		switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+			case BiometricManager.BIOMETRIC_SUCCESS:
+				Log.d(TAG, "Biometric: success");
+				break;
+			case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+				Log.d(TAG, "Biometric: No Hardware");
+				fingerprintSwitch.setEnabled(false);
+				break;
+			case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+				Log.d(TAG, "Biometric: None enrolled");
+				fingerprintSwitch.setChecked(false);
+				break;
+			default:
+				Log.d(TAG, "Biometric: Default Error in fingerprint setup");
+				fingerprintSwitch.setEnabled(false);
+		}
 
 		abc = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
 			@Override
@@ -60,35 +79,35 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			}
 		});
 
-		passwordSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
-			boolean on = (boolean) newValue;
-			editTextPreference.setVisible(on);
-			fingerprintSwitch.setVisible(on);
-
-			if(on) {
-				biometricManager = BiometricManager.from(getContext());
-				fingerprintSwitch.setEnabled(true);
-				switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
-					case BiometricManager.BIOMETRIC_SUCCESS:
-						Log.d(TAG, "Biometric: success");
-						break;
-					case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-						Log.d(TAG, "Biometric: No Hardware");
-						fingerprintSwitch.setEnabled(false);
-						break;
-					case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-						Log.d(TAG, "Biometric: None enrolled");
-						fingerprintSwitch.setChecked(false);
-						break;
-					default:
-						Log.d(TAG, "Biometric: Default Error in fingerprint setup");
-						fingerprintSwitch.setEnabled(false);
-				}
-			}
-
-//				Log.d(TAG, "onPreferenceChange:  on = "+on);
-			return true;
-		});
+//		passwordSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+//			boolean on = (boolean) newValue;
+//			editTextPreference.setVisible(on);
+//			fingerprintSwitch.setVisible(on);
+//
+//			if(on) {
+//				biometricManager = BiometricManager.from(getContext());
+//				fingerprintSwitch.setEnabled(true);
+//				switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+//					case BiometricManager.BIOMETRIC_SUCCESS:
+//						Log.d(TAG, "Biometric: success");
+//						break;
+//					case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+//						Log.d(TAG, "Biometric: No Hardware");
+//						fingerprintSwitch.setEnabled(false);
+//						break;
+//					case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+//						Log.d(TAG, "Biometric: None enrolled");
+//						fingerprintSwitch.setChecked(false);
+//						break;
+//					default:
+//						Log.d(TAG, "Biometric: Default Error in fingerprint setup");
+//						fingerprintSwitch.setEnabled(false);
+//				}
+//			}
+//
+////				Log.d(TAG, "onPreferenceChange:  on = "+on);
+//			return true;
+//		});
 
 		notif.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 			@Override

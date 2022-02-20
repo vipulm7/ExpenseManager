@@ -1,6 +1,7 @@
 package com.VipulMittal.expensemanager.categoryRoom;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -10,19 +11,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.VipulMittal.expensemanager.IconsAdapter;
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
+import com.VipulMittal.expensemanager.transactionRoom.Transaction;
+import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -36,11 +42,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 	String TAG="Vipul_tag";
 	public int who;
 	MainActivity mainActivity;
+	TransactionViewModel transactionViewModel;
 
 
 	public CategoryAdapter(MainActivity mainActivity) {
 		categories=new ArrayList<>();
 		this.mainActivity = mainActivity;
+		transactionViewModel = mainActivity.transactionViewModel;
 	}
 
 	@NonNull
@@ -57,6 +65,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 	@Override
 	public void onBindViewHolder(@NonNull BSDCatViewHolder holder, int position) {
 		Category category = categories.get(position);
+		Log.d(TAG, "onBindViewHolder: category = "+category.catName+"         id = "+category.catId);
 		if(who==1)
 		{
 			holder.name.setText(category.catName);
@@ -118,6 +127,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				else
 					holder.progressBar.setProgress(0);
 			}
+
+			holder.imageView.setImageResource(category.catImageID);
 		}
 	}
 
@@ -142,6 +153,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 		public BSDCatViewHolder(@NonNull View itemView) {
 			super(itemView);
+
 			if(who==1)
 			{
 				name = itemView.findViewById(R.id.BSD_Cat);
@@ -187,6 +199,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 						TextView catTitle = catView.findViewById(R.id.TVDialogCT);
 						catTitle.setText("Update SubCategory");
+						IconsAdapter iconsAdapter = new IconsAdapter(mainActivity.icon_category_income);
 
 						AlertDialog.Builder builder2;
 						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -200,7 +213,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 								.setView(catView)
 								.setPositiveButton("Update", (dialog2, which) -> {
 									int type=catTabLayout.getSelectedTabPosition()+1;
-									SubCategory subCategory = new SubCategory(ETForCatN.getText().toString().trim(), subCategorySelected.subCatAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), subCategorySelected.categoryID, type);
+									SubCategory subCategory = new SubCategory(ETForCatN.getText().toString().trim(), subCategorySelected.subCatAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), subCategorySelected.categoryID, type, mainActivity.icon_category_income[iconsAdapter.selected]);
 									subCategory.id = subCategorySelected.id;
 									mainActivity.subCategoryViewModel.Update(subCategory);
 								});
@@ -248,6 +261,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 						ETForCatIB.setText(""+subCategorySelected.subCatBudget);
 						ETForCatN.requestFocus();
 
+						RecyclerView recyclerView = catView.findViewById(R.id.rv_icons_category);
+
+						IconsAdapter.ClickListener listener = viewHolder2 -> {
+							int pos2 = viewHolder2.getAdapterPosition();
+
+							int a=iconsAdapter.selected;
+							iconsAdapter.selected=pos2;
+
+							iconsAdapter.notifyItemChanged(a);
+							iconsAdapter.notifyItemChanged(pos2);
+						};
+						iconsAdapter.listener = listener;
+						recyclerView.setAdapter(iconsAdapter);
+						recyclerView.setHasFixedSize(true);
+						recyclerView.setLayoutManager(new GridLayoutManager(mainActivity, 2, GridLayoutManager.HORIZONTAL, false));
+
 
 						int posT = catTabLayout.getSelectedTabPosition();
 						if(posT==0)
@@ -265,7 +294,41 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 					}
 				};
 
+				SubCategoryAdapter.ClickListener deleteListenerS = new SubCategoryAdapter.ClickListener() {
+					@Override
+					public void onItemClick(SubCategoryAdapter.BSDSubCatViewHolder viewHolder) {
+
+						int pos= getAdapterPosition();
+						SubCategory subCategory = subCategoryAdapter.subCategories.get(pos);
+
+						List<Transaction>transactionsToBeDeleted = transactionViewModel.getAllTransactionsAcc(subCategory.id);
+
+						AlertDialog.Builder builder;
+						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+							builder = new AlertDialog.Builder(mainActivity, android.R.style.ThemeOverlay_Material_Dialog);
+						}
+						else
+							builder = new AlertDialog.Builder(mainActivity);
+						builder.setTitle("Delete Account")
+								.setMessage("Are you sure want to delete this account!")
+								.setNegativeButton("Cancel", (dialog, which) -> {
+
+								})
+								.setPositiveButton("Delete", null);
+						final AlertDialog[] dialog = {builder.create()};
+						dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+//				dialog.getWindow().getAttributes().windowAnimations = R.style.
+
+						dialog[0].show();
+						Dialog dialog1 = dialog[0];
+
+						Button del = dialog[0].getButton(AlertDialog.BUTTON_POSITIVE);
+
+					}
+				};
+
 				subCategoryAdapter.listener = listenerS;
+				subCategoryAdapter.deleteListener = deleteListenerS;
 
 				rv_subcatList.setNestedScrollingEnabled(false);
 				rv_subcatList.setLayoutManager(new LinearLayoutManager(mainActivity.getApplicationContext()));
@@ -283,6 +346,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 						arrowListener.onItemClick(this);
 				});
 			}
+		}
+
+		public void setProgressBar(int progress)
+		{
+			progressBar.setProgress(progress);
+//			if(progress<11)
 		}
 	}
 

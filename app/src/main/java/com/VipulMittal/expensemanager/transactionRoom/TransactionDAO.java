@@ -30,6 +30,12 @@ public interface TransactionDAO {
     @Query("SELECT * FROM transaction_table WHERE dateOfMonth=:day AND month=:month AND year=:year ORDER BY dateTime DESC")
     LiveData<List<Transaction>> getAllTransactionsDAY(int day, int month, int year);
 
-    @Query("SELECT * FROM transaction_table WHERE accountID=:accountID ORDER BY dateTime DESC")
+    @Query("SELECT * FROM transaction_table WHERE accountID=:accountID")
     List<Transaction> getAllTransactionsAcc(int accountID);
+
+    @Query("SELECT * FROM transaction_table WHERE catID=:catID")
+    List<Transaction> getAllTransactionsCat(int catID);
+
+    @Query("SELECT * FROM transaction_table WHERE subCatID=:subCatID")
+    List<Transaction> getAllTransactionsSubCat(int subCatID);
 }

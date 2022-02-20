@@ -65,6 +65,7 @@ public class TransactionFragment extends Fragment {
 		cIDCame=cID;
 		sIDCame=sID;
 		aIDCame=aID;
+		typeCame = type;
 		Log.d(TAG, "TransactionFragment: aid="+aID+" cid="+cID+" sid="+sID);
 	}
 
@@ -75,7 +76,7 @@ public class TransactionFragment extends Fragment {
 	RadioButton RBIncome, RBExpense, RBTransfer;
 	Toast toast;
 	public int type, amount, request, cID, sID, aID, id;
-	public int amountCame, cIDCame, sIDCame, aIDCame;
+	public int amountCame, cIDCame, sIDCame, aIDCame, typeCame;
 	String note, description;
 	Calendar calendar;
 	EditText ETNote, ETDes, ETAmt;
@@ -83,7 +84,7 @@ public class TransactionFragment extends Fragment {
 	Button save, repeat;
 	int dateArray[]=new int[7];
 	MainActivity mainActivity;
-	ImageView iv_acc;
+	ImageView iv_acc, iv_cat;
 
 
 	@Override
@@ -106,11 +107,13 @@ public class TransactionFragment extends Fragment {
 		save=view.findViewById(R.id.transaction_save_button);
 		repeat=view.findViewById(R.id.transaction_repeat_button);
 		iv_acc = view.findViewById(R.id.IVAccounts);
+		iv_cat = view.findViewById(R.id.IVCategory);
 		save.setEnabled(request != 1);
 		repeat.setEnabled(request != 1);
 		mainActivity=(MainActivity) getActivity();
 
 		iv_acc.setImageResource(R.drawable.ic_account);
+		iv_cat.setImageResource(R.drawable.ic_category);
 
 		setRadioButton(type);
 		doColoring();
@@ -129,19 +132,31 @@ public class TransactionFragment extends Fragment {
 
 		if(cID!=-1)
 		{
-			Category category=mainActivity.categoryViewModel.getCat(cID);
-			Log.d(TAG, "onCreateView: category = "+category);
-			Log.d(TAG, "onCreateView: category name = "+category.catName);
-			if(sID!=-1)
-			{
-				SubCategory subCategory=mainActivity.subCategoryViewModel.getSubCat(sID);
-				Log.d(TAG, "onCreateView: subCategory = "+subCategory);
-				Log.d(TAG, "onCreateView: subCategory name = "+subCategory.name);
-				TVCategory.setText(category.catName + " / " + subCategory.name);
+			if(type != 3) {
+				Category category = mainActivity.categoryViewModel.getCat(cID);
+				iv_cat.setImageResource(category.catImageID);
+				Log.d(TAG, "onCreateView: category = " + category);
+				Log.d(TAG, "onCreateView: category name = " + category.catName);
+				if (sID != -1) {
+					SubCategory subCategory = mainActivity.subCategoryViewModel.getSubCat(sID);
+					Log.d(TAG, "onCreateView: subCategory = " + subCategory);
+					Log.d(TAG, "onCreateView: subCategory name = " + subCategory.name);
+					TVCategory.setText(category.catName + " / " + subCategory.name);
+					iv_cat.setImageResource(subCategory.subCatImageID);
+				} else
+					TVCategory.setText(category.catName);
 			}
 			else
-				TVCategory.setText(category.catName);
-			BCat=true;
+			{
+				Account account=mainActivity.accountViewModel.getAcc(cID);
+				Log.d(TAG, "onCreateView: account = "+account);
+				Log.d(TAG, "onCreateView: account name = "+account.name);
+				TVCategory.setText(account.name);
+
+				iv_cat.setImageResource(account.imageId);
+			}
+
+			BCat = true;
 		}
 
 		enableDisableSaveButton();
@@ -162,7 +177,7 @@ public class TransactionFragment extends Fragment {
 			mainActivity.setActionBarTitle("Edit Transaction");
 
 		TVAccount.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(aID, cID, 1, type, this);
+			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(aID, cID, 1, type, this, null);
 			bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
 		});
 
@@ -173,7 +188,7 @@ public class TransactionFragment extends Fragment {
 			}
 			else
 			{
-				BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(cID, aID, 2, type, this);
+				BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(cID, aID, 2, type, this, null);
 				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts2");
 			}
 		});
@@ -209,22 +224,26 @@ public class TransactionFragment extends Fragment {
 			mainActivity.accountViewModel.UpdateAmt(a, aID);
 			if(type!=3)
 			{
-				if(cIDCame!=-1)
-					mainActivity.categoryViewModel.UpdateAmt(-amountCame, cIDCame);
 				mainActivity.categoryViewModel.UpdateAmt(a, cID);
-
-
-				if(sIDCame !=-1)
-					mainActivity.subCategoryViewModel.UpdateAmt(-amountCame, sIDCame);
 				if (sID != -1)
 					mainActivity.subCategoryViewModel.UpdateAmt(a, sID);
-
 			}
 			else {
+				mainActivity.accountViewModel.UpdateAmt(-a, cID);//cid has aid2 data
+			}
+
+			if(typeCame != 3)
+			{
+				if(cIDCame!=-1)
+					mainActivity.categoryViewModel.UpdateAmt(-amountCame, cIDCame);
+				if(sIDCame !=-1)
+					mainActivity.subCategoryViewModel.UpdateAmt(-amountCame, sIDCame);
+			}
+			else
+			{
 				//amountCame - a
 				if(cIDCame!=-1)
 					mainActivity.accountViewModel.UpdateAmt(amountCame, cIDCame);//cid has aid2 data
-				mainActivity.accountViewModel.UpdateAmt(-a, cID);//cid has aid2 data
 			}
 		});
 
@@ -318,7 +337,7 @@ public class TransactionFragment extends Fragment {
 		repeat.setEnabled(BNote && BAmt && BAcc && BCat);
 	}
 
-	public void saveSelectedCategoryWithName(int cID, String name)
+	public void saveSelectedCategoryWithName(int cID, String name, int imageID)
 	{
 		this.cID=cID;
 		TVCategory.setText(name);
@@ -326,6 +345,8 @@ public class TransactionFragment extends Fragment {
 		this.sID = -1;
 		save.setEnabled(BNote && BAmt && BAcc && BCat);
 		repeat.setEnabled(BNote && BAmt && BAcc && BCat);
+		iv_cat.setImageResource(imageID);
+
 	}
 
 	public void saveSelectedCategoryWithoutName(int cID)
@@ -333,7 +354,7 @@ public class TransactionFragment extends Fragment {
 		this.cID =cID;
 	}
 
-	public void saveSelectedSubCategory(int cID, int sID, String name)
+	public void saveSelectedSubCategory(int cID, int sID, String name, int imageID)
 	{
 		TVCategory.setText(name);
 		BCat=true;
@@ -341,6 +362,7 @@ public class TransactionFragment extends Fragment {
 		repeat.setEnabled(BNote && BAmt && BAcc && BCat);
 		this.sID=sID;
 		this.cID=cID;
+		iv_cat.setImageResource(imageID);
 	}
 
 

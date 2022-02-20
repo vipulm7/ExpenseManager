@@ -10,6 +10,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.VipulMittal.expensemanager.MainActivity;
+import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 
 import java.util.Calendar;
@@ -52,25 +53,31 @@ public abstract class SubCategoryDatabase extends RoomDatabase {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(Void... voids)
+        {
 
-            subCategoryDAO.Insert(new SubCategory("By amazon",0,0,2,1));
-            subCategoryDAO.Insert(new SubCategory("By gpay",0,0,2,1));
-            subCategoryDAO.Insert(new SubCategory("By freecharge",0,0,2,1));
+            subCategoryDAO.Insert(new SubCategory("By amazon",0,0,2,1, R.drawable.ia_amazon));
+            subCategoryDAO.Insert(new SubCategory("By gpay",0,0,2,1, R.drawable.ia_google_pay));
+            subCategoryDAO.Insert(new SubCategory("By freecharge",0,0,2,1, R.drawable.ia_freecharge));
 
-            subCategoryDAO.Insert(new SubCategory("By bank",0,0,3,1));
-            subCategoryDAO.Insert(new SubCategory("By paytm",0,0,3,1));
+            subCategoryDAO.Insert(new SubCategory("By bank",0,0,3,1, R.drawable.is_bank));
+            subCategoryDAO.Insert(new SubCategory("By paytm",0,0,3,1, R.drawable.ia_paytm));
 
-            subCategoryDAO.Insert(new SubCategory("Lunch",0,0,4,2));
-            subCategoryDAO.Insert(new SubCategory("BreakFast",0,0,4,2));
-            subCategoryDAO.Insert(new SubCategory("Dinner",0,0,4,2));
-            subCategoryDAO.Insert(new SubCategory("Restaurant",0,0,4,2));
+            subCategoryDAO.Insert(new SubCategory("Fast Food",0,0,4,2, R.drawable.is_hamburger));
+            subCategoryDAO.Insert(new SubCategory("Fruits",0,0,4,2, R.drawable.is_orange));
+            subCategoryDAO.Insert(new SubCategory("Vegetables",0,0,4,2, R.drawable.is_potato));
+            subCategoryDAO.Insert(new SubCategory("Restaurant",0,0,4,2, R.drawable.is_cafe));
 
-            subCategoryDAO.Insert(new SubCategory("Bus",0,0,5,2));
-            subCategoryDAO.Insert(new SubCategory("Petrol",0,0,5,2));
+            subCategoryDAO.Insert(new SubCategory("Bus",0,0,5,2, R.drawable.is_bus));
+            subCategoryDAO.Insert(new SubCategory("Petrol",0,0,5,2, R.drawable.is_gas_station));
+            subCategoryDAO.Insert(new SubCategory("Taxi",0,0,5,2, R.drawable.is_taxi));
 
-            subCategoryDAO.Insert(new SubCategory("Medicine", MainActivity.sum_amounts,0,7,2));
-            subCategoryDAO.Insert(new SubCategory("Insurance",0,0,7,2));
+            subCategoryDAO.Insert(new SubCategory("Medicine", MainActivity.sum_amounts,0,7,2, R.drawable.is_pills));
+            subCategoryDAO.Insert(new SubCategory("Insurance",0,0,7,2, R.drawable.is_treatment_list));
+
+            subCategoryDAO.Insert(new SubCategory("Movie", 0,0,8,2, R.drawable.is_ticket));
+            subCategoryDAO.Insert(new SubCategory("Netflix",0,0,8,2, R.drawable.is_netflix));
+
             return null;
         }
     }

@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountDAO;
@@ -29,6 +30,7 @@ import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
 
@@ -161,75 +163,76 @@ public class AccountsFragment extends Fragment {
 				iconsAdapter.selected = findIndex(mainActivity.icon_account, accountSelected.imageId);
 				iconsAdapter.listener = listener;
 				recyclerView.setAdapter(iconsAdapter);
+				recyclerView.setHasFixedSize(true);
 				recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false));
 			}
 		};
 
-		AccountAdapter.ClickListener deleteListener = new AccountAdapter.ClickListener() {
-			@Override
-			public void onItemClick(AccountAdapter.AccViewHolder viewHolder) {
-				int position = viewHolder.getAdapterPosition();
-				Account account = accountAdapter.accounts.get(position);
+		AccountAdapter.ClickListener deleteListener = viewHolder -> {
+			int position = viewHolder.getAdapterPosition();
+			Account account = accountAdapter.accounts.get(position);
 
-				List<Transaction>transactionsToBeDeleted = transactionViewModel.getAllTransactionsAcc(account.id);
+			List<Transaction>transactionsToBeDeleted = transactionViewModel.getAllTransactionsAcc(account.id);
 
-				AlertDialog.Builder builder;
-				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-					builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
-				}
-				else
-					builder = new AlertDialog.Builder(getContext());
-				builder.setTitle("Delete Account")
-						.setMessage("Are you sure want to delete this account!")
-						.setNegativeButton("Cancel", (dialog, which) -> {
-
-						})
-						.setPositiveButton("Delete", null);
-				final AlertDialog[] dialog = {builder.create()};
-				dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
-//				dialog.getWindow().getAttributes().windowAnimations = R.style.
-
-				dialog[0].show();
-				Dialog dialog1 = dialog[0];
-
-				Button del = dialog[0].getButton(AlertDialog.BUTTON_POSITIVE);
-				del.setOnClickListener(v->{
-					if(transactionsToBeDeleted.size()==0)
-						accountViewModel.Delete(account);
-					else
-					{
-						builder.setTitle("")
-								.setMessage("There are "+transactionsToBeDeleted.size()+" transactions with done using this account. What to do with them")
-								.setPositiveButton("Delete those transaction", (dialog2, which2) -> {
-									for(int i=-1;++i<transactionsToBeDeleted.size();)
-									{
-										Transaction transaction = transactionsToBeDeleted.get(i);
-
-										transactionViewModel.Delete(transaction);
-										accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
-										if(transaction.type == 3)
-											accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
-										else {
-											categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
-											if(transaction.subCatID!=-1)
-												subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
-										}
-									}
-									mainActivity.transactionAdapter.notifyDataSetChanged();
-									accountViewModel.Delete(account);
-								})
-								.setNegativeButton("Choose New Account", (dialog2, which2) -> {
-
-								});
-						dialog[0] = builder.create();
-						dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
-//				dialog.getWindow().getAttributes().windowAnimations = R.style.
-
-						dialog[0].show();
-					}
-					dialog1.dismiss();
-				});
+			AlertDialog.Builder builder;
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+				builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
 			}
+			else
+				builder = new AlertDialog.Builder(getContext());
+			builder.setTitle("Delete Account")
+					.setMessage("Are you sure want to delete this account!")
+					.setNegativeButton("Cancel", (dialog, which) -> {
+
+					})
+					.setPositiveButton("Delete", null);
+			final AlertDialog[] dialog = {builder.create()};
+			dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+//				dialog.getWindow().getAttributes().windowAnimations = R.style.
+
+			dialog[0].show();
+			Dialog dialog1 = dialog[0];
+
+			Button del = dialog[0].getButton(AlertDialog.BUTTON_POSITIVE);
+			del.setOnClickListener(v->{
+				if(transactionsToBeDeleted.size()==0)
+					accountViewModel.Delete(account);
+				else
+				{
+					builder.setTitle("")
+							.setMessage("There are "+transactionsToBeDeleted.size()+" transactions with done using this account. What to do with them")
+							.setPositiveButton("Delete those transaction", (dialog2, which2) -> {
+								for(int i=-1;++i<transactionsToBeDeleted.size();)
+								{
+									Transaction transaction = transactionsToBeDeleted.get(i);
+
+									transactionViewModel.Delete(transaction);
+									accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
+									if(transaction.type == 3)
+										accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
+									else {
+										categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
+										if(transaction.subCatID!=-1)
+											subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
+									}
+								}
+								mainActivity.transactionAdapter.notifyDataSetChanged();
+								accountViewModel.Delete(account);
+							})
+							.setNegativeButton("Choose New Account", (dialog2, which2) -> {
+
+								TransactionFragment transactionFragment = null;
+								BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account.id, account.id, 1, 4, null, transactionsToBeDeleted);
+								bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
+							});
+					dialog[0] = builder.create();
+					dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+//				dialog.getWindow().getAttributes().windowAnimations = R.style.
+
+					dialog[0].show();
+				}
+				dialog1.dismiss();
+			});
 		};
 
 

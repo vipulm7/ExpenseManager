@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.VipulMittal.expensemanager.MainActivity;
@@ -37,7 +35,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 	public Map<Integer, String> subcat;
 	public int dates;
 	LayoutInflater inflater;
-	public boolean selectionModeOn, selectAllOn;
+	public boolean selectionModeOn;
+	public boolean[] select;
 
 	public TransactionAdapter(MainActivity mainActivity) {
 		transactions = new ArrayList<>();
@@ -129,22 +128,35 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 				holder.TVAmount.setText("\u20b9"+mainActivity.moneyToString(-transaction.amount));
 			}
 
-			Log.d(TAG, "onBindViewHolder: holder.selected = "+holder.selected);
-			Log.d(TAG, "onBindViewHolder: holderv = "+holder);
+//			Log.d(TAG, "onBindViewHolder: holder.selected = "+select[position]);
+//			Log.d(TAG, "onBindViewHolder: holderv = "+holder);
 
-			if(position==transactions.size()-1 || transactions.get(position+1).catID==-1) {
-				if(holder.selected)
-					holder.view.setBackgroundResource(R.drawable.rc_below_selected);
+			if(selectionModeOn)
+			{
+				if(position==transactions.size()-1 || transactions.get(position+1).catID==-1)
+				{
+					if(select[position])
+						holder.view.setBackgroundResource(R.drawable.rc_below_selected);
+					else
+						holder.view.setBackgroundResource(R.drawable.rc_below);
+				}
 				else
-					holder.view.setBackgroundResource(R.drawable.rc_below);
+				{
+					if(select[position])
+						holder.view.setBackgroundResource(R.drawable.rc_mid_selected);
+					else
+						holder.view.setBackgroundResource(R.drawable.rc_mid);
+				}
 			}
 			else
 			{
-				if(holder.selected)
-					holder.view.setBackgroundResource(R.drawable.rc_mid_selected);
+				if(position==transactions.size()-1 || transactions.get(position+1).catID==-1)
+					holder.view.setBackgroundResource(R.drawable.rc_below);
 				else
 					holder.view.setBackgroundResource(R.drawable.rc_mid);
 			}
+
+
 		}
 	}
 
@@ -173,7 +185,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 	{
 		TextView TVCat, TVSubCat, TVNote, TVAccount, TVAmount;
 		View view;
-		public boolean selected;
 
 		public TransViewHolder(@NonNull View itemView, int viewType) {
 			super(itemView);
@@ -201,8 +212,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 				itemView.setOnLongClickListener((View.OnLongClickListener) v -> {
 					if(longListener != null) {
 						longListener.onItemClick(this);
+						return true;
 					}
-					return true;
+					return false;
 				});
 			}
 		}
@@ -211,35 +223,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		{
 			int position = getAdapterPosition();
 			Transaction transaction = transactions.get(position);
-			selected = !selected;
 
-			Log.d(TAG, "changeSelectionv: selected = "+selected);
-			Log.d(TAG, "changeSelectionv: view.getBackground() = "+view.getBackground());
-			Log.d(TAG, "changeSelectionv: mainActivity.getResources().getDrawable(R.drawable.rc_below) = "+mainActivity.getResources().getDrawable(R.drawable.rc_below));
-			Log.d(TAG, "changeSelectionv: mainActivity.getResources().getDrawable(R.drawable.rc_below_selected) = "+mainActivity.getResources().getDrawable(R.drawable.rc_below_selected));
-			Log.d(TAG, "changeSelectionv: holderv = "+this);
-
-			if(position==transactions.size()-1 || transactions.get(position+1).id==-1) {
-				if(selected) {
-                    view.setBackgroundResource(R.drawable.rc_below_selected);
-					transactionsToBeDeleted.add(transaction);
-				}
-				else {
-                    view.setBackgroundResource(R.drawable.rc_below);
-					transactionsToBeDeleted.remove(transaction);
-				}
-			}
+			select[position] = ! select[position];
+			if(select[position])
+				transactionsToBeDeleted.add(transaction);
 			else
-			{
-				if(selected) {
-                    view.setBackgroundResource(R.drawable.rc_mid_selected);
-					transactionsToBeDeleted.add(transaction);
-				}
-				else {
-                    view.setBackgroundResource(R.drawable.rc_mid);
-					transactionsToBeDeleted.remove(transaction);
-				}
-			}
+				transactionsToBeDeleted.remove(transaction);
 
 			mainActivity.homeFragment.actionMode.setTitle(""+transactionsToBeDeleted.size());
 			notifyItemChanged(position);

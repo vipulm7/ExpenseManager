@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.VipulMittal.expensemanager.IconsAdapter;
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.TransactionFragment;
@@ -90,7 +92,7 @@ public class BsdCategoryFragment extends Fragment {
 				}
 				else
 				{
-					transactionFragment.saveSelectedCategoryWithName(cID, categorySelected.catName);
+					transactionFragment.saveSelectedCategoryWithName(cID, categorySelected.catName, categorySelected.catImageID);
 					bsdCatFragment.dismiss();
 				}
 			}
@@ -122,17 +124,17 @@ public class BsdCategoryFragment extends Fragment {
 
 	private void addNewCat() {
 		LayoutInflater layoutInflater=LayoutInflater.from(getContext());
-		catView =layoutInflater.inflate(R.layout.category_dialog, null);
+		catView = layoutInflater.inflate(R.layout.category_dialog, null);
 
 		EditText ETForCatN= catView.findViewById(R.id.ETDialogCatName);
 		EditText ETForCatIB= catView.findViewById(R.id.ETDialogCatBudget);
+		IconsAdapter iconsAdapter = new IconsAdapter(mainActivity.icon_category_income);
 
-		TextView catTitle = new TextView(getContext());
-		catTitle.setText("Add New Category");
-		catTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-		catTitle.setPadding(2,16,2,10);
-		catTitle.setTextSize(22);
-		catTitle.setTypeface(null, Typeface.BOLD);
+		TextView catTitle = catView.findViewById(R.id.TVDialogCT);
+		if(type == 1)
+			catTitle.setText("Add new Income Category");
+		else
+			catTitle.setText("Add new Expense Category");
 
 		AlertDialog.Builder builder;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -140,13 +142,13 @@ public class BsdCategoryFragment extends Fragment {
 		}
 		else
 			builder = new AlertDialog.Builder(getContext());
-		builder.setCustomTitle(catTitle)
+		builder
 				.setNegativeButton("Cancel", (dialog, which) -> {
 
 				})
 				.setView(catView)
 				.setPositiveButton("Add", (dialog, which) -> {
-					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type));
+					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type, mainActivity.icon_category_income[iconsAdapter.selected]));
 				});
 		AlertDialog dialog = builder.create();
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -193,6 +195,23 @@ public class BsdCategoryFragment extends Fragment {
 			ETForCatN.setText("");
 			ETForCatIB.setText("");
 			ETForCatN.requestFocus();
+
+			RecyclerView recyclerView = catView.findViewById(R.id.rv_icons_category);
+
+			IconsAdapter.ClickListener listener = viewHolder2 -> {
+				int pos2 = viewHolder2.getAdapterPosition();
+
+				int a=iconsAdapter.selected;
+				iconsAdapter.selected=pos2;
+
+				iconsAdapter.notifyItemChanged(a);
+				iconsAdapter.notifyItemChanged(pos2);
+			};
+			iconsAdapter.listener = listener;
+			recyclerView.setAdapter(iconsAdapter);
+			recyclerView.setHasFixedSize(true);
+			recyclerView.setLayoutManager(new GridLayoutManager(mainActivity, 2, GridLayoutManager.HORIZONTAL, false));
+
 			Log.d(TAG, "onCreateView: dialog created");
 		});
 	}
@@ -228,7 +247,7 @@ public class BsdCategoryFragment extends Fragment {
 		}
 		else
 		{
-			transactionFragment.saveSelectedCategoryWithName(cID, categorySelected.catName);
+			transactionFragment.saveSelectedCategoryWithName(cID, categorySelected.catName, categorySelected.catImageID);
 			bsdCatFragment.dismiss();
 		}
 	}

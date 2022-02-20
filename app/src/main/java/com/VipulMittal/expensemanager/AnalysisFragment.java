@@ -265,7 +265,7 @@ public class AnalysisFragment extends Fragment {
 					pieEntries.add(new PieEntry(catAmount.get(cat.get(i)), category.catName));
 					a = (double)catAmount.get(cat.get(i)) / totalIncome;
 					s+=a;
-					percent.add(new Cat(a, category.catName));
+					percent.add(new Cat(a, category.catName, category.catImageID));
 				}
 				Log.d(TAG, "pieData: amt = "+catAmount.get(cat.get(i))+" name = "+category.catName);
 			}
@@ -273,7 +273,7 @@ public class AnalysisFragment extends Fragment {
 			if(percent.size()!=0) {
 				s -= a;
 				a = 1 - s;
-				percent.set(percent.size() - 1, new Cat(a, percent.get(percent.size() - 1).catName));
+				percent.set(percent.size() - 1, new Cat(a, percent.get(percent.size() - 1).catName, percent.get(percent.size() - 1).imageID));
 			}
 
 			pieChart.setNoDataText("No Income Entries");
@@ -286,14 +286,14 @@ public class AnalysisFragment extends Fragment {
 					pieEntries.add(new PieEntry(-catAmount.get(cat.get(i)), category.catName));
 					a = (double)catAmount.get(cat.get(i)) / totalExpense;
 					s+=a;
-					percent.add(new Cat(a, category.catName));
+					percent.add(new Cat(a, category.catName, category.catImageID));
 				}
 			}
 
 			if(percent.size()!=0) {
 				s -= a;
 				a = 1 - s;
-				percent.set(percent.size() - 1, new Cat(a, percent.get(percent.size() - 1).catName));
+				percent.set(percent.size() - 1, new Cat(a, percent.get(percent.size() - 1).catName, percent.get(percent.size() - 1).imageID));
 			}
 
 			pieChart.setNoDataText("No Expense Entries");

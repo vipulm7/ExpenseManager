@@ -21,9 +21,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.io.File;
-
-import ir.androidexception.roomdatabasebackupandrestore.Backup;
-import ir.androidexception.roomdatabasebackupandrestore.OnWorkFinishListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 public class BackupRestoreFragment extends PreferenceFragmentCompat {
 
@@ -46,13 +47,59 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 
 
 				int permission = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-				if(permission == PackageManager.PERMISSION_GRANTED)
+
+				if(true)
 				{
 					File folder = new File (Environment.getExternalStorageDirectory() + File.separator + "Expense Tracker");
 
-					if(!folder.exists())
-						folder.mkdirs();
+					if(!folder.exists()) {
+						if(!folder.mkdirs())
+						{
+							if (mainActivity.toast != null)
+								mainActivity.toast.cancel();
+							mainActivity.toast = Toast.makeText(getContext(), "Can't create directory!", Toast.LENGTH_SHORT);
+							mainActivity.toast.show();
+						}
+					}
 
+					File sd= Environment.getExternalStorageDirectory();
+					File data = Environment.getDataDirectory();
+
+					if(sd.canWrite())
+					{
+						String currentDBPath = "//data//ExpenseTracker//databases//trans_database";
+						String backupDBPath = "/BackupFolder/trans_database";
+						File currentDB = new File(data, currentDBPath);
+						File backupDB = new File(sd, backupDBPath);
+
+						try {
+							FileChannel src = new FileInputStream(currentDB).getChannel();
+							FileChannel dst = new FileInputStream(backupDB).getChannel();
+
+							dst.transferFrom(src, 0, src.size());
+							src.close();
+							dst.close();
+
+							if (mainActivity.toast != null)
+								mainActivity.toast.cancel();
+							mainActivity.toast = Toast.makeText(getContext(), "Backup created successfully!", Toast.LENGTH_SHORT);
+							mainActivity.toast.show();
+
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+							mainActivity.toast = Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG);
+							mainActivity.toast.show();
+						} catch (IOException e) {
+							e.printStackTrace();
+							mainActivity.toast = Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG);
+							mainActivity.toast.show();
+						}
+					}
+					else
+					{
+						mainActivity.toast = Toast.makeText(getContext(),"Can't write!", Toast.LENGTH_LONG);
+						mainActivity.toast.show();
+					}
 
 //
 //					File db= mainActivity.getDatabasePath("account_database");
@@ -84,7 +131,8 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 //								}
 //							})
 //							.execute();
-				} else
+				}
+				else
 				{
 					if (mainActivity.toast != null)
 						mainActivity.toast.cancel();
@@ -92,17 +140,17 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 					mainActivity.toast.show();
 				}
 
-				new Backup.Init()
-				.database(mainActivity.accountViewModel.repo.accountDatabase)
-				.path("/sdk_gphone_x86_64_arm64/")
-				.fileName("acc.txt")
-				.onWorkFinishListener((success, message) -> {
-					if (mainActivity.toast != null)
-						mainActivity.toast.cancel();
-					mainActivity.toast = Toast.makeText(getContext(), "Backup done!", Toast.LENGTH_SHORT);
-					mainActivity.toast.show();
-				})
-				.execute();
+//				new Backup.Init()
+//				.database(mainActivity.accountViewModel.repo.accountDatabase)
+//				.path("/sdk_gphone_x86_64_arm64/")
+//				.fileName("acc.txt")
+//				.onWorkFinishListener((success, message) -> {
+//					if (mainActivity.toast != null)
+//						mainActivity.toast.cancel();
+//					mainActivity.toast = Toast.makeText(getContext(), "Backup done!", Toast.LENGTH_SHORT);
+//					mainActivity.toast.show();
+//				})
+//				.execute();
 
 				return true;
 			}

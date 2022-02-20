@@ -14,7 +14,6 @@
 		app:layout_constraintTop_toTopOf="parent"
 		android:id="@+id/IVCat_image"
 		app:layout_constraintBottom_toTopOf="@id/progressBar"
-		android:background="@color/cyan_dark"
 		android:layout_marginStart="8dp"
 		/>
 
@@ -91,7 +90,18 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		app:layout_constraintStart_toEndOf="@id/IVCat_image"
-		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintEnd_toStartOf="@id/BAccDel"
 		app:layout_constraintTop_toBottomOf="@id/TVCat_BUDGET"
+		android:layout_marginStart="8dp"
+		/>
+
+	<TextView
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/progressBar"
+		android:background="@drawable/ic_delete"
+		android:id="@+id/BAccDel"
 		/>
 </androidx.constraintlayout.widget.ConstraintLayout>

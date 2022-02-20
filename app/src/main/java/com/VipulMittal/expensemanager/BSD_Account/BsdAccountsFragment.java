@@ -27,6 +27,8 @@ import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
+import com.VipulMittal.expensemanager.transactionRoom.Transaction;
+import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
@@ -34,12 +36,13 @@ import java.util.List;
 public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 	//constructor
-	public BsdAccountsFragment(int aID, int other, int aType, int type, TransactionFragment transactionFragment) {
+	public BsdAccountsFragment(int aID, int other, int aType, int type, TransactionFragment transactionFragment, List<Transaction> transactionsToBeModified) {
 		this.aID = aID;
 		this.transactionFragment=transactionFragment;
 		this.aType = aType;
 		this.other=other;
 		this.type=type;
+		this.transactionsToBeModified = transactionsToBeModified;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -53,6 +56,8 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	MainActivity mainActivity;
 	View accView;
 	boolean b1=false, b2=false;
+	TransactionViewModel transactionViewModel;
+	public List<Transaction> transactionsToBeModified;
 
 
 	@Override
@@ -64,6 +69,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		addNew=view.findViewById(R.id.BSD_BaddAccount);
 
 		mainActivity=(MainActivity)getActivity();
+		transactionViewModel = mainActivity.transactionViewModel;
 		accountAdapter=mainActivity.accountAdapter;
 		accounts=accountAdapter.accounts;
 		accountAdapter.aID = aID;
@@ -81,7 +87,31 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 				mainActivity.getSupportFragmentManager();
 
 
-				if(type == 3 && aID == other)
+				if(type == 4)
+				{
+					if(aID == other) {
+						if (mainActivity.toast != null)
+							mainActivity.toast.cancel();
+
+						mainActivity.toast = Toast.makeText(getContext(), "Can't select this account", Toast.LENGTH_SHORT);
+						mainActivity.toast.show();
+					}
+					else
+					{
+						Account accountToBeDeleted = accountViewModel.getAcc(transactionsToBeModified.get(0).accountID);
+
+						for(int i=-1;++i< transactionsToBeModified.size();)
+						{
+							transactionsToBeModified.get(i).accountID = aID;
+							transactionViewModel.Update(transactionsToBeModified.get(i));
+							accountViewModel.UpdateAmt(transactionsToBeModified.get(i).amount, aID);
+						}
+
+						accountViewModel.Delete(accountToBeDeleted);
+						dismiss();
+					}
+				}
+				else if(type == 3 && aID == other)
 				{
 					if(mainActivity.toast!=null)
 						mainActivity.toast.cancel();
@@ -93,7 +123,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 					if (aType == 1)
 						transactionFragment.saveSelectedAccount(aID, accounts.get(pos)); //bsdAccountsFragment.selected can also be used
 					else
-						transactionFragment.saveSelectedCategoryWithName(aID, accounts.get(pos).name);
+						transactionFragment.saveSelectedCategoryWithName(aID, accounts.get(pos).name, accounts.get(pos).imageId);
 					dismiss();
 				}
 			}

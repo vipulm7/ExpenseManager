@@ -53,6 +53,16 @@ public class TransactionRepo
         return transactionDAO.getAllTransactionsAcc(accountID);
     }
 
+    public List<Transaction> getAllTransactionsCat(int catID)
+    {
+        return transactionDAO.getAllTransactionsCat(catID);
+    }
+
+    public List<Transaction> getAllTransactionsSubCat(int subCatID)
+    {
+        return transactionDAO.getAllTransactionsSubCat(subCatID);
+    }
+
 //    public void UpdateTrans(String note, int amount, String amountDisplay, int accountID, int catID, int subCatID, String description, int type, long date,long dateTime, int id)
 //    {
 //        transactionDAO.UpdateTrans(note, amount, amountDisplay, accountID, catID, subCatID, description, type, date, dateTime, id);
