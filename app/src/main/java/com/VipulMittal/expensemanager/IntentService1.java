@@ -22,8 +22,8 @@ public class IntentService1 extends IntentService {
 	public static final String ACTION_DISMISS="com.example.android.wearable.wear.wearnotifications.handlers.action.DISMISS";
 	NotificationCompat.Builder builder;
 	NotificationManagerCompat notificationManagerCompat;
-	public int snoozeTimeInMillies=3600000;
-//	public int snoozeTimeInMillies=3000;
+//	public int snoozeTimeInMillies=3600000;
+	public int snoozeTimeInMillies=30000;
 	public final String CHANNEL_ID="1";
 	public static final int notifID =2;
 
@@ -36,14 +36,14 @@ public class IntentService1 extends IntentService {
 			final String actionReceived=intent.getAction();
 			Log.d(TAG, "onHandleIntent: intent = "+intent);
 			Log.d(TAG, "onHandleIntent: string = "+actionReceived);
-			if(actionReceived.equals(ACTION_SNOOZE))
-			{
-				Log.d(TAG, "onHandleIntent: ACTION_SNOOZE");
-				snooze();
-			}
-			else if(actionReceived.equals(ACTION_DISMISS)) {
-				Log.d(TAG, "onHandleIntent: ACTION_DISMISS");
-				dismiss();
+			if(actionReceived!=null) {
+				if (actionReceived.equals(ACTION_SNOOZE)) {
+					Log.d(TAG, "onHandleIntent: ACTION_SNOOZE");
+					snooze();
+				} else if (actionReceived.equals(ACTION_DISMISS)) {
+					Log.d(TAG, "onHandleIntent: ACTION_DISMISS");
+					dismiss();
+				}
 			}
 		}
 	}

@@ -35,9 +35,9 @@ public class Receiver extends BroadcastReceiver {
 			NotificationCompat.Builder builder= new NotificationCompat.Builder(context, CHANNEL_ID);
 			builder.setSmallIcon(R.drawable.ic_notifications)
 					.setContentTitle("Add today's records!")
-					.setContentText("Add today's records!")
+					.setContentText("Where did you transact today!")
 					.setStyle(new NotificationCompat.BigTextStyle()
-							.bigText("Add today's records!"))
+							.bigText("Where did you transact today!"))
 					.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 					.setColor(ContextCompat.getColor(context, R.color.cyan));
 
@@ -48,7 +48,7 @@ public class Receiver extends BroadcastReceiver {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			PendingIntent pendingIntent;
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-				pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+				pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 			else
 				pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			builder.setContentIntent(pendingIntent);
@@ -58,7 +58,7 @@ public class Receiver extends BroadcastReceiver {
 			snoozeIntent.setAction(ACTION_SNOOZE);
 			PendingIntent snoozePendingIntent;
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-				snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+				snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 			else
 				snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			NotificationCompat.Action snoozeAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
@@ -69,7 +69,7 @@ public class Receiver extends BroadcastReceiver {
 			dismissIntent.setAction(ACTION_DISMISS);
 			PendingIntent dismissPendingIntent;
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-				dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+				dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 			else
 				dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			NotificationCompat.Action dismissAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,

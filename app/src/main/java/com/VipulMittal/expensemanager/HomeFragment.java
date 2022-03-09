@@ -197,8 +197,13 @@ public class HomeFragment extends Fragment {
 								break;
 							case R.id.menuSelectAll:
 								transactionAdapter.transactionsToBeDeleted.clear();
-								if(!allSelected())
-									transactionAdapter.transactionsToBeDeleted.addAll(transactionAdapter.transactions);
+								if(!allSelected()) {
+									for(int i=-1;++i<transactionAdapter.transactions.size();) {
+										if(transactionAdapter.transactions.get(i).id == -1)
+											continue;
+										transactionAdapter.transactionsToBeDeleted.add(transactionAdapter.transactions.get(i));
+									}
+								}
 								Arrays.fill(transactionAdapter.select, !allSelected());
 								transactionAdapter.notifyDataSetChanged();
 								mode.setTitle(""+transactionAdapter.transactionsToBeDeleted.size());

@@ -10,11 +10,11 @@
         android:icon="@drawable/ic_settings"
         />
 
-    <item
-        android:id="@+id/action_backup"
-        android:orderInCategory="2"
-        app:showAsAction="never"
-        android:title="Backup And Restore"
-        />
+<!--    <item-->
+<!--        android:id="@+id/action_backup"-->
+<!--        android:orderInCategory="2"-->
+<!--        app:showAsAction="never"-->
+<!--        android:title="Backup And Restore"-->
+<!--        />-->
 
 </menu>

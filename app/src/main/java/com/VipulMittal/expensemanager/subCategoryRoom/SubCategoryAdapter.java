@@ -115,7 +115,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
 	public class BSDSubCatViewHolder extends RecyclerView.ViewHolder
 	{
-		TextView name, bgt,amt, amt2, bgt2;
+		TextView name, bgt,amt, amt2, bgt2, del;
 		ImageView imageView;
 		ProgressBar progressBar;
 
@@ -141,12 +141,19 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 				bgt2=itemView.findViewById(R.id.TVCat_BUDGET);
 				amt2=itemView.findViewById(R.id.TVCat_AMOUNT);
 				progressBar = itemView.findViewById(R.id.progressBar);
+				del = itemView.findViewById(R.id.BSubCatDel);
 
 
 				itemView.setOnClickListener(v->{
 					if(listener!=null)
 						listener.onItemClick(this);
 				});
+
+				del.setOnClickListener(v->{
+					if(deleteListener!=null)
+						deleteListener.onItemClick(this);
+				});
+
 			}
 		}
 	}

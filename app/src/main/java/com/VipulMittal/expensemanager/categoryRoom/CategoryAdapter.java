@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
+import com.VipulMittal.expensemanager.Cat;
 import com.VipulMittal.expensemanager.IconsAdapter;
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
@@ -107,12 +108,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 
 			holder.bgt.setText("\u20b9"+moneyToString(category.catBudget));
-			if(category.noOfSubCat>0) {
-				holder.arrow.setVisibility(View.VISIBLE);
-			}
-			else {
-				holder.arrow.setVisibility(View.INVISIBLE);
-			}
+
+			holder.arrow.setVisibility(View.VISIBLE);
 
 			if(category.type == 1)
 			{
@@ -193,6 +190,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				subCategoryAdapter.who =2;
 				subCategoryAdapter.cID=-1;
 				subCategoryAdapter.sID=-1;
+
+				TransactionViewModel transactionViewModel = mainActivity.transactionViewModel;
+				CategoryViewModel categoryViewModel = mainActivity.categoryViewModel;
+				AccountViewModel accountViewModel = mainActivity.accountViewModel;
+				SubCategoryViewModel subCategoryViewModel = mainActivity.subCategoryViewModel;
 
 				SubCategoryAdapter.ClickListener listenerS = new SubCategoryAdapter.ClickListener() {
 					@Override
@@ -315,6 +317,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 						int pos= getAdapterPosition();
 						SubCategory subCategory = subCategoryAdapter.subCategories.get(pos);
 
+						Log.d(TAG, "onItemClick: transactionViewModel = "+transactionViewModel);
 						List<Transaction>transactionsToBeDeleted = transactionViewModel.getAllTransactionsSubCat(subCategory.id);
 
 						AlertDialog.Builder builder;
@@ -365,7 +368,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 											subCategoryViewModel.Delete(subCategory);
 											categoryViewModel.catDeleted(subCategory.categoryID);
 										})
-										.setNegativeButton("Choose New Account", (dialog2, which2) -> {
+										.setNegativeButton("", (dialog2, which2) -> {
 
 										});
 								dialog[0] = builder.create();

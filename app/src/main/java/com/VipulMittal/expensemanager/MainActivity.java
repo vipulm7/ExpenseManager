@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public LayoutInflater inflater;
 
 	Map<Integer, List<SubCategory>> subcategoriesMap;
-	IconsAdapter iconsAdapterCat;
+	IconsAdapter iconsAdapterCat, iconsAdapter;
 
 
 	@Override
@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				})
 				.setView(accView)
 				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(ETForAccN.getText().toString(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), R.drawable.ia_google_pay));
+					accountViewModel.Insert(new Account(ETForAccN.getText().toString(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), icon_account[iconsAdapter.selected]));
 				});
 		AlertDialog dialog = builder.create();
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -457,7 +457,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				ETForAccIB.setText("");
 				ETForAccN.requestFocus();
 
-				IconsAdapter iconsAdapter = new IconsAdapter(icon_account);
+				iconsAdapter = new IconsAdapter(icon_account);
 				RecyclerView recyclerView = accView.findViewById(R.id.rv_icons_account);
 
 				IconsAdapter.ClickListener listener = viewHolder -> {
@@ -1041,20 +1041,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			return true;
 		}
-		else if(id == R.id.action_backup)
-		{
-			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-			fragmentTransaction.addToBackStack("backup");
-			fragmentTransaction.replace(R.id.layoutForFragment, new BackupRestoreFragment())
-					.commit();
-
-			FABAdd.hide();
-			navigationBarView.setVisibility(View.INVISIBLE);
-			hideMenu();
-			setActionBarTitle("Backup and Restore");
-
-			return true;
-		}
+//		else if(id == R.id.action_backup)
+//		{
+//			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//			fragmentTransaction.addToBackStack("backup");
+//			fragmentTransaction.replace(R.id.layoutForFragment, new BackupRestoreFragment())
+//					.commit();
+//
+//			FABAdd.hide();
+//			navigationBarView.setVisibility(View.INVISIBLE);
+//			hideMenu();
+//			setActionBarTitle("Backup and Restore");
+//
+//			return true;
+//		}
 
 		return super.onOptionsItemSelected(item);
 	}
