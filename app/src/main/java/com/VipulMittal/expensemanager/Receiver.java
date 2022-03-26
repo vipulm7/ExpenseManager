@@ -48,7 +48,7 @@ public class Receiver extends BroadcastReceiver {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			PendingIntent pendingIntent;
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-				pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+				pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 			else
 				pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			builder.setContentIntent(pendingIntent);
@@ -58,7 +58,7 @@ public class Receiver extends BroadcastReceiver {
 			snoozeIntent.setAction(ACTION_SNOOZE);
 			PendingIntent snoozePendingIntent;
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-				snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+				snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 			else
 				snoozePendingIntent = PendingIntent.getService(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			NotificationCompat.Action snoozeAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
@@ -69,9 +69,10 @@ public class Receiver extends BroadcastReceiver {
 			dismissIntent.setAction(ACTION_DISMISS);
 			PendingIntent dismissPendingIntent;
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-				dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+				dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 			else
 				dismissPendingIntent = PendingIntent.getService(context, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 			NotificationCompat.Action dismissAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications,
 					"Nothing today!", dismissPendingIntent).build();
 
@@ -81,6 +82,7 @@ public class Receiver extends BroadcastReceiver {
 			GlobalNotificationBuilder.setGlobalNotificationCompatBuilder(builder);
 
 			notificationManager.notify(notifID, builder.build());
+
 			Intent intent1 = new Intent(context, IntentService1.class);
 			context.startService(intent1);
 			SharedPreferences.Editor editor = sharedPreferences.edit();

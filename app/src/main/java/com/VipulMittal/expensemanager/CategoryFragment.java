@@ -907,13 +907,13 @@ public class CategoryFragment extends Fragment {
 		@NonNull
 		@Override
 		public Fragment createFragment(int position) {
-			Fragment catIncomeFragment;
+			Fragment catFragment;
 			if(position==0)
-				catIncomeFragment = new CatTabFragment(categoryAdapter);
+				catFragment = new CatTabFragment(categoryAdapter);
 			else
-				catIncomeFragment = new CatTabFragment(categoryAdapter2);
+				catFragment = new CatTabFragment(categoryAdapter2);
 
-			return catIncomeFragment;
+			return catFragment;
 		}
 
 		@Override

@@ -15,7 +15,6 @@ import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 public class CatTabFragment extends Fragment {
 
 	public CatTabFragment(CategoryAdapter adapter) {
-		// Required empty public constructor
 		this.adapter=adapter;
 	}
 
@@ -29,8 +28,6 @@ public class CatTabFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_cat_tab, container, false);
 
 		rv_cat =view.findViewById(R.id.RV_cat);
-
-
 
 		rv_cat.setAdapter(adapter);
 		rv_cat.setLayoutManager(new LinearLayoutManager(getContext()));
