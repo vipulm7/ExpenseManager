@@ -215,6 +215,7 @@ public class CategoryFragment extends Fragment {
 										Category category = new Category(ETForCatN.getText().toString().trim(), categorySelected.catAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.noOfSubCat, type, mainActivity.icon_category_income[iconsAdapter.selected]);
 										category.catId = categorySelected.catId;
 										categoryViewModel.Update(category);
+										dialog2.dismiss();
 									}
 									else
 									{
@@ -590,6 +591,7 @@ public class CategoryFragment extends Fragment {
 										Category category = new Category(ETForCatN.getText().toString().trim(), categorySelected.catAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.noOfSubCat, type, mainActivity.icon_category_income[iconsAdapter.selected]);
 										category.catId = categorySelected.catId;
 										categoryViewModel.Update(category);
+										dialog2.dismiss();
 									}
 									else
 									{

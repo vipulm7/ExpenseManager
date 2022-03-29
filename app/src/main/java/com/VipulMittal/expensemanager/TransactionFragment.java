@@ -43,7 +43,7 @@ import java.util.Map;
 
 public class TransactionFragment extends Fragment {
 
-	public TransactionFragment(int amount, String note, String description, Calendar calendar, int aID, int cID, int sID, int request, int type, int id) {
+	public TransactionFragment(int amount, String note, String description, Calendar calendar, int aID, int cID, int sID, int request, int type, int id, boolean focus) {
 		this.id=id;
 		this.aID=aID;
 		this.amount=amount;
@@ -66,11 +66,14 @@ public class TransactionFragment extends Fragment {
 		sIDCame=sID;
 		aIDCame=aID;
 		typeCame = type;
+		this.focus=focus;
+
 		Log.d(TAG, "TransactionFragment: aid="+aID+" cid="+cID+" sid="+sID);
 	}
 
 
 	private static final String TAG = "Vipul_tag";
+	boolean focus;
 	public TextView TVDate, TVTime, TVAccount, TVCategory;
 	RadioGroup radioGroup;
 	RadioButton RBIncome, RBExpense, RBTransfer;
@@ -192,6 +195,10 @@ public class TransactionFragment extends Fragment {
 				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts2");
 			}
 		});
+
+		if(focus) {
+			ETNote.requestFocus();
+		}
 		return view;
 	}
 
@@ -275,7 +282,7 @@ public class TransactionFragment extends Fragment {
 				mainActivity.accountViewModel.UpdateAmt(amountCame-a, cID);//cid has aid2 data
 
 //			mainActivity.getSupportFragmentManager().
-			TransactionFragment transactionFragment=new TransactionFragment(0, "", "", Calendar.getInstance(), aID, cID, sID, 1, type, -1);
+			TransactionFragment transactionFragment=new TransactionFragment(0, "", "", Calendar.getInstance(), aID, cID, sID, 1, type, -1, true);
 			FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
 			fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 			fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "repeat");

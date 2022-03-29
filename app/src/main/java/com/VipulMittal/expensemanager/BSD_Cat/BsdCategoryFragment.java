@@ -188,14 +188,9 @@ public class BsdCategoryFragment extends Fragment {
 			categoryAdapter.cID = cID;
 		categoryAdapter.cardListener =listener;
 
-//		Log.d(TAG, "onCreateView: adapter after = "+categoryAdapter);
-
 		RVCategories.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVCategories.setAdapter(categoryAdapter);
 		RVCategories.setNestedScrollingEnabled(false);
-
-//		if(cID !=-1)
-//			Log.d(TAG, "onCreateView: category.noOfSubCat"+categoryAdapter.categories.get(cID).noOfSubCat);
 
 		if(transactionsToBeModified==null)
 		{

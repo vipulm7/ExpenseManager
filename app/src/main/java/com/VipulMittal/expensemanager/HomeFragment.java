@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment {
 				Transaction transaction = transactionAdapter.transactions.get(position);
 				calendar.setTimeInMillis(transaction.dateTime);
 
-				TransactionFragment transactionFragment = new TransactionFragment(transaction.amount, transaction.note, transaction.description, calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2, transaction.type, transaction.id);
+				TransactionFragment transactionFragment = new TransactionFragment(transaction.amount, transaction.note, transaction.description, calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2, transaction.type, transaction.id, false);
 				FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
 				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);

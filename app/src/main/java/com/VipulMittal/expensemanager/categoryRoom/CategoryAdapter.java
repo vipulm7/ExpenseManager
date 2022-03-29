@@ -276,6 +276,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 								subCategoryViewModel.Update(subCategory);
 								subCategoryAdapter.subCategories.set(pos, subCategory);
 								subCategoryAdapter.notifyItemChanged(pos);
+								dialog2.dismiss();
 							}
 							else
 							{
@@ -395,13 +396,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 										}
 //										categoryViewModel.catDeleted(subCategory.categoryID);
 									})
-									.setNegativeButton("Choose New Sub-Category", (dialog2, which2) -> {
-										BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(subCategory.categoryID, subCategory.id, subCategory.type, null, transactionsToBeDeleted, null);
-										bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
+									.setNegativeButton("", (dialog2, which2) -> {
+//										BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(subCategory.categoryID, subCategory.id, subCategory.type, null, transactionsToBeDeleted, null);
+//										bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
 									});
 							dialog[0] = builder.create();
 							dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
-//							dialog.getWindow().getAttributes().windowAnimations = R.style.
 
 							dialog[0].show();
 						}

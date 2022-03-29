@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -197,6 +198,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		first_time = sharedPreferences.getBoolean("first_time", true);
 		Log.d(TAG, "onCreate: viewMode = "+viewMode);
 		menuShow = true;
+
+		actionBar = getSupportActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
 
 		if(first_time)
 		{
@@ -425,7 +429,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			systemTimeInMillies=0;
 			if(navigationBarView.getSelectedItemId()==R.id.bn_home && !FABAdd.isOrWillBeHidden())
 			{
-				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1);
+				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1, false);
 				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
 				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 //				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
@@ -485,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					if(possible(ETForCatIB.getText().toString().trim())) {
 						int type=categoryFragment.catTabLayout.getSelectedTabPosition()+1;
 						categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type, icon_category_income[iconsAdapterCat.selected]));
-						dialog.dismiss();
+						dialog2.dismiss();
 					}
 					else
 					{
