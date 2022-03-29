@@ -183,7 +183,7 @@ public class TransactionFragment extends Fragment {
 
 		TVCategory.setOnClickListener(v->{
 			if(type!=3) {
-				BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(cID, sID, type, this);
+				BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(cID, sID, type, this, null, null);
 				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
 			}
 			else

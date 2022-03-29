@@ -58,6 +58,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	boolean b1=false, b2=false;
 	TransactionViewModel transactionViewModel;
 	public List<Transaction> transactionsToBeModified;
+	Toast toast;
 
 
 	@Override
@@ -74,6 +75,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		accounts=accountAdapter.accounts;
 		accountAdapter.aID = aID;
 		accountAdapter.who=1;
+		toast=mainActivity.toast;
 
 		accountViewModel=mainActivity.accountViewModel;
 
@@ -169,9 +171,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 				})
 				.setView(accView)
-				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), mainActivity.icon_account[iconsAdapter.selected]));
-				});
+				.setPositiveButton("Add", null);
 		AlertDialog dialog = builder.create();
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
@@ -214,6 +214,21 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 //			builder.create();
 
 			dialog.show();
+			Button del1=dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+			del1.setOnClickListener(view->{
+				if(possible(ETForAccIB.getText().toString().trim())) {
+					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), mainActivity.icon_account[iconsAdapter.selected]));
+					dialog.dismiss();
+				}
+				else
+				{
+					if(toast!=null)
+						toast.cancel();
+
+					toast=Toast.makeText(mainActivity, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+					toast.show();
+				}
+			});
 			dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 			ETForAccN.setText("");
 			ETForAccIB.setText("");
@@ -239,5 +254,14 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		});
 	}
 
-
+	private boolean possible(String trim) {
+		int n=trim.length();
+		for(int i=-1;++i<n;)
+		{
+			if(trim.charAt(i)>='0' && trim.charAt(i)<='9')
+				continue;
+			return false;
+		}
+		return true;
+	}
 }

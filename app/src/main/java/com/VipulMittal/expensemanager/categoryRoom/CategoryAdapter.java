@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
+import com.VipulMittal.expensemanager.BSD_Cat.BsdCatFragment;
 import com.VipulMittal.expensemanager.Cat;
 import com.VipulMittal.expensemanager.IconsAdapter;
 import com.VipulMittal.expensemanager.MainActivity;
@@ -52,6 +54,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 	SubCategoryViewModel subCategoryViewModel;
 	AccountViewModel accountViewModel;
 	CategoryViewModel categoryViewModel;
+	Toast toast;
 
 
 	public CategoryAdapter(MainActivity mainActivity) {
@@ -102,7 +105,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				holder.amt.setText("\u20b9"+moneyToString(-category.catAmount));
 
 			if(category.type==1)
-				holder.amt.setTextColor(Color.GREEN);
+				holder.amt.setTextColor(Color.parseColor("#4fb85f"));//green
 			else
 				holder.amt.setTextColor(Color.RED);
 
@@ -224,14 +227,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 						})
 								.setView(catView)
-								.setPositiveButton("Update", (dialog2, which) -> {
-									int type=catTabLayout.getSelectedTabPosition()+1;
-									SubCategory subCategory = new SubCategory(ETForCatN.getText().toString().trim(), subCategorySelected.subCatAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), subCategorySelected.categoryID, type, mainActivity.icon_category_income[iconsAdapter.selected]);
-									subCategory.id = subCategorySelected.id;
-									mainActivity.subCategoryViewModel.Update(subCategory);
-									subCategoryAdapter.subCategories.set(pos, subCategory);
-									subCategoryAdapter.notifyItemChanged(pos);
-								});
+								.setPositiveButton("Update", null);
 						AlertDialog dialog2 = builder2.create();
 						dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
@@ -271,6 +267,25 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 
 						dialog2.show();
+						Button del1=dialog2.getButton(AlertDialog.BUTTON_POSITIVE);
+						del1.setOnClickListener(view->{
+							if(possible(ETForCatIB.getText().toString().trim())) {
+								int type=catTabLayout.getSelectedTabPosition()+1;
+								SubCategory subCategory = new SubCategory(ETForCatN.getText().toString().trim(), subCategorySelected.subCatAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), subCategorySelected.categoryID, type, mainActivity.icon_category_income[iconsAdapter.selected]);
+								subCategory.id = subCategorySelected.id;
+								subCategoryViewModel.Update(subCategory);
+								subCategoryAdapter.subCategories.set(pos, subCategory);
+								subCategoryAdapter.notifyItemChanged(pos);
+							}
+							else
+							{
+								if(toast!=null)
+									toast.cancel();
+
+								toast= Toast.makeText(mainActivity, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+								toast.show();
+							}
+						});
 						dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 						ETForCatN.setText(subCategorySelected.name);
 						ETForCatIB.setText(""+subCategorySelected.subCatBudget);
@@ -310,84 +325,95 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 					}
 				};
 
-				SubCategoryAdapter.ClickListener deleteListenerS = new SubCategoryAdapter.ClickListener() {
-					@Override
-					public void onItemClick(SubCategoryAdapter.BSDSubCatViewHolder viewHolder) {
+				SubCategoryAdapter.ClickListener deleteListenerS = viewHolder -> {
 
-						int pos= getAdapterPosition();
-						SubCategory subCategory = subCategoryAdapter.subCategories.get(pos);
+					int pos= viewHolder.getAdapterPosition();
+					SubCategory subCategory = subCategoryAdapter.subCategories.get(pos);
 
-						Log.d(TAG, "onItemClick: transactionViewModel = "+transactionViewModel);
-						List<Transaction>transactionsToBeDeleted = transactionViewModel.getAllTransactionsSubCat(subCategory.id);
+					Log.d(TAG, "onItemClick: transactionViewModel = "+transactionViewModel);
+					List<Transaction>transactionsToBeDeleted = transactionViewModel.getAllTransactionsSubCat(subCategory.id);
 
-						AlertDialog.Builder builder;
-						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-							builder = new AlertDialog.Builder(mainActivity, android.R.style.ThemeOverlay_Material_Dialog);
+					AlertDialog.Builder builder;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+						builder = new AlertDialog.Builder(mainActivity, android.R.style.ThemeOverlay_Material_Dialog);
+					else
+						builder = new AlertDialog.Builder(mainActivity);
+					builder.setTitle("Delete Sub-Category")
+							.setMessage("Are you sure want to delete this Sub-Category!")
+							.setNegativeButton("Cancel", (dialog, which) -> {
+
+							})
+							.setPositiveButton("Delete", null);
+					final AlertDialog[] dialog = {builder.create()};
+					dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+
+					dialog[0].show();
+					Dialog dialog1 = dialog[0];
+
+					Button del = dialog[0].getButton(AlertDialog.BUTTON_POSITIVE);
+
+					del.setOnClickListener(v->{
+						if(transactionsToBeDeleted.size()==0) {
+							subCategoryViewModel.Delete(subCategory);
+							if(this.open)
+							{
+								subCategoryAdapter.subCategories.remove(pos);
+								subCategoryAdapter.notifyItemRemoved(pos);
+							}
 						}
 						else
-							builder = new AlertDialog.Builder(mainActivity);
-						builder.setTitle("Delete Sub-Category")
-								.setMessage("Are you sure want to delete this Sub-Category!")
-								.setNegativeButton("Cancel", (dialog, which) -> {
-
-								})
-								.setPositiveButton("Delete", null);
-						final AlertDialog[] dialog = {builder.create()};
-						dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
-//				dialog.getWindow().getAttributes().windowAnimations = R.style.
-
-						dialog[0].show();
-						Dialog dialog1 = dialog[0];
-
-						Button del = dialog[0].getButton(AlertDialog.BUTTON_POSITIVE);
-
-						del.setOnClickListener(v->{
-							if(transactionsToBeDeleted.size()==0)
-								subCategoryViewModel.Delete(subCategory);
+						{
+							String msg2;
+							if(transactionsToBeDeleted.size()==1)
+								msg2="There is 1 transaction done using this category. What to do with it";
 							else
-							{
-								builder.setTitle("")
-										.setMessage("There are "+transactionsToBeDeleted.size()+" transactions registered with this sub-category. What to do with them")
-										.setPositiveButton("Delete those transaction", (dialog2, which2) -> {
-											for(int i=-1;++i<transactionsToBeDeleted.size();)
+								msg2="There are "+transactionsToBeDeleted.size()+" transactions done using this category. What to do with them";
+							builder.setTitle("")
+									.setMessage(msg2)
+									.setPositiveButton("Delete those transaction", (dialog2, which2) -> {
+										for(int i=-1;++i<transactionsToBeDeleted.size();)
+										{
+											Transaction transaction = transactionsToBeDeleted.get(i);
+
+											transactionViewModel.Delete(transaction);
+											accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
+											if(transaction.type == 3)
+												accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
+											else
 											{
-												Transaction transaction = transactionsToBeDeleted.get(i);
-
-												transactionViewModel.Delete(transaction);
-												accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
-												if(transaction.type == 3)
-													accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
-												else
-												{
-													categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
-													if(transaction.subCatID!=-1)
-														subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
-												}
+												categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
+												if(transaction.subCatID!=-1)
+													subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
 											}
-											mainActivity.transactionAdapter.notifyDataSetChanged();
-											subCategoryViewModel.Delete(subCategory);
-											categoryViewModel.catDeleted(subCategory.categoryID);
-										})
-										.setNegativeButton("", (dialog2, which2) -> {
+										}
+										mainActivity.transactionAdapter.notifyDataSetChanged();
+										subCategoryViewModel.Delete(subCategory);
+										if(this.open)
+										{
+											subCategoryAdapter.subCategories.remove(pos);
+											subCategoryAdapter.notifyItemRemoved(pos);
+										}
+//										categoryViewModel.catDeleted(subCategory.categoryID);
+									})
+									.setNegativeButton("Choose New Sub-Category", (dialog2, which2) -> {
+										BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(subCategory.categoryID, subCategory.id, subCategory.type, null, transactionsToBeDeleted, null);
+										bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
+									});
+							dialog[0] = builder.create();
+							dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
+//							dialog.getWindow().getAttributes().windowAnimations = R.style.
 
-										});
-								dialog[0] = builder.create();
-								dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
-//				dialog.getWindow().getAttributes().windowAnimations = R.style.
-
-								dialog[0].show();
-							}
-							dialog1.dismiss();
-						});
-
-					}
+							dialog[0].show();
+						}
+						dialog1.dismiss();
+					});
 				};
 
 				subCategoryAdapter.listener = listenerS;
 				subCategoryAdapter.deleteListener = deleteListenerS;
 
 				rv_subcatList.setNestedScrollingEnabled(false);
-				rv_subcatList.setLayoutManager(new LinearLayoutManager(mainActivity.getApplicationContext()));
+				rv_subcatList.setLayoutManager(new LinearLayoutManager(mainActivity));
 				rv_subcatList.setAdapter(subCategoryAdapter);
 
 				itemView.setOnClickListener(v->{
@@ -477,6 +503,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				return i;
 
 		return -1;
+	}
+
+	private boolean possible(String trim) {
+		int n=trim.length();
+		for(int i=-1;++i<n;)
+		{
+			if(trim.charAt(i)>='0' && trim.charAt(i)<='9')
+				continue;
+			return false;
+		}
+		return true;
 	}
 
 

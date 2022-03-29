@@ -31,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="?android:textColor"
+            android:textColor="#154b5e"
             android:background="?cardBackgroundColor"
             android:textAlignment="center"
             />
@@ -104,7 +104,9 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/TVIncome"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="#154b5e"
+            />
 
         <TextView
             android:id="@+id/TVExpenseAmt"
@@ -144,7 +146,9 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@id/TVTotal"
             app:layout_constraintStart_toEndOf="@+id/TVExpense"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="#154b5e"
+            />
 
         <TextView
             android:id="@+id/TVIncomeAmt"
@@ -163,7 +167,7 @@
             android:paddingStart="7dp"
             android:paddingEnd="7dp"
             android:text="\u20b90"
-            android:textColor="#00FF00"
+            android:textColor="#4fb85f"
             app:layout_constraintEnd_toStartOf="@id/TVTotalAmt"
             app:layout_constraintStart_toEndOf="@id/TVExpenseAmt"
             app:layout_constraintTop_toBottomOf="@+id/TVIncome" />
@@ -185,7 +189,9 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/TVIncome"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="#154b5e"
+            />
 
         <TextView
             android:id="@+id/TVTotalAmt"

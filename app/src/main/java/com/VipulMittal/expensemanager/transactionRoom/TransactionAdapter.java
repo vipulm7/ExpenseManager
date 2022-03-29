@@ -85,7 +85,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 				holder.TVSubCat.setText("Income : \u20b9"+transactions.get(position).note);
 			else
 				holder.TVSubCat.setText("");
-			holder.TVSubCat.setTextColor(Color.GREEN);
+			holder.TVSubCat.setTextColor(Color.parseColor("#4fb85f"));//green
 
 			if(!transactions.get(position).description.equals("0"))
 				holder.TVAmount.setText("Expense : \u20b9"+transactions.get(position).description);
@@ -105,7 +105,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 			holder.TVNote.setText(transaction.note);
 			if(transaction.amount>=0) {
 				holder.TVAmount.setText("\u20b9"+mainActivity.moneyToString(transaction.amount));
-				holder.TVAmount.setTextColor(Color.GREEN);
+				holder.TVAmount.setTextColor(Color.parseColor("#4fb85f"));//green
 			}
 			else
 			{

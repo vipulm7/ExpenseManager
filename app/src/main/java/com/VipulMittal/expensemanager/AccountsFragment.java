@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
 import com.VipulMittal.expensemanager.accountRoom.Account;
@@ -47,6 +48,7 @@ public class AccountsFragment extends Fragment {
 	CategoryViewModel categoryViewModel;
 	SubCategoryViewModel subCategoryViewModel;
 	View accView;
+	Toast toast;
 	boolean b1=false, b2=false;
 
 	@Override
@@ -65,6 +67,7 @@ public class AccountsFragment extends Fragment {
 		transactionViewModel = mainActivity.transactionViewModel;
 		categoryViewModel = mainActivity.categoryViewModel;
 		subCategoryViewModel = mainActivity.subCategoryViewModel;
+		toast=mainActivity.toast;
 
 
 
@@ -101,9 +104,7 @@ public class AccountsFragment extends Fragment {
 						})
 						.setView(accView)
 						.setPositiveButton("Update", (dialog, which) -> {
-							Account account=new Account(ETForAccN.getText().toString().trim(),accountSelected.amount, Integer.parseInt(ETForAccIB.getText().toString().trim()), mainActivity.icon_account[iconsAdapter.selected]);
-							account.id=accountSelected.id;
-							accountViewModel.Update(account);
+
 						});
 				AlertDialog dialog = builder.create();
 				dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -143,6 +144,23 @@ public class AccountsFragment extends Fragment {
 
 
 				dialog.show();
+				Button del1=dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				del1.setOnClickListener(view->{
+					if(possible(ETForAccIB.getText().toString().trim())) {
+						Account account=new Account(ETForAccN.getText().toString().trim(),accountSelected.amount, Integer.parseInt(ETForAccIB.getText().toString().trim()), mainActivity.icon_account[iconsAdapter.selected]);
+						account.id=accountSelected.id;
+						accountViewModel.Update(account);
+						dialog.dismiss();
+					}
+					else
+					{
+						if(toast!=null)
+							toast.cancel();
+
+						toast= Toast.makeText(mainActivity, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+						toast.show();
+					}
+				});
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 				ETForAccN.setText(accountSelected.name);
 				ETForAccIB.setText(""+accountSelected.initialBalance);
@@ -221,7 +239,6 @@ public class AccountsFragment extends Fragment {
 							})
 							.setNegativeButton("Choose New Account", (dialog2, which2) -> {
 
-								TransactionFragment transactionFragment = null;
 								BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account.id, account.id, 1, 4, null, transactionsToBeDeleted);
 								bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
 							});
@@ -252,5 +269,16 @@ public class AccountsFragment extends Fragment {
 				return i;
 
 		return -1;
+	}
+
+	private boolean possible(String trim) {
+		int n=trim.length();
+		for(int i=-1;++i<n;)
+		{
+			if(trim.charAt(i)>='0' && trim.charAt(i)<='9')
+				continue;
+			return false;
+		}
+		return true;
 	}
 }

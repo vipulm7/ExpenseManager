@@ -1,15 +1,19 @@
 package com.VipulMittal.expensemanager;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 public class IntentService1 extends IntentService {
 
@@ -86,7 +90,7 @@ public class IntentService1 extends IntentService {
 				.setContentText("Add today's records!")
 				.setStyle(new NotificationCompat.BigTextStyle()
 						.bigText("Add today's records!"))
-				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+				.setPriority(NotificationCompat.PRIORITY_MAX)
 				.setColor(ContextCompat.getColor(this, R.color.cyan));
 
 
@@ -123,6 +127,20 @@ public class IntentService1 extends IntentService {
 
 		builder.addAction(snoozeAction);
 		builder.addAction(dismissAction);
+
+		Context context = getApplicationContext();
+
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+		Intent intent1 = new Intent(context, IntentService1.class);
+		context.startService(intent1);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		long notifTime = sharedPreferences.getLong("notifTime", -1);
+		editor.putLong("notifTime", notifTime+ AlarmManager.INTERVAL_DAY);
+		editor.apply();
+
+		Log.d(TAG, "notifTime before: recreate"+notifTime);
+		Log.d(TAG, "notifTime after: recreate"+sharedPreferences.getLong("notifTime", -1));
 
 		GlobalNotificationBuilder.setGlobalNotificationCompatBuilder(builder);
 	}

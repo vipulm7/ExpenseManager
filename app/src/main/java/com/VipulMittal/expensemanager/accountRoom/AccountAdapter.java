@@ -60,7 +60,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 				holder.amount.setText("- \u20b9"+moneyToString(-amt));
 			}
 			else {
-				holder.amount.setTextColor(Color.GREEN);
+				holder.amount.setTextColor(Color.parseColor("#4fb85f"));//green
 				holder.amount.setText("  \u20b9"+moneyToString(amt));
 			}
 		}
@@ -74,7 +74,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 				holder.amount.setText("- \u20b9 "+moneyToString(-amt));
 			}
 			else {
-				holder.amount.setTextColor(Color.GREEN);
+				holder.amount.setTextColor(Color.parseColor("#4fb85f"));//green
 				holder.amount.setText("  \u20b9 "+moneyToString(amt));
 			}
 //			holder.amount.setText("\u20b91234567890123456789012345678901234567890");

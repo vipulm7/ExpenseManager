@@ -10,24 +10,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 import com.VipulMittal.expensemanager.TransactionFragment;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
+import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryAdapter;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
+import com.VipulMittal.expensemanager.transactionRoom.Transaction;
+import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 
 import java.util.List;
 
 public class BsdSubCategoryFragment extends Fragment {
 
-	public BsdSubCategoryFragment(int cID, int sID, int type, Category categorySelected) {
+	public BsdSubCategoryFragment(int cID, int cIDCame, int sID, int type, Category categorySelected, List<Transaction> transactionsToBeModified, CategoryAdapter.BSDCatViewHolder viewHolder) {
 		this.sID = sID;
 		this.type=type;
 		this.categorySelected = categorySelected;
 		this.cID = cID;
+		sIDCame=sID;
+		this.transactionsToBeModified=transactionsToBeModified;
+		this.cIDCame=cIDCame;
+		viewHolderCat=viewHolder;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -35,7 +44,12 @@ public class BsdSubCategoryFragment extends Fragment {
 	SubCategoryAdapter subCategoryAdapter;
 	SubCategoryViewModel subCategoryViewModel;
 	Category categorySelected;
-	int sID, type, cID;
+	int sID, type, cID, sIDCame, cIDCame;
+	Toast toast;
+	List<Transaction> transactionsToBeModified;
+	CategoryViewModel categoryViewModel;
+	TransactionViewModel transactionViewModel;
+	CategoryAdapter.BSDCatViewHolder viewHolderCat;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +61,10 @@ public class BsdSubCategoryFragment extends Fragment {
 		BsdCatFragment bsdCatFragment = (BsdCatFragment) getParentFragment();
 		MainActivity mainActivity=(MainActivity)getActivity();
 		TransactionFragment transactionFragment= bsdCatFragment.transactionFragment;
+		transactionViewModel=mainActivity.transactionViewModel;
+		subCategoryViewModel=mainActivity.subCategoryViewModel;
+		categoryViewModel=mainActivity.categoryViewModel;
+		toast=mainActivity.toast;
 
 		Log.d(TAG, "onCreateView: cID in BsdSubCategoryFragment = "+cID);
 
@@ -59,10 +77,48 @@ public class BsdSubCategoryFragment extends Fragment {
 			@Override
 			public void onItemClick(SubCategoryAdapter.BSDSubCatViewHolder viewHolder) {
 				int position=viewHolder.getAdapterPosition();
-				sID = subCategoryAdapter.subCategories.get(position).id;
-				transactionFragment.saveSelectedSubCategory(cID, sID, categorySelected.catName + " / " + subCategoryAdapter.subCategories.get(position).name, subCategoryAdapter.subCategories.get(position).subCatImageID);
+				SubCategory subCategorySelected=subCategoryAdapter.subCategories.get(position);
+				sID = subCategorySelected.id;
 
-				bsdCatFragment.dismiss();
+				if(transactionFragment!=null) {
+					transactionFragment.saveSelectedSubCategory(cID, sID, categorySelected.catName + " / " + subCategoryAdapter.subCategories.get(position).name, subCategoryAdapter.subCategories.get(position).subCatImageID);
+					bsdCatFragment.dismiss();
+				}
+				else if(sID==sIDCame)
+				{
+					toast=mainActivity.toast;
+					if(toast!=null)
+						toast.cancel();
+					toast= Toast.makeText(mainActivity, "Can't select same SubCategory!", Toast.LENGTH_SHORT);
+					toast.show();
+				}
+				else
+				{
+					Category categoryToBeDeleted=categoryViewModel.getCat(cIDCame);
+					for(int i=-1;++i<transactionsToBeModified.size();)
+					{
+						Transaction transaction = transactionsToBeModified.get(i);
+						if(transaction.type == 3)
+							continue;
+
+						transaction.catID=cID;
+						transaction.subCatID=sID;
+						transactionViewModel.Update(transaction);
+
+						categoryViewModel.UpdateAmt(transaction.amount, cID);
+						subCategoryViewModel.UpdateAmt(transaction.amount, sID);
+					}
+
+					List<SubCategory> subCats = subCategoryViewModel.getSubcats(categoryToBeDeleted.catId);
+					for(int i=-1;++i<subCats.size();)
+						subCategoryViewModel.Delete(subCats.get(i));
+					categoryViewModel.Delete(categoryToBeDeleted);
+
+					int x=viewHolderCat.subCategoryAdapter.subCategories.size();
+					viewHolderCat.subCategoryAdapter.subCategories.clear();
+					viewHolderCat.subCategoryAdapter.notifyItemRangeRemoved(0, x);
+					bsdCatFragment.dismiss();
+				}
 			}
 		};
 

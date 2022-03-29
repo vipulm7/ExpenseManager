@@ -145,7 +145,7 @@ public class HomeFragment extends Fragment {
 						switch (id){
 							case R.id.menuSelectDelete:
 
-								if(transactionAdapter.transactionsToBeDeleted.size() == 0) {
+								if(transactionAdapter.transactionsToBeDeleted.size()==0) {
 									if (mainActivity.toast != null)
 										mainActivity.toast.cancel();
 

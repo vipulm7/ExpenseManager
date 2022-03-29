@@ -22,8 +22,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
+import com.VipulMittal.expensemanager.BSD_Cat.BsdCatFragment;
+import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
@@ -68,6 +71,7 @@ public class CategoryFragment extends Fragment {
 	AlertDialog dialog2;
 	boolean b3, b4;
 	View catView;
+	Toast toast;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,6 +87,7 @@ public class CategoryFragment extends Fragment {
 		accountViewModel = mainActivity.accountViewModel;
 		subCategoryViewModel = mainActivity.subCategoryViewModel;
 		iconsAdapter = new IconsAdapter(null);
+		toast=mainActivity.toast;
 
 		ArrayList<String> arrayList = new ArrayList<>();
 		arrayList.add("Income");
@@ -109,37 +114,28 @@ public class CategoryFragment extends Fragment {
 				int position = viewHolder.getAdapterPosition();
 				Category categorySelected = categoryAdapter.categories.get(position);
 
-				int cID = categorySelected.catId;
-				List<SubCategory> subCategories = mainActivity.subcategoriesMap.get(cID);
-
 				if(!viewHolder.open) {
-//					viewHolder.subCategoryAdapter.subCategories.addAll(subCategories);
-//					viewHolder.subCategoryAdapter.notifyItemRangeInserted(0, subCategories.size());
+					int cID = categorySelected.catId;
+					List<SubCategory> subCategories = mainActivity.subcategoriesMap.get(cID);
 					if(subCategories != null)
 					{
-						for(int i=-1;++i<subCategories.size();)
-						{
-							viewHolder.subCategoryAdapter.subCategories.add(0, subCategories.get(i));
-							viewHolder.subCategoryAdapter.notifyItemInserted(0);
-						}
+						viewHolder.subCategoryAdapter.subCategories.addAll(subCategories);
+						viewHolder.subCategoryAdapter.notifyItemRangeInserted(0, subCategories.size());
 						viewHolder.open=true;
-//					viewHolder.arrow.setBackgroundResource(R.drawable.ic_arrow_drop_up);
 					}
 				}
 				else
 				{
-					if(subCategories != null)
-					{
-						viewHolder.subCategoryAdapter.subCategories.clear();
-						viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, subCategories.size());
-						viewHolder.open = false;
-					}
-//					viewHolder.arrow.setBackgroundResource(R.drawable.ic_arrow_drop_down);
+					List<SubCategory> subCategories = viewHolder.subCategoryAdapter.subCategories;
+					int x=subCategories.size();
+					subCategories.clear();
+					viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, x);
+					viewHolder.open = false;
 				}
 			}
 		};
 
-		CategoryAdapter.ClickListener arrowListener = new CategoryAdapter.ClickListener() {
+		CategoryAdapter.ClickListener menuListener = new CategoryAdapter.ClickListener() {
 			@Override
 			public void onItemClick(CategoryAdapter.BSDCatViewHolder viewHolder) {
 				int position = viewHolder.getAdapterPosition();
@@ -164,8 +160,6 @@ public class CategoryFragment extends Fragment {
 								catName.setText("Category Name");
 								ETForCatN.setHint("Enter Category Name");
 
-								iconsAdapter = new IconsAdapter(mainActivity.icon_category_income);
-
 								if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
 									builder2 = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
 								else
@@ -174,12 +168,7 @@ public class CategoryFragment extends Fragment {
 
 								})
 										.setView(catView)
-										.setPositiveButton("Update", (dialog2, which) -> {
-											int type = catTabLayout.getSelectedTabPosition() + 1;
-											Category category = new Category(ETForCatN.getText().toString().trim(), categorySelected.catAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.noOfSubCat, type, mainActivity.icon_category_income[iconsAdapter.selected]);
-											category.catId = categorySelected.catId;
-											categoryViewModel.Update(category);
-										});
+										.setPositiveButton("Update", null);
 								dialog2 = builder2.create();
 								dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
@@ -219,6 +208,23 @@ public class CategoryFragment extends Fragment {
 
 
 								dialog2.show();
+								Button del1=dialog2.getButton(AlertDialog.BUTTON_POSITIVE);
+								del1.setOnClickListener(view->{
+									if(possible(ETForCatIB.getText().toString().trim())) {
+										int type = catTabLayout.getSelectedTabPosition() + 1;
+										Category category = new Category(ETForCatN.getText().toString().trim(), categorySelected.catAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.noOfSubCat, type, mainActivity.icon_category_income[iconsAdapter.selected]);
+										category.catId = categorySelected.catId;
+										categoryViewModel.Update(category);
+									}
+									else
+									{
+										if(toast!=null)
+											toast.cancel();
+
+										toast= Toast.makeText(mainActivity, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+										toast.show();
+									}
+								});
 								ETForCatN.setText("");
 								ETForCatIB.setText("");
 								ETForCatN.setText(categorySelected.catName);
@@ -237,6 +243,7 @@ public class CategoryFragment extends Fragment {
 									iconsAdapter.notifyItemChanged(a);
 									iconsAdapter.notifyItemChanged(pos2);
 								};
+								iconsAdapter.icons=mainActivity.icon_category_income;
 								iconsAdapter.listener = listener;
 								iconsAdapter.selected = findIndex(mainActivity.icon_category_income, categorySelected.catImageID);
 								recyclerView.setAdapter(iconsAdapter);
@@ -265,8 +272,17 @@ public class CategoryFragment extends Fragment {
 								}
 								else
 									builder2 = new AlertDialog.Builder(getContext());
+
+								String msg;
+								if(categorySelected.noOfSubCat==0)
+									msg="Are you sure want to delete this category!";
+								else if(categorySelected.noOfSubCat==1)
+									msg="Are you sure want to delete this category!\nThis will also delete 1 sub-category linked with this category";
+								else
+									msg="Are you sure want to delete this category!\nThis will also delete all the "+categorySelected.noOfSubCat+" sub-categories linked with this category";
+
 								builder2.setTitle("Delete Category")
-										.setMessage("Are you sure want to delete this category!\nThis will also delete all the sub-categories linked with this category")
+										.setMessage(msg)
 										.setNegativeButton("Cancel", (dialog, which) -> {
 
 										})
@@ -281,8 +297,9 @@ public class CategoryFragment extends Fragment {
 								del.setOnClickListener(v->{
 									if(transactionsToBeDeleted.size()==0) {
 
+										int x=viewHolder.subCategoryAdapter.subCategories.size();
 										viewHolder.subCategoryAdapter.subCategories.clear();
-										viewHolder.subCategoryAdapter.notifyDataSetChanged();
+										viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, x);
 
 										List<SubCategory> subCats = subCategoryViewModel.getSubcats(categorySelected.catId);
 										for(int i=-1;++i<subCats.size();)
@@ -291,8 +308,13 @@ public class CategoryFragment extends Fragment {
 									}
 									else
 									{
+										String msg2;
+										if(transactionsToBeDeleted.size()==1)
+											msg2="There is 1 transaction with done using this category. What to do with it";
+										else
+											msg2="There are "+transactionsToBeDeleted.size()+" transactions with done using this category. What to do with them";
 										builder2.setTitle("")
-												.setMessage("There are "+transactionsToBeDeleted.size()+" transactions with done using this category. What to do with them")
+												.setMessage(msg2)
 												.setPositiveButton("Delete those transaction", (dialog3, which2) -> {
 													for(int i=-1;++i<transactionsToBeDeleted.size();)
 													{
@@ -310,8 +332,9 @@ public class CategoryFragment extends Fragment {
 													}
 													mainActivity.transactionAdapter.notifyDataSetChanged();
 
+													int x=viewHolder.subCategoryAdapter.subCategories.size();
 													viewHolder.subCategoryAdapter.subCategories.clear();
-													viewHolder.subCategoryAdapter.notifyDataSetChanged();
+													viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, x);
 
 													categoryViewModel.Delete(categorySelected);
 
@@ -319,8 +342,10 @@ public class CategoryFragment extends Fragment {
 													for(int i=-1;++i<subCats.size();)
 														subCategoryViewModel.Delete(subCats.get(i));
 												})
-												.setNegativeButton("", (dialog3, which2) -> {
+												.setNegativeButton("Choose New Category", (dialog3, which2) -> {
 
+													BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(categorySelected.catId, -1, categorySelected.type, null, transactionsToBeDeleted, viewHolder);
+													bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
 												});
 										dialog[0] = builder2.create();
 										dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -353,9 +378,10 @@ public class CategoryFragment extends Fragment {
 										.setPositiveButton("Add", (dialog3, which) -> {
 											int type=catTabLayout.getSelectedTabPosition()+1;
 											subCategoryViewModel.Insert(new SubCategory(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.catId, type, mainActivity.icon_category_income[iconsAdapter.selected]));
-											viewHolder.subCategoryAdapter.subCategories = subCategoryViewModel.getSubcats(categorySelected.catId);
-											if(viewHolder.open)
+											if(viewHolder.open) {
+												viewHolder.subCategoryAdapter.subCategories = subCategoryViewModel.getSubcats(categorySelected.catId);
 												viewHolder.subCategoryAdapter.notifyDataSetChanged();
+											}
 										});
 								dialog2 = builder2.create();
 								dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -399,6 +425,7 @@ public class CategoryFragment extends Fragment {
 								dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 								ETForCatN.setText("");
 								ETForCatIB.setText("");
+								b3=false;b4=false;
 
 								IconsAdapter.ClickListener listenerIcon = viewHolder -> {
 									int pos2 = viewHolder.getAdapterPosition();
@@ -444,100 +471,9 @@ public class CategoryFragment extends Fragment {
 		};
 
 
-		/*
-
-				View catView = inflater.inflate(R.layout.category_dialog, null);
-
-				EditText ETForCatN = catView.findViewById(R.id.ETDialogCatName);
-				EditText ETForCatIB = catView.findViewById(R.id.ETDialogCatBudget);
-//				rg_catDialog=catView.findViewById(R.id.RGCatDialog);
-				IconsAdapter iconsAdapter = new IconsAdapter(mainActivity.icon_category_income);
-
-				TextView catTitle = catView.findViewById(R.id.TVDialogCT);
-				catTitle.setText("Update Category");
-
-				AlertDialog.Builder builder2;
-				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-					builder2 = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
-				}
-				else
-					builder2 = new AlertDialog.Builder(getContext());
-				builder2.setNegativeButton("Cancel", (dialog2, which) -> {
-
-				})
-						.setView(catView)
-						.setPositiveButton("Update", (dialog2, which) -> {
-							int type=catTabLayout.getSelectedTabPosition()+1;
-							Category category = new Category(ETForCatN.getText().toString().trim(), categorySelected.catAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.noOfSubCat, type, mainActivity.icon_category_income[iconsAdapter.selected]);
-							category.catId = categorySelected.catId;
-							categoryViewModel.Update(category);
-						});
-				AlertDialog dialog2 = builder2.create();
-				dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
-
-				ETForCatN.addTextChangedListener(new TextWatcher() {
-					@Override
-					public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-					}
-
-					@Override
-					public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-						b3 = charSequence.toString().trim().length() != 0;
-						dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b3 && b4);
-					}
-
-					@Override
-					public void afterTextChanged(Editable editable) {
-					}
-				});
-
-				ETForCatIB.addTextChangedListener(new TextWatcher() {
-					@Override
-					public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-					}
-
-					@Override
-					public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-						b4 = charSequence.toString().trim().length() != 0;
-						dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b3 && b4);
-					}
-
-					@Override
-					public void afterTextChanged(Editable editable) {
-					}
-				});
-
-
-				dialog2.show();
-				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-				ETForCatN.setText(categorySelected.catName);
-				ETForCatIB.setText(""+categorySelected.catBudget);
-				ETForCatN.requestFocus();
-
-
-				int pos = catTabLayout.getSelectedTabPosition();
-				if(pos==0)
-				{
-					ETForCatIB.setVisibility(View.GONE);
-					catView.findViewById(R.id.TVDialogCB).setVisibility(View.GONE);
-				}
-				else if(pos == 1)
-				{
-					ETForCatIB.setVisibility(View.VISIBLE);
-					catView.findViewById(R.id.TVDialogCB).setVisibility(View.VISIBLE);
-				}
-
-				Log.d(TAG, "onItemClick: card clicked "+position);
-
-		 */
-
-
-
 		categoryAdapter=mainActivity.categoryAdapter;
 		categoryAdapter.cardListener =cardListener;
-		categoryAdapter.arrowListener = arrowListener;
+		categoryAdapter.arrowListener = menuListener;
 		categoryAdapter.who=2;
 		categoryAdapter.cID=-1;
 
@@ -551,39 +487,30 @@ public class CategoryFragment extends Fragment {
 				int position = viewHolder.getAdapterPosition();
 				Category categorySelected = categoryAdapter2.categories.get(position);
 
-				int cID = categorySelected.catId;
-				List<SubCategory> subCategories = mainActivity.subcategoriesMap.get(cID);
-
 				if(!viewHolder.open) {
-//					viewHolder.subCategoryAdapter.subCategories.addAll(subCategories);
-//					viewHolder.subCategoryAdapter.notifyItemRangeInserted(0, subCategories.size());
+					int cID = categorySelected.catId;
+					List<SubCategory> subCategories = mainActivity.subcategoriesMap.get(cID);
 					if(subCategories != null)
 					{
-						for(int i=-1;++i<subCategories.size();)
-						{
-							viewHolder.subCategoryAdapter.subCategories.add(0, subCategories.get(i));
-							viewHolder.subCategoryAdapter.notifyItemInserted(0);
-						}
+						viewHolder.subCategoryAdapter.subCategories.addAll(subCategories);
+						viewHolder.subCategoryAdapter.notifyItemRangeInserted(0, subCategories.size());
 						viewHolder.open=true;
-//					viewHolder.arrow.setBackgroundResource(R.drawable.ic_arrow_drop_up);
 					}
 				}
 				else
 				{
-					if(subCategories != null)
-					{
-						viewHolder.subCategoryAdapter.subCategories.clear();
-						viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, subCategories.size());
-						viewHolder.open = false;
-					}
-//					viewHolder.arrow.setBackgroundResource(R.drawable.ic_arrow_drop_down);
+					List<SubCategory> subCategories = viewHolder.subCategoryAdapter.subCategories;
+					int x=subCategories.size();
+					subCategories.clear();
+					viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, x);
+					viewHolder.open = false;
 				}
 			}
 		};
 
 
 
-		CategoryAdapter.ClickListener arrowListener2 = new CategoryAdapter.ClickListener() {
+		CategoryAdapter.ClickListener menuListener2 = new CategoryAdapter.ClickListener() {
 			@Override
 			public void onItemClick(CategoryAdapter.BSDCatViewHolder viewHolder) {
 				int position = viewHolder.getAdapterPosition();
@@ -608,8 +535,6 @@ public class CategoryFragment extends Fragment {
 								catName.setText("Category Name");
 								ETForCatN.setHint("Enter Category Name");
 
-								iconsAdapter = new IconsAdapter(mainActivity.icon_category_income);
-
 								if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
 									builder2 = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
 								else
@@ -618,12 +543,7 @@ public class CategoryFragment extends Fragment {
 
 								})
 										.setView(catView)
-										.setPositiveButton("Update", (dialog2, which) -> {
-											int type = catTabLayout.getSelectedTabPosition() + 1;
-											Category category = new Category(ETForCatN.getText().toString().trim(), categorySelected.catAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.noOfSubCat, type, mainActivity.icon_category_income[iconsAdapter.selected]);
-											category.catId = categorySelected.catId;
-											categoryViewModel.Update(category);
-										});
+										.setPositiveButton("Update", null);
 								dialog2 = builder2.create();
 								dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
@@ -663,6 +583,23 @@ public class CategoryFragment extends Fragment {
 
 
 								dialog2.show();
+								Button del1=dialog2.getButton(AlertDialog.BUTTON_POSITIVE);
+								del1.setOnClickListener(view->{
+									if(possible(ETForCatIB.getText().toString().trim())) {
+										int type = catTabLayout.getSelectedTabPosition() + 1;
+										Category category = new Category(ETForCatN.getText().toString().trim(), categorySelected.catAmount, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.noOfSubCat, type, mainActivity.icon_category_income[iconsAdapter.selected]);
+										category.catId = categorySelected.catId;
+										categoryViewModel.Update(category);
+									}
+									else
+									{
+										if(toast!=null)
+											toast.cancel();
+
+										toast= Toast.makeText(mainActivity, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+										toast.show();
+									}
+								});
 								ETForCatN.setText("");
 								ETForCatIB.setText("");
 								ETForCatN.setText(categorySelected.catName);
@@ -681,6 +618,7 @@ public class CategoryFragment extends Fragment {
 									iconsAdapter.notifyItemChanged(a);
 									iconsAdapter.notifyItemChanged(pos2);
 								};
+								iconsAdapter.icons=mainActivity.icon_category_income;
 								iconsAdapter.listener = listener;
 								iconsAdapter.selected = findIndex(mainActivity.icon_category_income, categorySelected.catImageID);
 								recyclerView.setAdapter(iconsAdapter);
@@ -709,8 +647,17 @@ public class CategoryFragment extends Fragment {
 								}
 								else
 									builder2 = new AlertDialog.Builder(getContext());
+
+								String msg;
+								if(categorySelected.noOfSubCat==0)
+									msg="Are you sure want to delete this category!";
+								else if(categorySelected.noOfSubCat==1)
+									msg="Are you sure want to delete this category!\nThis will also delete 1 sub-category linked with this category";
+								else
+									msg="Are you sure want to delete this category!\nThis will also delete all the "+categorySelected.noOfSubCat+" sub-categories linked with this category";
+
 								builder2.setTitle("Delete Category")
-										.setMessage("Are you sure want to delete this category!\nThis will also delete all the sub-categories linked with this category")
+										.setMessage(msg)
 										.setNegativeButton("Cancel", (dialog, which) -> {
 
 										})
@@ -725,8 +672,9 @@ public class CategoryFragment extends Fragment {
 								del.setOnClickListener(v->{
 									if(transactionsToBeDeleted.size()==0) {
 
+										int x=viewHolder.subCategoryAdapter.subCategories.size();
 										viewHolder.subCategoryAdapter.subCategories.clear();
-										viewHolder.subCategoryAdapter.notifyDataSetChanged();
+										viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, x);
 
 										List<SubCategory> subCats = subCategoryViewModel.getSubcats(categorySelected.catId);
 										for(int i=-1;++i<subCats.size();)
@@ -735,8 +683,13 @@ public class CategoryFragment extends Fragment {
 									}
 									else
 									{
+										String msg2;
+										if(transactionsToBeDeleted.size()==1)
+											msg2="There is 1 transaction done using this category. What to do with it";
+										else
+											msg2="There are "+transactionsToBeDeleted.size()+" transactions done using this category. What to do with them";
 										builder2.setTitle("")
-												.setMessage("There are "+transactionsToBeDeleted.size()+" transactions with done using this category. What to do with them")
+												.setMessage(msg2)
 												.setPositiveButton("Delete those transaction", (dialog3, which2) -> {
 													for(int i=-1;++i<transactionsToBeDeleted.size();)
 													{
@@ -754,8 +707,11 @@ public class CategoryFragment extends Fragment {
 													}
 													mainActivity.transactionAdapter.notifyDataSetChanged();
 
-													viewHolder.subCategoryAdapter.subCategories.clear();
-													viewHolder.subCategoryAdapter.notifyDataSetChanged();
+													if(viewHolder.open) {
+														int x = viewHolder.subCategoryAdapter.subCategories.size();
+														viewHolder.subCategoryAdapter.subCategories.clear();
+														viewHolder.subCategoryAdapter.notifyItemRangeRemoved(0, x);
+													}
 
 													categoryViewModel.Delete(categorySelected);
 
@@ -763,8 +719,10 @@ public class CategoryFragment extends Fragment {
 													for(int i=-1;++i<subCats.size();)
 														subCategoryViewModel.Delete(subCats.get(i));
 												})
-												.setNegativeButton("", (dialog3, which2) -> {
+												.setNegativeButton("Choose New Category", (dialog3, which2) -> {
 
+													BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(categorySelected.catId, -1, categorySelected.type, null, transactionsToBeDeleted, viewHolder);
+													bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
 												});
 										dialog[0] = builder2.create();
 										dialog[0].getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -797,9 +755,10 @@ public class CategoryFragment extends Fragment {
 										.setPositiveButton("Add", (dialog3, which) -> {
 											int type=catTabLayout.getSelectedTabPosition()+1;
 											subCategoryViewModel.Insert(new SubCategory(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), categorySelected.catId, type, mainActivity.icon_category_income[iconsAdapter.selected]));
-											viewHolder.subCategoryAdapter.subCategories = subCategoryViewModel.getSubcats(categorySelected.catId);
-											if(viewHolder.open)
+											if(viewHolder.open) {
+												viewHolder.subCategoryAdapter.subCategories = subCategoryViewModel.getSubcats(categorySelected.catId);
 												viewHolder.subCategoryAdapter.notifyDataSetChanged();
+											}
 										});
 								dialog2 = builder2.create();
 								dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
@@ -843,6 +802,7 @@ public class CategoryFragment extends Fragment {
 								dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 								ETForCatN.setText("");
 								ETForCatIB.setText("");
+								b3=false;b4=false;
 
 								IconsAdapter.ClickListener listenerIcon = viewHolder -> {
 									int pos2 = viewHolder.getAdapterPosition();
@@ -889,7 +849,7 @@ public class CategoryFragment extends Fragment {
 
 		categoryAdapter2= mainActivity.categoryAdapter2;
 		categoryAdapter2.cardListener =cardListener2;
-		categoryAdapter2.arrowListener = arrowListener2;
+		categoryAdapter2.arrowListener = menuListener2;
 		categoryAdapter2.who=2;
 		categoryAdapter2.cID=-1;
 
@@ -928,5 +888,16 @@ public class CategoryFragment extends Fragment {
 				return i;
 
 		return -1;
+	}
+
+	private boolean possible(String trim) {
+		int n=trim.length();
+		for(int i=-1;++i<n;)
+		{
+			if(trim.charAt(i)>='0' && trim.charAt(i)<='9')
+				continue;
+			return false;
+		}
+		return true;
 	}
 }

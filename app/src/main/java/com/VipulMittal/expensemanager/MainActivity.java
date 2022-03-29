@@ -42,6 +42,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.RadioGroup;
@@ -307,9 +308,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		accTitle.setTypeface(null, Typeface.BOLD);
 
 		AlertDialog.Builder builder;
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
 			builder = new AlertDialog.Builder(this, android.R.style.ThemeOverlay_Material_Dialog);
-		}
 		else
 			builder = new AlertDialog.Builder(this);
 		builder.setCustomTitle(accTitle)
@@ -317,9 +317,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 				})
 				.setView(accView)
-				.setPositiveButton("Add", (dialog, which) -> {
-					accountViewModel.Insert(new Account(ETForAccN.getText().toString(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), icon_account[iconsAdapter.selected]));
-				});
+				.setPositiveButton("Add", null);
 		AlertDialog dialog = builder.create();
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
@@ -367,16 +365,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		EditText ETForCatN = catView.findViewById(R.id.ETDialogCatName);
 		EditText ETForCatIB = catView.findViewById(R.id.ETDialogCatBudget);
-//		rg_catDialog=catView.findViewById(R.id.RGCatDialog);
 
 		TextView catTitle = catView.findViewById(R.id.TVDialogCT);
-//		TextView catTitle = new TextView(this);
-//		catTitle.setText("Add New Category");
-//		catTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-//		catTitle.setPadding(2,2,2,10);
-//		catTitle.setTextSize(22);
-//		catTitle.setTypeface(null, Typeface.BOLD);
-
 		AlertDialog.Builder builder2;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 			builder2 = new AlertDialog.Builder(this, android.R.style.ThemeOverlay_Material_Dialog);
@@ -387,10 +377,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 				})
 				.setView(catView)
-				.setPositiveButton("Add", (dialog2, which) -> {
-					int type=categoryFragment.catTabLayout.getSelectedTabPosition()+1;
-					categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type, icon_category_income[iconsAdapterCat.selected]));
-				});
+				.setPositiveButton("Add", null);
+
 		AlertDialog dialog2 = builder2.create();
 		dialog2.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
@@ -435,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		FABAdd.setOnClickListener(v->{
 
 			systemTimeInMillies=0;
-			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
+			if(navigationBarView.getSelectedItemId()==R.id.bn_home && !FABAdd.isOrWillBeHidden())
 			{
 				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1);
 				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
@@ -452,6 +440,21 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
 			{
 				dialog.show();
+				Button del1=dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				del1.setOnClickListener(view->{
+					if(possible(ETForAccIB.getText().toString().trim())) {
+						accountViewModel.Insert(new Account(ETForAccN.getText().toString(), 0, Integer.parseInt(ETForAccIB.getText().toString().trim()), icon_account[iconsAdapter.selected]));
+						dialog.dismiss();
+					}
+					else
+					{
+						if(toast!=null)
+							toast.cancel();
+
+						toast=Toast.makeText(this, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+						toast.show();
+					}
+				});
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 				ETForAccN.setText("");
 				ETForAccIB.setText("");
@@ -477,6 +480,22 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_cat)
 			{
 				dialog2.show();
+				Button del2=dialog2.getButton(AlertDialog.BUTTON_POSITIVE);
+				del2.setOnClickListener(view->{
+					if(possible(ETForCatIB.getText().toString().trim())) {
+						int type=categoryFragment.catTabLayout.getSelectedTabPosition()+1;
+						categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type, icon_category_income[iconsAdapterCat.selected]));
+						dialog.dismiss();
+					}
+					else
+					{
+						if(toast!=null)
+							toast.cancel();
+
+						toast=Toast.makeText(this, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+						toast.show();
+					}
+				});
 				dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 				ETForCatN.setText("");
 				ETForCatIB.setText("");
@@ -561,6 +580,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 	}
 
+	private boolean possible(String trim) {
+		int n=trim.length();
+		for(int i=-1;++i<n;)
+		{
+			if(trim.charAt(i)>='0' && trim.charAt(i)<='9')
+				continue;
+			return false;
+		}
+		return true;
+	}
+
 	private void fingerprint() {
 		executor= ContextCompat.getMainExecutor(this);
 		biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
@@ -607,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 
-	private void notification() {
+	public void notification() {
 		abc=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
 			@Override
 			public void onActivityResult(ActivityResult result) {
@@ -647,6 +677,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		if(alarmManager != null) {
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, sharedPreferences.getLong("notifTime", -1), AlarmManager.INTERVAL_DAY, pendingIntent);
 			Log.d(TAG, "createNotif: notiftime = "+sharedPreferences.getLong("notifTime", -1));
+
 		}
 	}
 
@@ -674,7 +705,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public void createNotificationChannelForOreoAndAbove() {
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-			NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Notif", NotificationManager.IMPORTANCE_DEFAULT);
+			NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Notif", NotificationManager.IMPORTANCE_HIGH);
 			channel.setDescription("DesForNotifChannel");
 
 			NotificationManager notificationManager=getSystemService(NotificationManager.class);
@@ -712,7 +743,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			}
 			else {
 				navigationBarView.setSelectedItemId(R.id.bn_home);
-				setActionBarTitle("Expense Tracker");
+				setActionBarTitle("Expense Manager");
 			}
 		}
 	}
@@ -739,7 +770,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
 				if (income + expense >= 0) {
 					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
-					homeFragment.TVMainTotal.setTextColor(Color.GREEN);
+					homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
 				}
 				else
 				{
@@ -766,7 +797,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
 					if (income + expense >= 0) {
 						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
-						homeFragment.TVMainTotal.setTextColor(Color.GREEN);
+						homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
 					} else {
 						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 						homeFragment.TVMainTotal.setTextColor(Color.RED);
@@ -793,7 +824,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
 					if (income + expense >= 0) {
 						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
-						homeFragment.TVMainTotal.setTextColor(Color.GREEN);
+						homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
 					} else {
 						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 						homeFragment.TVMainTotal.setTextColor(Color.RED);
@@ -926,7 +957,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			homeFragment=new HomeFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, homeFragment).commit();
 			Log.d(TAG, "showFragment: home");
-			setActionBarTitle("Expense Tracker");
+			setActionBarTitle("Expense Manager");
 		}
 		else if(id==R.id.bn_cat) {
 			categoryFragment=new CategoryFragment();
@@ -940,14 +971,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			fragmentTransaction.replace(R.id.layoutForFragment, accountsFragment).commit();
 			Log.d(TAG, "showFragment: accounts");
 			systemTimeInMillies=0;
-			setActionBarTitle("Expense Tracker");
+			setActionBarTitle("Expense Manager");
 		}
 		else if(id==R.id.bn_analysis) {
 			analysisFragment=new AnalysisFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, analysisFragment).commit();
 			Log.d(TAG, "showFragment: analysis");
 			systemTimeInMillies=0;
-			setActionBarTitle("Expense Tracker");
+			setActionBarTitle("Expense Manager");
 		}
 		else {
 			Log.d(TAG, "showFragment: else");

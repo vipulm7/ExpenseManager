@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -22,6 +23,7 @@ public class Receiver extends BroadcastReceiver {
 	public final String CHANNEL_ID="1";
 	public static final int notifID=2;
 	NotificationManagerCompat notificationManager;
+	public static final String TAG="Vipul_tag";
 
 
 	@Override
@@ -30,7 +32,7 @@ public class Receiver extends BroadcastReceiver {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		boolean showNotif=sharedPreferences.getBoolean("notifs", true);
 
-		if(showNotif)
+		if(showNotif && MainActivity.notificationManager!=null)
 		{
 			NotificationCompat.Builder builder= new NotificationCompat.Builder(context, CHANNEL_ID);
 			builder.setSmallIcon(R.drawable.ic_notifications)
@@ -38,7 +40,7 @@ public class Receiver extends BroadcastReceiver {
 					.setContentText("Where did you transact today!")
 					.setStyle(new NotificationCompat.BigTextStyle()
 							.bigText("Where did you transact today!"))
-					.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+					.setPriority(NotificationCompat.PRIORITY_MAX)
 					.setColor(ContextCompat.getColor(context, R.color.cyan));
 
 			notificationManager = MainActivity.notificationManager;
@@ -89,6 +91,10 @@ public class Receiver extends BroadcastReceiver {
 			long notifTime = sharedPreferences.getLong("notifTime", -1);
 			editor.putLong("notifTime", notifTime+AlarmManager.INTERVAL_DAY);
 			editor.apply();
+
+			Log.d(TAG, "notifTime before: "+notifTime);
+			Log.d(TAG, "notifTime after: "+sharedPreferences.getLong("notifTime", -1));
+
 		}
 	}
 }

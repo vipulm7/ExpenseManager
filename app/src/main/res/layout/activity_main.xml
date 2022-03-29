@@ -45,6 +45,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/BottomNavigation"
             android:id="@+id/layoutForFragment"
+
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
