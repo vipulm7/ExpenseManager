@@ -45,8 +45,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 		int amt=accounts.get(position).amount+accounts.get(position).initialBalance;
 		if(who==1) {
 			if (accounts.get(position).id == aID) {
-				holder.name.setBackgroundColor(Color.CYAN);
-				holder.amount.setBackgroundColor(Color.CYAN);
+				holder.name.setBackgroundColor(Color.parseColor("#C6E6E8"));//cyan
+				holder.amount.setBackgroundColor(Color.parseColor("#C6E6E8"));//cyan
 //				holder.imageView.setBackgroundColor(Color.CYAN);
 			}
 			else {

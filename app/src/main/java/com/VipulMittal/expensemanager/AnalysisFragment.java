@@ -229,9 +229,9 @@ public class AnalysisFragment extends Fragment {
 				pieData(1);
 				pieChart.invalidate();
 
-				RBI.setTextColor(Color.parseColor("#a912db"));
+				RBI.setTextColor(Color.parseColor("#154b5e"));
 				RBI.setTextSize(25);
-				RBE.setTextColor(Color.parseColor("#db4002"));
+				RBE.setTextColor(Color.parseColor("#1a74a1"));
 				RBE.setTextSize(20);
 			}
 			else if(type==R.id.radioCatExpenseChart)
@@ -239,9 +239,9 @@ public class AnalysisFragment extends Fragment {
 				pieData(2);
 				pieChart.invalidate();
 
-				RBE.setTextColor(Color.parseColor("#a912db"));
+				RBE.setTextColor(Color.parseColor("#154b5e"));
 				RBE.setTextSize(25);
-				RBI.setTextColor(Color.parseColor("#db4002"));
+				RBI.setTextColor(Color.parseColor("#1a74a1"));
 				RBI.setTextSize(20);
 			}
 		});

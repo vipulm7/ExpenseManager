@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		menuShow = true;
 
 		actionBar = getSupportActionBar();
-		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
+//		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
 
 		if(first_time)
 		{

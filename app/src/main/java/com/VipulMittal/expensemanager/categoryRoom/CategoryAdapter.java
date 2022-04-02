@@ -87,7 +87,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 			Log.d(TAG, "onBindViewHolder: ofCat position=" + position);
 			Log.d(TAG, "onBindViewHolder: ofCat name=" + category.catName + " noOfSubCat=" + category.noOfSubCat + " id=" + category.catId);
 			if (category.catId == cID)
-				holder.name.setBackgroundColor(Color.CYAN);
+				holder.name.setBackgroundColor(Color.parseColor("#C6E6E8"));//cyan
 			else
 				holder.name.setBackgroundResource(R.drawable.bsd);
 

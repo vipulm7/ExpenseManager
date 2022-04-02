@@ -59,7 +59,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 			Log.d(TAG, "onBindViewHolder: subCat name = " + subCategories.get(position).name + " id = " + subCategories.get(position).id);
 			holder.name.setText(subCategories.get(position).name);
 			if (subCategories.get(position).id == sID)
-				holder.name.setBackgroundColor(Color.CYAN);
+				holder.name.setBackgroundColor(Color.parseColor("#C6E6E8"));//cyan
 			else
 				holder.name.setBackgroundResource(R.drawable.bsd);
 		}

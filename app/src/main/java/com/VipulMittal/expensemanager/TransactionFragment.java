@@ -423,12 +423,12 @@ public class TransactionFragment extends Fragment {
 
 	private void rSelected(RadioButton selected) {
 		selected.setTextSize(27);
-		selected.setTextColor(Color.parseColor("#a912db"));
+		selected.setTextColor(Color.parseColor("#154b5e"));
 	}
 
 	private void rNotSelected(RadioButton notSelected) {
 		notSelected.setTextSize(20);
-		notSelected.setTextColor(Color.parseColor("#db4002"));
+		notSelected.setTextColor(Color.parseColor("#1a74a1"));
 	}
 
 	private void doColoring() {

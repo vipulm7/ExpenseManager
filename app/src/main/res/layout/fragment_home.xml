@@ -31,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="#154b5e"
+            android:textColor="?android:textColor"
             android:background="?cardBackgroundColor"
             android:textAlignment="center"
             />
@@ -105,7 +105,7 @@
             app:layout_constraintEnd_toStartOf="@+id/TVIncome"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="#154b5e"
+            android:textColor="?android:textColor"
             />
 
         <TextView
@@ -147,7 +147,7 @@
             app:layout_constraintEnd_toStartOf="@id/TVTotal"
             app:layout_constraintStart_toEndOf="@+id/TVExpense"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="#154b5e"
+            android:textColor="?android:textColor"
             />
 
         <TextView
@@ -190,7 +190,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/TVIncome"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="#154b5e"
+            android:textColor="?android:textColor"
             />
 
         <TextView
