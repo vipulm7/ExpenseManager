@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.biometric.BiometricPrompt;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -21,6 +23,7 @@ import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -62,6 +65,7 @@ import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public static final String TAG="Vipul_tag";
 
-	FloatingActionButton FABAdd;
+	ExtendedFloatingActionButton FABAdd;
 
 	public TransactionAdapter transactionAdapter;
 	public TransactionViewModel transactionViewModel, transactionViewModel2;
@@ -423,23 +427,30 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 
 
-
 		FABAdd.setOnClickListener(v->{
 
 			systemTimeInMillies=0;
-			if(navigationBarView.getSelectedItemId()==R.id.bn_home && !FABAdd.isOrWillBeHidden())
+			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
 			{
-				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1, false);
-				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
-//				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
-				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
-				fragmentTransaction.addToBackStack("main");
-				fragmentTransaction.commit();
+//				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1, false);
+//				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+//				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
+////				fragmentTransaction.addSharedElement(FABAdd, "FAB");
+////				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
+//				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
+//				fragmentTransaction.addToBackStack("main");
+//				fragmentTransaction.commit();
+//
+//				FABAdd.hide();
+//				navigationBarView.setVisibility(View.INVISIBLE);
+//				hideMenu();
 
-				FABAdd.hide();
-				navigationBarView.setVisibility(View.INVISIBLE);
-				hideMenu();
+				Intent intent = new Intent(this, MainActivity2.class);
+				intent.putExtra("EXTRA_DURATION", 400L);
+
+
+				ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, FABAdd, "EXTRA_VIEW");
+				startActivity(intent, options.toBundle());
 			}
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
 			{
@@ -557,6 +568,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 				Log.d(TAG, "onCreateView: dialog created");
 			}
+		});
+
+
+		FABAdd.setOnLongClickListener(v -> {
+
+			if(FABAdd.isExtended())
+				FABAdd.shrink();
+			else
+				FABAdd.extend();
+
+			return true;
 		});
 
 
@@ -951,9 +973,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public void showFragment(int id) {
 		FABAdd.hide();
-		if(id!=R.id.bn_analysis)
-			FABAdd.show();
 
+		if(id!=R.id.bn_analysis) {
+			FABAdd.show();
+			FABAdd.shrink();
+		}
 
 		FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
 		fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -962,6 +986,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			fragmentTransaction.replace(R.id.layoutForFragment, homeFragment).commit();
 			Log.d(TAG, "showFragment: home");
 			setActionBarTitle("Expense Manager");
+			FABAdd.setText("Add Transaction");
 		}
 		else if(id==R.id.bn_cat) {
 			categoryFragment=new CategoryFragment();
@@ -969,6 +994,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			Log.d(TAG, "showFragment: category");
 			systemTimeInMillies=0;
 			setActionBarTitle("Categories ->");
+			FABAdd.setText("Add Category");
 		}
 		else if(id==R.id.bn_accounts) {
 			accountsFragment=new AccountsFragment();
@@ -976,6 +1002,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			Log.d(TAG, "showFragment: accounts");
 			systemTimeInMillies=0;
 			setActionBarTitle("Expense Manager");
+			FABAdd.setText("Add Account");
 		}
 		else if(id==R.id.bn_analysis) {
 			analysisFragment=new AnalysisFragment();

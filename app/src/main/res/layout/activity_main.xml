@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         >
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/FABAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,6 +26,8 @@
             app:layout_constraintBottom_toTopOf="@id/BottomNavigation"
             android:layout_marginBottom="25dp"
             android:layout_marginEnd="25dp"
+            android:text="Add Transaction"
+            app:icon="@drawable/add_button"
             />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
