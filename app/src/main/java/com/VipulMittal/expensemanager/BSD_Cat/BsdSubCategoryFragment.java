@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
-import com.VipulMittal.expensemanager.TransactionFragment;
+import com.VipulMittal.expensemanager.TransactionActivity;
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class BsdSubCategoryFragment extends Fragment {
 
-	public BsdSubCategoryFragment(int cID, int cIDCame, int sID, int type, Category categorySelected, List<Transaction> transactionsToBeModified, CategoryAdapter.BSDCatViewHolder viewHolder) {
+	public BsdSubCategoryFragment(int cID, int cIDCame, int sID, int type, Category categorySelected, List<Transaction> transactionsToBeModified, CategoryAdapter.BSDCatViewHolder viewHolder, MainActivity mainActivity) {
 		this.sID = sID;
 		this.type=type;
 		this.categorySelected = categorySelected;
@@ -37,6 +37,7 @@ public class BsdSubCategoryFragment extends Fragment {
 		this.transactionsToBeModified=transactionsToBeModified;
 		this.cIDCame=cIDCame;
 		viewHolderCat=viewHolder;
+		this.mainActivity=mainActivity;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -50,6 +51,7 @@ public class BsdSubCategoryFragment extends Fragment {
 	CategoryViewModel categoryViewModel;
 	TransactionViewModel transactionViewModel;
 	CategoryAdapter.BSDCatViewHolder viewHolderCat;
+	MainActivity mainActivity;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,8 +61,7 @@ public class BsdSubCategoryFragment extends Fragment {
 
 		RVSubCategories=view.findViewById(R.id.bsd_rv_subcategories);
 		BsdCatFragment bsdCatFragment = (BsdCatFragment) getParentFragment();
-		MainActivity mainActivity=(MainActivity)getActivity();
-		TransactionFragment transactionFragment= bsdCatFragment.transactionFragment;
+		TransactionActivity transactionActivity = bsdCatFragment.transactionActivity;
 		transactionViewModel=mainActivity.transactionViewModel;
 		subCategoryViewModel=mainActivity.subCategoryViewModel;
 		categoryViewModel=mainActivity.categoryViewModel;
@@ -80,8 +81,8 @@ public class BsdSubCategoryFragment extends Fragment {
 				SubCategory subCategorySelected=subCategoryAdapter.subCategories.get(position);
 				sID = subCategorySelected.id;
 
-				if(transactionFragment!=null) {
-					transactionFragment.saveSelectedSubCategory(cID, sID, categorySelected.catName + " / " + subCategoryAdapter.subCategories.get(position).name, subCategoryAdapter.subCategories.get(position).subCatImageID);
+				if(transactionActivity !=null) {
+					transactionActivity.saveSelectedSubCategory(cID, sID, categorySelected.catName + " / " + subCategoryAdapter.subCategories.get(position).name, subCategoryAdapter.subCategories.get(position).subCatImageID);
 					bsdCatFragment.dismiss();
 				}
 				else if(sID==sIDCame)

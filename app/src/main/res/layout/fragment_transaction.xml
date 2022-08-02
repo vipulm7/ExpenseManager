@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".TransactionFragment"
+    tools:context=".TransactionActivity"
     android:background="?backgroundSplit"
     >
 
@@ -37,7 +37,7 @@
                 android:id="@+id/constraintDateTime1"
                 >
 
-                <TextView
+                <TextSwitcher
                     android:id="@+id/TVDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/constraintDateTime2"
                 >
-                <TextView
+                <TextSwitcher
                     android:id="@+id/TVTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -223,7 +223,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/TVAccount"
                     />
 
-                <TextView
+                <TextSwitcher
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Account "
@@ -269,7 +269,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/TVCategory"
                     />
 
-                <TextView
+                <TextSwitcher
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Category"

@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.VipulMittal.expensemanager.IconsAdapter;
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
-import com.VipulMittal.expensemanager.TransactionFragment;
+import com.VipulMittal.expensemanager.TransactionActivity;
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
@@ -36,13 +36,14 @@ import java.util.List;
 public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 	//constructor
-	public BsdAccountsFragment(int aID, int other, int aType, int type, TransactionFragment transactionFragment, List<Transaction> transactionsToBeModified) {
+	public BsdAccountsFragment(int aID, int other, int aType, int type, TransactionActivity transactionActivity, List<Transaction> transactionsToBeModified, MainActivity mainActivity) {
 		this.aID = aID;
-		this.transactionFragment=transactionFragment;
+		this.transactionActivity = transactionActivity;
 		this.aType = aType;
 		this.other=other;
 		this.type=type;
 		this.transactionsToBeModified = transactionsToBeModified;
+		this.mainActivity=mainActivity;
 	}
 
 	private static final String TAG = "Vipul_tag";
@@ -51,7 +52,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	AccountAdapter accountAdapter;
 	AccountViewModel accountViewModel;
 	int aID, aType, other, type;
-	TransactionFragment transactionFragment;
+	TransactionActivity transactionActivity;
 	List<Account> accounts;
 	MainActivity mainActivity;
 	View accView;
@@ -69,7 +70,6 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		RVAccounts =view.findViewById(R.id.bsd_rv_accounts);
 		addNew=view.findViewById(R.id.BSD_BaddAccount);
 
-		mainActivity=(MainActivity)getActivity();
 		transactionViewModel = mainActivity.transactionViewModel;
 		accountAdapter=mainActivity.accountAdapter;
 		accounts=accountAdapter.accounts;
@@ -123,9 +123,9 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 				}
 				else {
 					if (aType == 1)
-						transactionFragment.saveSelectedAccount(aID, accounts.get(pos)); //bsdAccountsFragment.selected can also be used
+						transactionActivity.saveSelectedAccount(aID, accounts.get(pos)); //bsdAccountsFragment.selected can also be used
 					else
-						transactionFragment.saveSelectedCategoryWithName(aID, accounts.get(pos).name, accounts.get(pos).imageId);
+						transactionActivity.saveSelectedCategoryWithName(aID, accounts.get(pos).name, accounts.get(pos).imageId);
 					dismiss();
 				}
 			}

@@ -1,7 +1,5 @@
 package com.VipulMittal.expensemanager;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -10,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.biometric.BiometricPrompt;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -29,12 +25,11 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -45,10 +40,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,7 +59,6 @@ import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionAdapter;
 import com.VipulMittal.expensemanager.transactionRoom.TransactionViewModel;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
@@ -425,7 +417,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			}
 		});
+		MainActivity mainActivity = this;
 
+		dialog.getWindow().getAttributes().windowAnimations=R.style.DialogAnimation;
 
 		FABAdd.setOnClickListener(v->{
 
@@ -433,10 +427,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
 			{
 //				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1, false);
+//
 //				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
 //				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
-////				fragmentTransaction.addSharedElement(FABAdd, "FAB");
-////				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
 //				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
 //				fragmentTransaction.addToBackStack("main");
 //				fragmentTransaction.commit();
@@ -445,16 +438,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 //				navigationBarView.setVisibility(View.INVISIBLE);
 //				hideMenu();
 
-				Intent intent = new Intent(this, MainActivity2.class);
+				Intent intent = new Intent(this, TransactionActivity.class);
 				intent.putExtra("EXTRA_DURATION", 400L);
+				intent.putExtra("calendar", Calendar.getInstance().getTimeInMillis());
+				intent.putExtra("note", "");
+				intent.putExtra("description", "");
 
+				Bundle bundle = new Bundle();
+				bundle.putBinder("bind", new ObjectWrapper(mainActivity));
+				intent.putExtras(bundle);
 
-				ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, FABAdd, "EXTRA_VIEW");
+				ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, FABAdd, "EXTRA_VIEW2");
 				startActivity(intent, options.toBundle());
 			}
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
 			{
 				dialog.show();
+
 				Button del1=dialog.getButton(AlertDialog.BUTTON_POSITIVE);
 				del1.setOnClickListener(view->{
 					if(possible(ETForAccIB.getText().toString().trim())) {
@@ -664,18 +664,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 	public void notification() {
-		abc=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-			@Override
-			public void onActivityResult(ActivityResult result) {
-				notificationManager=NotificationManagerCompat.from(getApplicationContext());
-				createNotificationChannelForOreoAndAbove();
-				areNotifAllowed =notificationManager.areNotificationsEnabled();
+		abc=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+			notificationManager=NotificationManagerCompat.from(this);
+			createNotificationChannelForOreoAndAbove();
+			areNotifAllowed =notificationManager.areNotificationsEnabled();
 
-				if(areNotifAllowed)
-					notifSwitchPreference.setChecked(true);
-				else
-					notifSwitchPreference.setChecked(false);
-			}
+			notifSwitchPreference.setChecked(areNotifAllowed);
 		});
 
 		notificationManager=NotificationManagerCompat.from(this);
@@ -698,17 +692,18 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 		else
 			pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
 
-		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//		alarmManager.cancel(pendingIntent);
 		if(alarmManager != null) {
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, sharedPreferences.getLong("notifTime", -1), AlarmManager.INTERVAL_DAY, pendingIntent);
 			Log.d(TAG, "createNotif: notiftime = "+sharedPreferences.getLong("notifTime", -1));
-
 		}
 	}
 
 	private void stopNotif() {
-		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
 
 		if(toast!=null)
@@ -741,19 +736,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	@Override
 	public void onBackPressed() {
+		Log.d(TAG, "onBackPressed: came here");
 		Log.d(TAG, "onBackPressed: getBackStackEntryCount = "+getSupportFragmentManager().getBackStackEntryCount());
-		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
-			getSupportFragmentManager().popBackStack();
-			Fragment fragment=getSupportFragmentManager().findFragmentByTag("repeat");
-			if(fragment != null)
-				getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-			FABAdd.show();
-			navigationBarView.setVisibility(View.VISIBLE);
-			setActionBarTitle("Expense Manager");
-			showMenu();
-		}
-		else
-		{
+//		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
+//			getSupportFragmentManager().popBackStack();
+//			Fragment fragment=getSupportFragmentManager().findFragmentByTag("repeat");
+//			if(fragment != null)
+//				getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+//			FABAdd.show();
+//			navigationBarView.setVisibility(View.VISIBLE);
+//			setActionBarTitle("Expense Manager");
+//			showMenu();
+//		}
+//		else
+//		{
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
 				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = "+(System.currentTimeMillis() - systemTimeInMillies));
 				if(exit  ||  System.currentTimeMillis() - systemTimeInMillies<2000) {
@@ -771,7 +767,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				navigationBarView.setSelectedItemId(R.id.bn_home);
 				setActionBarTitle("Expense Manager");
 			}
-		}
+//		}
 	}
 
 	public void transactionROOM() {

@@ -203,15 +203,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 				TVAccount = itemView.findViewById(R.id.TVLayAcc);
 				view = itemView;
 
-				itemView.setOnClickListener(view -> {
+				itemView.setOnClickListener(v -> {
 					int position=getAdapterPosition();
 					if(listener!=null && position!=RecyclerView.NO_POSITION) //RecyclerView.NO_POSITION is equal to -1
-						listener.onItemClick(this);
+						listener.onItemClick(this, view);
 				});
 
-				itemView.setOnLongClickListener((View.OnLongClickListener) v -> {
+				itemView.setOnLongClickListener( v -> {
 					if(longListener != null) {
-						longListener.onItemClick(this);
+						longListener.onItemClick(this, view);
 						return true;
 					}
 					return false;
@@ -238,7 +238,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 	//    android:background="@drawable/icon_account_not_selected"
 	public interface CLickListener {
-		void onItemClick(TransViewHolder viewHolder);
+		void onItemClick(TransViewHolder viewHolder, View view);
 	}
 
 	public void setTransactions(List<Transaction> transactions)

@@ -239,7 +239,7 @@ public class AccountsFragment extends Fragment {
 							})
 							.setNegativeButton("Choose New Account", (dialog2, which2) -> {
 
-								BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account.id, account.id, 1, 4, null, transactionsToBeDeleted);
+								BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(account.id, account.id, 1, 4, null, transactionsToBeDeleted, mainActivity);
 								bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
 							});
 					dialog[0] = builder.create();

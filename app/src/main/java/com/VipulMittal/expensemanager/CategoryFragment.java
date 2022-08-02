@@ -345,7 +345,7 @@ public class CategoryFragment extends Fragment {
 												})
 												.setNegativeButton("Choose New Category", (dialog3, which2) -> {
 
-													BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(categorySelected.catId, -1, categorySelected.type, null, transactionsToBeDeleted, viewHolder);
+													BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(categorySelected.catId, -1, categorySelected.type, null, transactionsToBeDeleted, viewHolder, mainActivity);
 													bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
 												});
 										dialog[0] = builder2.create();
@@ -723,7 +723,7 @@ public class CategoryFragment extends Fragment {
 												})
 												.setNegativeButton("Choose New Category", (dialog3, which2) -> {
 
-													BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(categorySelected.catId, -1, categorySelected.type, null, transactionsToBeDeleted, viewHolder);
+													BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(categorySelected.catId, -1, categorySelected.type, null, transactionsToBeDeleted, viewHolder, mainActivity);
 													bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
 												});
 										dialog[0] = builder2.create();

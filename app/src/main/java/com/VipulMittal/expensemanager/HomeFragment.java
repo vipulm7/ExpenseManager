@@ -1,6 +1,8 @@
 package com.VipulMittal.expensemanager;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -81,29 +83,52 @@ public class HomeFragment extends Fragment {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 
 		mainActivity.transactionROOM();
+
 		setDate();
 
 		TVAfter.setText(">");
 		TVBefore.setText("<");
 
 
-		TransactionAdapter.CLickListener listener= viewHolder -> {
+		TransactionAdapter.CLickListener listener= (viewHolder, view1) -> {
 			int position=viewHolder.getAdapterPosition();
 
 			if(!transactionAdapter.selectionModeOn)
 			{
-				Calendar calendar = Calendar.getInstance();
+//				Calendar calendar = Calendar.getInstance();
 				Transaction transaction = transactionAdapter.transactions.get(position);
-				calendar.setTimeInMillis(transaction.dateTime);
+//				calendar.setTimeInMillis(transaction.dateTime);
 
-				TransactionFragment transactionFragment = new TransactionFragment(transaction.amount, transaction.note, transaction.description, calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2, transaction.type, transaction.id, false);
-				FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
-				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
-				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
-				fragmentTransaction.addToBackStack("home_page");
-				fragmentTransaction.commit();
+//				TransactionFragment transactionFragment = new TransactionFragment(transaction.amount, transaction.note, transaction.description, calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2, transaction.type, transaction.id, false);
+				Intent intent=new Intent(mainActivity, TransactionActivity.class);
+				intent.putExtra("EXTRA_DURATION", 400L);
+				intent.putExtra("calendar", transaction.dateTime);
+				intent.putExtra("amount", transaction.amount);
+				intent.putExtra("note", transaction.note);
+				intent.putExtra("description", transaction.description);
+				intent.putExtra("aID", transaction.accountID);
+				intent.putExtra("cID", transaction.catID);
+				intent.putExtra("sID", transaction.subCatID);
+				intent.putExtra("request", 2);
+				intent.putExtra("type", transaction.type);
+				intent.putExtra("id", transaction.id);
 
-				mainActivity.FABAdd.hide();
+				Bundle bundle = new Bundle();
+				bundle.putBinder("bind", new ObjectWrapper(mainActivity));
+				intent.putExtras(bundle);
+
+				ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mainActivity, view1, "EXTRA_VIEW_LIST");
+				startActivity(intent, options.toBundle());
+
+
+
+//				FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
+//				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
+//				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
+//				fragmentTransaction.addToBackStack("home_page");
+//				fragmentTransaction.commit();
+
+//				mainActivity.FABAdd.hide();
 				mainActivity.systemTimeInMillies = 0;
 				mainActivity.hideMenu();
 			}
@@ -113,7 +138,8 @@ public class HomeFragment extends Fragment {
 			}
 		};
 
-		TransactionAdapter.CLickListener longListener = viewHolder -> {
+
+		TransactionAdapter.CLickListener longListener = (viewHolder, view1) -> {
 			if(!transactionAdapter.selectionModeOn) {
 				transactionAdapter.selectionModeOn = true;
 				transactionAdapter.transactionsToBeDeleted.clear();

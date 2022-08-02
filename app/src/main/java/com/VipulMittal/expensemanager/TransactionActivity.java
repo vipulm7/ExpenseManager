@@ -1,33 +1,26 @@
 package com.VipulMittal.expensemanager;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LiveData;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
@@ -37,23 +30,56 @@ import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 import com.VipulMittal.expensemanager.transactionRoom.Transaction;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.color.MaterialColors;
+import com.google.android.material.transition.platform.MaterialContainerTransform;
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 
+import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Map;
 
-public class TransactionFragment extends Fragment {
+public class TransactionActivity extends AppCompatActivity implements Serializable {
 
-	public TransactionFragment(int amount, String note, String description, Calendar calendar, int aID, int cID, int sID, int request, int type, int id, boolean focus) {
-		this.id=id;
-		this.aID=aID;
-		this.amount=amount;
-		this.note=note;
-		this.description=description;
-		this.calendar=calendar;
-		this.cID=cID;
-		this.sID=sID;
-		this.type=type;
-		this.request=request;
+	private static final String TAG = "Vipul_tag";
+	boolean focus;
+	RadioGroup radioGroup;
+	RadioButton RBIncome, RBExpense, RBTransfer;
+	Toast toast;
+	public int type, amount, request, cID, sID, aID, id;
+	public int amountCame, cIDCame, sIDCame, aIDCame, typeCame;
+	String note, description;
+	Calendar calendar;
+	EditText ETNote, ETDes, ETAmt;
+	boolean BNote, BAmt, BAcc, BCat;
+	Button save, repeat;
+	int dateArray[]=new int[7];
+	ImageView iv_acc, iv_cat;
+	MainActivity mainActivity;
+	public TextSwitcher TVDate, TVTime, TVAccount, TVCategory;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+
+		getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+		// Set up shared element transition
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.fragment_transaction);
+
+		Intent intent=getIntent();
+		Object objReceived = ((ObjectWrapper)intent.getExtras().getBinder("bind")).getData();
+		mainActivity=(MainActivity) objReceived;
+		id=intent.getIntExtra("id", -1);
+		aID=intent.getIntExtra("aID", -1);
+		cID=intent.getIntExtra("cID", -1);
+		sID=intent.getIntExtra("sID", -1);
+		type=intent.getIntExtra("type", 2);
+		request=intent.getIntExtra("request", 1);
+		amount=intent.getIntExtra("amount", 0);
+		note=intent.getStringExtra("note");
+		description=intent.getStringExtra("description");
+		focus=intent.getBooleanExtra("focus", false);
+		calendar=Calendar.getInstance();
+		calendar.setTimeInMillis(intent.getLongExtra("calendar", -1));
 		dateArray[0]=calendar.get(Calendar.YEAR);
 		dateArray[1]=calendar.get(Calendar.MONTH);
 		dateArray[2]=calendar.get(Calendar.DATE);
@@ -66,57 +92,62 @@ public class TransactionFragment extends Fragment {
 		sIDCame=sID;
 		aIDCame=aID;
 		typeCame = type;
-		this.focus=focus;
 
-		Log.d(TAG, "TransactionFragment: aid="+aID+" cid="+cID+" sid="+sID);
-	}
+		if(request==1)
+			getSupportActionBar().setTitle("Add Transaction");
+		else
+			getSupportActionBar().setTitle("Edit Transaction");
 
+		if(request==1)
+			findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW2");
+		else if(request == 2)
+			findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW_LIST");
+		setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
+		getWindow().setSharedElementEnterTransition(buildContainerTransform(true));
+		getWindow().setSharedElementReturnTransition(buildContainerTransform(false));
 
-	private static final String TAG = "Vipul_tag";
-	boolean focus;
-	public TextView TVDate, TVTime, TVAccount, TVCategory;
-	RadioGroup radioGroup;
-	RadioButton RBIncome, RBExpense, RBTransfer;
-	Toast toast;
-	public int type, amount, request, cID, sID, aID, id;
-	public int amountCame, cIDCame, sIDCame, aIDCame, typeCame;
-	String note, description;
-	Calendar calendar;
-	EditText ETNote, ETDes, ETAmt;
-	boolean BNote, BAmt, BAcc, BCat;
-	Button save, repeat;
-	int dateArray[]=new int[7];
-	MainActivity mainActivity;
-	ImageView iv_acc, iv_cat;
+		TVDate=findViewById(R.id.TVDate);
+		TVTime=findViewById(R.id.TVTime);
+		TVAccount =findViewById(R.id.TVAccount);
+		TVCategory=findViewById(R.id.TVCategory);
+		radioGroup=findViewById(R.id.RadioGroupType);
+		RBExpense=findViewById(R.id.radioCatExpense);
+		RBIncome=findViewById(R.id.radioCatIncome);
+		RBTransfer=findViewById(R.id.radioCatTransfer);
+		ETNote =findViewById(R.id.ETNote);
+		ETDes=findViewById(R.id.ETDes);
+		ETAmt=findViewById(R.id.ETAmount);
+		save=findViewById(R.id.transaction_save_button);
+		repeat=findViewById(R.id.transaction_repeat_button);
+		iv_acc = findViewById(R.id.IVAccounts);
+		iv_cat = findViewById(R.id.IVCategory);
 
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.fragment_transaction, container, false);
-
-		TVDate=view.findViewById(R.id.TVDate);
-		TVTime=view.findViewById(R.id.TVTime);
-		TVAccount =view.findViewById(R.id.TVAccount);
-		TVCategory=view.findViewById(R.id.TVCategory);
-		radioGroup=view.findViewById(R.id.RadioGroupType);
-		RBExpense=view.findViewById(R.id.radioCatExpense);
-		RBIncome=view.findViewById(R.id.radioCatIncome);
-		RBTransfer=view.findViewById(R.id.radioCatTransfer);
-		ETNote =view.findViewById(R.id.ETNote);
-		ETDes=view.findViewById(R.id.ETDes);
-		ETAmt=view.findViewById(R.id.ETAmount);
-		save=view.findViewById(R.id.transaction_save_button);
-		repeat=view.findViewById(R.id.transaction_repeat_button);
-		iv_acc = view.findViewById(R.id.IVAccounts);
-		iv_cat = view.findViewById(R.id.IVCategory);
 		save.setEnabled(request != 1);
 		repeat.setEnabled(request != 1);
-		mainActivity=(MainActivity) getActivity();
 
 		iv_acc.setImageResource(R.drawable.ic_account);
 		iv_cat.setImageResource(R.drawable.ic_category);
+
+		TVDate.setFactory(() -> {
+			TextView t = new TextView(this);
+			t.setTextSize(20);
+			return t;
+		});
+		TVTime.setFactory(() -> {
+			TextView t = new TextView(this);
+			t.setTextSize(20);
+			return t;
+		});
+		TVAccount.setFactory(() -> {
+			TextView t = new TextView(this);
+			t.setTextSize(20);
+			return t;
+		});
+		TVCategory.setFactory(() -> {
+			TextView t = new TextView(this);
+			t.setTextSize(20);
+			return t;
+		});
 
 		setRadioButton(type);
 		doColoring();
@@ -126,12 +157,14 @@ public class TransactionFragment extends Fragment {
 		if(aID!=-1)
 		{
 			Account account=mainActivity.accountViewModel.getAcc(aID);
-			Log.d(TAG, "onCreateView: account = "+account);
+//			Log.d(TAG, "onCreateView: account = "+account);
 			Log.d(TAG, "onCreateView: account name = "+account.name);
-			TVAccount.setText(account.name);
+			TVAccount.setCurrentText(account.name);
 			BAcc=true;
 			iv_acc.setImageResource(account.imageId);	//icon
 		}
+		else
+			TVAccount.setCurrentText("Account");
 
 		if(cID!=-1)
 		{
@@ -144,63 +177,82 @@ public class TransactionFragment extends Fragment {
 					SubCategory subCategory = mainActivity.subCategoryViewModel.getSubCat(sID);
 					Log.d(TAG, "onCreateView: subCategory = " + subCategory);
 					Log.d(TAG, "onCreateView: subCategory name = " + subCategory.name);
-					TVCategory.setText(category.catName + " / " + subCategory.name);
+					TVCategory.setCurrentText(category.catName + " / " + subCategory.name);
 					iv_cat.setImageResource(subCategory.subCatImageID);
 				} else
-					TVCategory.setText(category.catName);
+					TVCategory.setCurrentText(category.catName);
 			}
 			else
 			{
 				Account account=mainActivity.accountViewModel.getAcc(cID);
 				Log.d(TAG, "onCreateView: account = "+account);
 				Log.d(TAG, "onCreateView: account name = "+account.name);
-				TVCategory.setText(account.name);
+				TVCategory.setCurrentText(account.name);
 
 				iv_cat.setImageResource(account.imageId);
 			}
 
 			BCat = true;
 		}
+		else
+			TVCategory.setCurrentText("Category");
 
 		enableDisableSaveButton();
 
-		if(amount!=0) {
-			if (amount > 0)
+
+		Animation in = AnimationUtils.loadAnimation(this,R.anim.slide_down);
+		Animation out = AnimationUtils.loadAnimation(this,R.anim.slide_up);
+		TVCategory.setInAnimation(in);
+		TVCategory.setOutAnimation(out);
+		TVAccount.setInAnimation(in);
+		TVAccount.setOutAnimation(out);
+
+		if(request == 2)
+		{
+			if (amount >= 0)
 				ETAmt.setText("" + amount);
 			else
 				ETAmt.setText("" + (-amount));
-			ETNote.setText(note);
-			ETDes.setText(description);
 		}
 
-
-		if(request == 1)
-			mainActivity.setActionBarTitle("Add Transaction");
-		else if(request == 2)
-			mainActivity.setActionBarTitle("Edit Transaction");
+		ETNote.setText(note);
+		ETDes.setText(description);
 
 		TVAccount.setOnClickListener(v->{
-			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(aID, cID, 1, type, this, null);
-			bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts");
+			BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(aID, cID, 1, type, this, null, mainActivity);
+			bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Accounts");
 		});
 
 		TVCategory.setOnClickListener(v->{
 			if(type!=3) {
-				BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(cID, sID, type, this, null, null);
-				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Category");
+				BottomSheetDialogFragment bottomSheetDialogFragment = new BsdCatFragment(cID, sID, type, this, null, null, mainActivity);
+				bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Category");
 			}
 			else
 			{
-				BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(cID, aID, 2, type, this, null);
-				bottomSheetDialogFragment.show(mainActivity.getSupportFragmentManager(), "BSD_Accounts2");
+				BottomSheetDialogFragment bottomSheetDialogFragment=new BsdAccountsFragment(cID, aID, 2, type, this, null, mainActivity);
+				bottomSheetDialogFragment.show(getSupportFragmentManager(), "BSD_Accounts2");
 			}
 		});
 
 		if(focus) {
 			ETNote.requestFocus();
 		}
-		return view;
+
+
+
 	}
+
+	private MaterialContainerTransform buildContainerTransform(boolean entering) {
+		MaterialContainerTransform transform = new MaterialContainerTransform();
+		transform.setTransitionDirection(entering ? MaterialContainerTransform.TRANSITION_DIRECTION_ENTER : MaterialContainerTransform.TRANSITION_DIRECTION_RETURN);
+		transform.setAllContainerColors(MaterialColors.getColor(findViewById(android.R.id.content), R.attr.colorSurface));
+		transform.addTarget(android.R.id.content);
+		transform.setDuration(400L);
+		return transform;
+	}
+
+
 
 
 	private void enableDisableSaveButton() {
@@ -217,6 +269,7 @@ public class TransactionFragment extends Fragment {
 			calendar.set(Calendar.MILLISECOND, dateArray[6]);
 			Log.d(TAG, "enableDisableSaveButton: month = "+(dateArray[1]-1)+" y= "+dateArray[0]);
 			Log.d(TAG, "enableDisableSaveButton: starting");
+
 			if(request==1)
 				mainActivity.transactionViewModel.Insert(new Transaction(ETNote.getText().toString().trim(), a, aID,cID,sID,ETDes.getText().toString().trim(),type,calendar.getTimeInMillis()-dateArray[3]*3600000L-dateArray[4]*60000L-dateArray[5]*1000L-dateArray[6], calendar.getTimeInMillis()));
 			else {
@@ -224,8 +277,8 @@ public class TransactionFragment extends Fragment {
 				transaction.id=id;
 				mainActivity.transactionViewModel.Update(transaction);
 			}
-			mainActivity.onBackPressed();
 			Log.d(TAG, "enableDisableSaveButton: ended");
+
 			if(aIDCame!=-1)
 				mainActivity.accountViewModel.UpdateAmt(-amountCame, aIDCame);
 			mainActivity.accountViewModel.UpdateAmt(a, aID);
@@ -252,6 +305,8 @@ public class TransactionFragment extends Fragment {
 				if(cIDCame!=-1)
 					mainActivity.accountViewModel.UpdateAmt(amountCame, cIDCame);//cid has aid2 data
 			}
+
+			onBackPressed();
 		});
 
 		repeat.setOnClickListener(v->{
@@ -282,11 +337,28 @@ public class TransactionFragment extends Fragment {
 				mainActivity.accountViewModel.UpdateAmt(amountCame-a, cID);//cid has aid2 data
 
 //			mainActivity.getSupportFragmentManager().
-			TransactionFragment transactionFragment=new TransactionFragment(0, "", "", Calendar.getInstance(), aID, cID, sID, 1, type, -1, true);
-			FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
-			fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
-			fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "repeat");
-			fragmentTransaction.commit();
+//			TransactionFragment transactionFragment=new TransactionFragment(0, "", "", Calendar.getInstance(), aID, cID, sID, 1, type, -1, true);
+//			FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
+//			fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
+//			fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "repeat");
+//			fragmentTransaction.commit();
+
+
+			Intent intent = new Intent(TransactionActivity.this, TransactionActivity.class);
+			intent.putExtra("EXTRA_DURATION", 400L);
+			intent.putExtra("MainActivity", this);
+			intent.putExtra("calendar", Calendar.getInstance().getTimeInMillis());
+			intent.putExtra("note", "");
+			intent.putExtra("description", "");
+			intent.putExtra("aID", aID);
+			intent.putExtra("cID", cID);
+			intent.putExtra("sID", sID);
+			intent.putExtra("type", type);
+			intent.putExtra("focus", true);
+
+			ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(TransactionActivity.this, repeat, "EXTRA_VIEW2");
+			startActivity(intent, options.toBundle());
+//			finish();
 		});
 
 		ETNote.addTextChangedListener(new TextWatcher() {
@@ -335,6 +407,8 @@ public class TransactionFragment extends Fragment {
 
 	public void saveSelectedAccount(int aID, Account accountSelected)
 	{
+		if(aID==this.aID)
+			return;
 		this.aID = aID;
 		TVAccount.setText(accountSelected.name);
 		BAcc = true;
@@ -346,6 +420,9 @@ public class TransactionFragment extends Fragment {
 
 	public void saveSelectedCategoryWithName(int cID, String name, int imageID)
 	{
+		if(cID==this.cID && this.sID==-1)
+			return;
+
 		this.cID=cID;
 		TVCategory.setText(name);
 		BCat = true;
@@ -353,7 +430,6 @@ public class TransactionFragment extends Fragment {
 		save.setEnabled(BNote && BAmt && BAcc && BCat);
 		repeat.setEnabled(BNote && BAmt && BAcc && BCat);
 		iv_cat.setImageResource(imageID);
-
 	}
 
 	public void saveSelectedCategoryWithoutName(int cID)
@@ -363,6 +439,9 @@ public class TransactionFragment extends Fragment {
 
 	public void saveSelectedSubCategory(int cID, int sID, String name, int imageID)
 	{
+		if(cID==this.cID && sID==this.sID)
+			return;
+
 		TVCategory.setText(name);
 		BCat=true;
 		save.setEnabled(BNote && BAmt && BAcc && BCat);
@@ -378,7 +457,7 @@ public class TransactionFragment extends Fragment {
 		radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
 			if(i==R.id.radioCatIncome)
 			{
-				TVCategory.setText("Category");
+				TVCategory.setCurrentText("Category");
 				rSelected(RBIncome);
 				rNotSelected(RBExpense);
 				rNotSelected(RBTransfer);
@@ -392,7 +471,7 @@ public class TransactionFragment extends Fragment {
 			}
 			else if(i==R.id.radioCatExpense)
 			{
-				TVCategory.setText("Category");
+				TVCategory.setCurrentText("Category");
 				rSelected(RBExpense);
 				rNotSelected(RBIncome);
 				rNotSelected(RBTransfer);
@@ -406,7 +485,7 @@ public class TransactionFragment extends Fragment {
 			}
 			else if(i==R.id.radioCatTransfer)
 			{
-				TVCategory.setText("Account");
+				TVCategory.setCurrentText("Account");
 				rSelected(RBTransfer);
 				rNotSelected(RBExpense);
 				rNotSelected(RBIncome);
@@ -469,7 +548,7 @@ public class TransactionFragment extends Fragment {
 		{
 			if(toast!=null)
 				toast.cancel();
-			toast=Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT);
+			toast= Toast.makeText(this, "Error", Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
@@ -487,28 +566,39 @@ public class TransactionFragment extends Fragment {
 
 	private void setDateAndTime(Calendar calendar)
 	{
-		TVDate.setText(datePrint(dateArray[2], dateArray[1], dateArray[0]));
-		TVTime.setText(timePrint(dateArray[3], dateArray[4]));
+		TVDate.setCurrentText(datePrint(dateArray[2], dateArray[1], dateArray[0]));
+		TVTime.setCurrentText(timePrint(dateArray[3], dateArray[4]));
+
+		Animation in = AnimationUtils.loadAnimation(mainActivity,R.anim.slide_down);
+		Animation out = AnimationUtils.loadAnimation(mainActivity,R.anim.slide_up);
+		TVDate.setInAnimation(in);
+		TVDate.setOutAnimation(out);
+		TVTime.setInAnimation(in);
+		TVTime.setOutAnimation(out);
 
 		TVDate.setOnClickListener(v->{
-			DatePickerDialog datePickerDialog=new DatePickerDialog(getContext(),
+			DatePickerDialog datePickerDialog=new DatePickerDialog(this,
 					(datePicker, y, m, d) -> {
-						dateArray[0] =y;
-						dateArray[1] =m;
-						dateArray[2] =d;
-						TVDate.setText(datePrint(d,m,y));
+						if(dateArray[0]!=y || dateArray[1]!=m || dateArray[2]!=d)
+						{
+							dateArray[0] =y;
+							dateArray[1] =m;
+							dateArray[2] =d;
+							TVDate.setText(datePrint(d,m,y));
+						}
+
 					}, dateArray[0], dateArray[1], dateArray[2]);
 			datePickerDialog.show();
 		});
 
 		TVTime.setOnClickListener(v->{
-			TimePickerDialog timePickerDialog=new TimePickerDialog(getContext(),
-					new TimePickerDialog.OnTimeSetListener() {
-						@Override
-						public void onTimeSet(TimePicker timePicker, int h, int m) {
-							TVTime.setText(timePrint(h,m));
+			TimePickerDialog timePickerDialog=new TimePickerDialog(this,
+					(timePicker, h, m) -> {
+						if(dateArray[3]!=h || dateArray[4]!=m)
+						{
 							dateArray[3] =h;
 							dateArray[4] =m;
+							TVTime.setText(timePrint(h,m));
 						}
 					}, dateArray[3], dateArray[4],false);
 			timePickerDialog.show();
@@ -542,5 +632,4 @@ public class TransactionFragment extends Fragment {
 				"Jul","Aug","Sep","Oct","Nov","Dec"};
 		return name[month];
 	}
-
 }
