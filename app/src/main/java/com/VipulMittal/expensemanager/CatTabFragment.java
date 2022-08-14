@@ -2,6 +2,7 @@ package com.VipulMittal.expensemanager;
 
 import android.os.Bundle;
 
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ public class CatTabFragment extends Fragment {
 
 	RecyclerView rv_cat;
 	CategoryAdapter adapter;
+	public NestedScrollView nestedScrollView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,6 +30,7 @@ public class CatTabFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_cat_tab, container, false);
 
 		rv_cat =view.findViewById(R.id.RV_cat);
+		nestedScrollView = view.findViewById(R.id.NestedScrollView);
 
 		rv_cat.setAdapter(adapter);
 		rv_cat.setLayoutManager(new LinearLayoutManager(getContext()));

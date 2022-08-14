@@ -95,13 +95,10 @@ public class HomeFragment extends Fragment {
 
 			if(!transactionAdapter.selectionModeOn)
 			{
-//				Calendar calendar = Calendar.getInstance();
 				Transaction transaction = transactionAdapter.transactions.get(position);
-//				calendar.setTimeInMillis(transaction.dateTime);
 
-//				TransactionFragment transactionFragment = new TransactionFragment(transaction.amount, transaction.note, transaction.description, calendar, transaction.accountID, transaction.catID, transaction.subCatID, 2, transaction.type, transaction.id, false);
 				Intent intent=new Intent(mainActivity, TransactionActivity.class);
-				intent.putExtra("EXTRA_DURATION", 400L);
+				intent.putExtra("EXTRA_DURATION", 500L);
 				intent.putExtra("calendar", transaction.dateTime);
 				intent.putExtra("amount", transaction.amount);
 				intent.putExtra("note", transaction.note);
@@ -120,13 +117,6 @@ public class HomeFragment extends Fragment {
 				ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mainActivity, view1, "EXTRA_VIEW_LIST");
 				startActivity(intent, options.toBundle());
 
-
-
-//				FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
-//				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
-//				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment);
-//				fragmentTransaction.addToBackStack("home_page");
-//				fragmentTransaction.commit();
 
 //				mainActivity.FABAdd.hide();
 				mainActivity.systemTimeInMillies = 0;

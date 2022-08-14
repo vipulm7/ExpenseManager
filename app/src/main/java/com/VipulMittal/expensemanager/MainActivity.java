@@ -419,27 +419,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 		MainActivity mainActivity = this;
 
-		dialog.getWindow().getAttributes().windowAnimations=R.style.DialogAnimation;
-
 		FABAdd.setOnClickListener(v->{
 
 			systemTimeInMillies=0;
 			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
 			{
-//				TransactionFragment transactionFragment=new TransactionFragment(0,"","",Calendar.getInstance(), -1,-1,-1,1,2, -1, false);
-//
-//				FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-//				fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
-//				fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "home_page");
-//				fragmentTransaction.addToBackStack("main");
-//				fragmentTransaction.commit();
-//
-//				FABAdd.hide();
-//				navigationBarView.setVisibility(View.INVISIBLE);
-//				hideMenu();
-
 				Intent intent = new Intent(this, TransactionActivity.class);
-				intent.putExtra("EXTRA_DURATION", 400L);
+				intent.putExtra("EXTRA_DURATION", 500L);
 				intent.putExtra("calendar", Calendar.getInstance().getTimeInMillis());
 				intent.putExtra("note", "");
 				intent.putExtra("description", "");
@@ -448,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				bundle.putBinder("bind", new ObjectWrapper(mainActivity));
 				intent.putExtras(bundle);
 
-				ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, FABAdd, "EXTRA_VIEW2");
+				ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, FABAdd, "EXTRA_VIEW_FAB");
 				startActivity(intent, options.toBundle());
 			}
 			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)

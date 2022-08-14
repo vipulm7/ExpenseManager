@@ -78,7 +78,7 @@
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/category_dialog.xml" value="0.5423728813559322" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/category_dialog2.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/category_dialog_main.xml" value="0.5" />
-        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/category_layout_per_item.xml" value="0.42071197411003236" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/category_layout_per_item.xml" value="0.371875" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/empty.xml" value="0.3723958333333333" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/filter_dialog.xml" value="0.371875" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fingerprint.xml" value="0.24547101449275363" />
@@ -91,7 +91,7 @@
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_bsd_category.xml" value="0.1" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_bsd_sub_category.xml" value="0.264" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_cat_income.xml" value="0.25" />
-        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_cat_tab.xml" value="0.297554347826087" />
+        <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_cat_tab.xml" value="0.22" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_category.xml" value="0.33" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/layout/fragment_sub_category.xml" value="0.2453125" />
@@ -111,6 +111,7 @@
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/mipmap-anydpi-v26/ic_app_icon_round.xml" value="0.1805" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/xml/backup_restore.xml" value="0.33" />
         <entry key="..\:/Users/Vipul/AndroidStudioProjects/ExpenseManager/app/src/main/res/xml/main.xml" value="0.36658354114713215" />
+        <entry key="..\:/Users/Vipul/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/auto_complete_list.xml" value="0.11791666666666667" />
       </map>
     </option>
   </component>

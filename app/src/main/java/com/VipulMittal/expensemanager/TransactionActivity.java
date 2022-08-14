@@ -98,8 +98,10 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 		else
 			getSupportActionBar().setTitle("Edit Transaction");
 
-		if(request==1)
-			findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW2");
+		if(request==1 && aIDCame==-1)
+			findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW_FAB");
+		else if(request==1)
+			findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW_REPEAT");
 		else if(request == 2)
 			findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW_LIST");
 		setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
@@ -235,23 +237,20 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 			}
 		});
 
-		if(focus) {
+		if(focus)
 			ETNote.requestFocus();
-		}
-
-
-
 	}
 
 	private MaterialContainerTransform buildContainerTransform(boolean entering) {
+//		if(!entering && request==1)
+//			findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW_FAB");
 		MaterialContainerTransform transform = new MaterialContainerTransform();
 		transform.setTransitionDirection(entering ? MaterialContainerTransform.TRANSITION_DIRECTION_ENTER : MaterialContainerTransform.TRANSITION_DIRECTION_RETURN);
 		transform.setAllContainerColors(MaterialColors.getColor(findViewById(android.R.id.content), R.attr.colorSurface));
 		transform.addTarget(android.R.id.content);
-		transform.setDuration(400L);
+		transform.setDuration(500L);
 		return transform;
 	}
-
 
 
 
@@ -310,6 +309,7 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 		});
 
 		repeat.setOnClickListener(v->{
+//			Log.d(TAG, "enableDisableSaveButton: started");
 			String s = amt(ETAmt.getText().toString().trim());
 			int a=Integer.parseInt(s);
 			if(type==2)
@@ -336,17 +336,10 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 			else
 				mainActivity.accountViewModel.UpdateAmt(amountCame-a, cID);//cid has aid2 data
 
-//			mainActivity.getSupportFragmentManager().
-//			TransactionFragment transactionFragment=new TransactionFragment(0, "", "", Calendar.getInstance(), aID, cID, sID, 1, type, -1, true);
-//			FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
-//			fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out);
-//			fragmentTransaction.replace(R.id.layoutForFragment, transactionFragment, "repeat");
-//			fragmentTransaction.commit();
-
+//			Log.d(TAG, "enableDisableSaveButton: ended");
 
 			Intent intent = new Intent(TransactionActivity.this, TransactionActivity.class);
-			intent.putExtra("EXTRA_DURATION", 400L);
-			intent.putExtra("MainActivity", this);
+			intent.putExtra("EXTRA_DURATION", 500L);
 			intent.putExtra("calendar", Calendar.getInstance().getTimeInMillis());
 			intent.putExtra("note", "");
 			intent.putExtra("description", "");
@@ -356,9 +349,13 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 			intent.putExtra("type", type);
 			intent.putExtra("focus", true);
 
-			ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(TransactionActivity.this, repeat, "EXTRA_VIEW2");
+			Bundle bundle = new Bundle();
+			bundle.putBinder("bind", new ObjectWrapper(mainActivity));
+			intent.putExtras(bundle);
+
+			ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(TransactionActivity.this, repeat, "EXTRA_VIEW_REPEAT");
 			startActivity(intent, options.toBundle());
-//			finish();
+			finish();
 		});
 
 		ETNote.addTextChangedListener(new TextWatcher() {

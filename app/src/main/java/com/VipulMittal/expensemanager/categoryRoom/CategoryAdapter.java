@@ -155,6 +155,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 		public SubCategoryAdapter subCategoryAdapter;
 		boolean b3, b4;
 		public boolean open;
+		public View view;
 
 		public BSDCatViewHolder(@NonNull View itemView) {
 			super(itemView);
@@ -182,6 +183,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 				amt2=itemView.findViewById(R.id.TVCat_AMOUNT);
 				rv_subcatList= itemView.findViewById(R.id.rv_SubcatList);
 				progressBar = itemView.findViewById(R.id.progressBar);
+				view=itemView.findViewById(R.id.constraintLayoutCat);
+				view.setVisibility(View.GONE);
 
 				subCategoryAdapter = new SubCategoryAdapter();
 				subCategoryAdapter.who =2;
@@ -422,12 +425,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 						arrowListener.onItemClick(this);
 				});
 			}
-		}
-
-		public void setProgressBar(int progress)
-		{
-			progressBar.setProgress(progress);
-//			if(progress<11)
 		}
 	}
 

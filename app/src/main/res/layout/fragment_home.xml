@@ -36,7 +36,7 @@
             android:textAlignment="center"
             />
 
-        <Button
+        <TextView
             android:id="@+id/TVbefore"
             android:layout_width="35dp"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             android:textAlignment="center"
             />
 
-        <Button
+        <TextView
             android:id="@+id/TVafter"
             android:layout_width="35dp"
             android:layout_height="wrap_content"

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,20 +60,18 @@ public class CategoryFragment extends Fragment {
 
 	CategoryAdapter categoryAdapter2;
 	CategoryViewModel categoryViewModel;
-	SubCategoryAdapter subCategoryAdapter;
 	SubCategoryViewModel subCategoryViewModel;
-	List<SubCategory> subCategories;
 	TransactionViewModel transactionViewModel;
 	AccountViewModel accountViewModel;
 	EditText ETForCatN, ETForCatIB;
 	IconsAdapter iconsAdapter;
 	TextView catTitle, catName;
-	RecyclerView recyclerView;
 	AlertDialog.Builder builder2;
 	AlertDialog dialog2;
 	boolean b3, b4;
 	View catView;
 	Toast toast;
+	NestedScrollView nestedScrollView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,9 +104,6 @@ public class CategoryFragment extends Fragment {
 		})).attach();
 
 
-
-
-
 		CategoryAdapter.ClickListener cardListener = new CategoryAdapter.ClickListener() {
 			@Override
 			public void onItemClick(CategoryAdapter.BSDCatViewHolder viewHolder) {
@@ -122,10 +119,13 @@ public class CategoryFragment extends Fragment {
 						viewHolder.subCategoryAdapter.subCategories.addAll(subCategories);
 						viewHolder.subCategoryAdapter.notifyItemRangeInserted(0, subCategories.size());
 						viewHolder.open=true;
+						ViewAnimation.expand(viewHolder.view);
 					}
 				}
 				else
 				{
+					ViewAnimation.collapse(viewHolder.view);
+
 					List<SubCategory> subCategories = viewHolder.subCategoryAdapter.subCategories;
 					int x=subCategories.size();
 					subCategories.clear();
@@ -496,10 +496,13 @@ public class CategoryFragment extends Fragment {
 						viewHolder.subCategoryAdapter.subCategories.addAll(subCategories);
 						viewHolder.subCategoryAdapter.notifyItemRangeInserted(0, subCategories.size());
 						viewHolder.open=true;
+						ViewAnimation.expand(viewHolder.view);
 					}
 				}
 				else
 				{
+					ViewAnimation.collapse(viewHolder.view);
+
 					List<SubCategory> subCategories = viewHolder.subCategoryAdapter.subCategories;
 					int x=subCategories.size();
 					subCategories.clear();
@@ -870,10 +873,15 @@ public class CategoryFragment extends Fragment {
 		@Override
 		public Fragment createFragment(int position) {
 			Fragment catFragment;
-			if(position==0)
-				catFragment = new CatTabFragment(categoryAdapter);
-			else
-				catFragment = new CatTabFragment(categoryAdapter2);
+			CatTabFragment catTabFragment;
+			if(position==0) {
+				catTabFragment = new CatTabFragment(categoryAdapter);
+			}
+			else {
+				catTabFragment = new CatTabFragment(categoryAdapter2);
+			}
+			catFragment = catTabFragment;
+			nestedScrollView=catTabFragment.nestedScrollView;
 
 			return catFragment;
 		}
