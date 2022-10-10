@@ -34,6 +34,7 @@
 		<activity android:name=".TransactionActivity"
 			android:exported="false"
 			android:screenOrientation="portrait"
+			android:parentActivityName=".MainActivity"
 			/>
 
 		<receiver
