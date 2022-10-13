@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -196,7 +197,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		menuShow = true;
 
 		actionBar = getSupportActionBar();
-//		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
+		if(actionBar!=null)
+			actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
+//		actionBar.setBackgroundDrawable();
 
 		if(first_time)
 		{

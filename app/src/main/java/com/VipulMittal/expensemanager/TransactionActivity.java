@@ -1,5 +1,6 @@
 package com.VipulMittal.expensemanager;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
@@ -7,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -55,6 +57,8 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 	ImageView iv_acc, iv_cat;
 	MainActivity mainActivity;
 	public TextSwitcher TVDate, TVTime, TVAccount, TVCategory;
+	ActionBar actionBar;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +97,14 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 		aIDCame=aID;
 		typeCame = type;
 
+		actionBar = getSupportActionBar();
+
 		if(request==1)
-			getSupportActionBar().setTitle("Add Transaction");
+			actionBar.setTitle("Add Transaction");
 		else
-			getSupportActionBar().setTitle("Edit Transaction");
+			actionBar.setTitle("Edit Transaction");
+
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
 
 		if(request==1 && aIDCame==-1)
 			findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW_FAB");
