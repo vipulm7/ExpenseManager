@@ -727,18 +727,18 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public void onBackPressed() {
 		Log.d(TAG, "onBackPressed: came here");
 		Log.d(TAG, "onBackPressed: getBackStackEntryCount = "+getSupportFragmentManager().getBackStackEntryCount());
-//		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
-//			getSupportFragmentManager().popBackStack();
-//			Fragment fragment=getSupportFragmentManager().findFragmentByTag("repeat");
-//			if(fragment != null)
-//				getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-//			FABAdd.show();
-//			navigationBarView.setVisibility(View.VISIBLE);
-//			setActionBarTitle("Expense Manager");
-//			showMenu();
-//		}
-//		else
-//		{
+		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
+			getSupportFragmentManager().popBackStack();
+			Fragment fragment=getSupportFragmentManager().findFragmentByTag("repeat");
+			if(fragment != null)
+				getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+			FABAdd.show();
+			navigationBarView.setVisibility(View.VISIBLE);
+			setActionBarTitle("Expense Manager");
+			showMenu();
+		}
+		else
+		{
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
 				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = "+(System.currentTimeMillis() - systemTimeInMillies));
 				if(exit  ||  System.currentTimeMillis() - systemTimeInMillies<2000) {
@@ -756,7 +756,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				navigationBarView.setSelectedItemId(R.id.bn_home);
 				setActionBarTitle("Expense Manager");
 			}
-//		}
+		}
 	}
 
 	public void transactionROOM() {
