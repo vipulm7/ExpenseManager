@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -259,6 +260,23 @@ public class AccountsFragment extends Fragment {
 		RVAccount.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVAccount.setAdapter(accountAdapter);
 		RVAccount.setNestedScrollingEnabled(false);
+
+		RVAccount.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+			}
+
+			@Override
+			public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+
+				if(dy > 0)
+					mainActivity.FABAdd.hide();
+				else
+					mainActivity.FABAdd.show();
+				super.onScrolled(recyclerView, dx, dy);
+			}
+		});
 
 		return view;
 	}

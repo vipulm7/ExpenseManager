@@ -52,11 +52,11 @@ public class AccountRepo
     private static class InsertNoteASyncTask extends AsyncTask<Account,Void,Void>
     {
         private AccountDAO accountDAO;
-
         private InsertNoteASyncTask(AccountDAO accountDAO)
         {
             this.accountDAO = accountDAO;
         }
+
         @Override
         protected Void doInBackground(Account... accounts) {
             this.accountDAO.Insert(accounts[0]);
@@ -67,11 +67,11 @@ public class AccountRepo
     private static class DeleteNoteASyncTask extends AsyncTask<Account,Void,Void>
     {
         private AccountDAO accountDAO;
-
         private DeleteNoteASyncTask(AccountDAO accountDAO)
         {
             this.accountDAO = accountDAO;
         }
+
         @Override
         protected Void doInBackground(Account... accounts) {
             this.accountDAO.Delete(accounts[0]);
@@ -82,11 +82,11 @@ public class AccountRepo
     private static class UpdateNoteASyncTask extends AsyncTask<Account,Void,Void>
     {
         private AccountDAO accountDAO;
-
         private UpdateNoteASyncTask(AccountDAO accountDAO)
         {
             this.accountDAO = accountDAO;
         }
+
         @Override
         protected Void doInBackground(Account... accounts) {
             this.accountDAO.Update(accounts[0]);

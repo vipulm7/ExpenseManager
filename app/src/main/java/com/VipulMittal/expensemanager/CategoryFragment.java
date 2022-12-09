@@ -875,10 +875,10 @@ public class CategoryFragment extends Fragment {
 			Fragment catFragment;
 			CatTabFragment catTabFragment;
 			if(position==0) {
-				catTabFragment = new CatTabFragment(categoryAdapter);
+				catTabFragment = new CatTabFragment(categoryAdapter, mainActivity);
 			}
 			else {
-				catTabFragment = new CatTabFragment(categoryAdapter2);
+				catTabFragment = new CatTabFragment(categoryAdapter2, mainActivity);
 			}
 			catFragment = catTabFragment;
 			nestedScrollView=catTabFragment.nestedScrollView;

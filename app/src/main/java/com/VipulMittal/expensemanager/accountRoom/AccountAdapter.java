@@ -17,7 +17,8 @@ import com.VipulMittal.expensemanager.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewHolder> {
+public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewHolder>
+{
 	public ClickListener listener, deleteListener;
 	public List<Account> accounts;
 	String TAG="Vipul_tag";
@@ -44,7 +45,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 		Log.d(TAG, "onBindViewHolder: accounts name = "+accounts.get(position).name+" id = "+accounts.get(position).id+" amt = "+accounts.get(position).amount+" bal = "+accounts.get(position).initialBalance);
 		int amt=accounts.get(position).amount+accounts.get(position).initialBalance;
 		if(who==1) {
-			if (accounts.get(position).id == aID) {
+			if (accounts.get(position).id == aID)
+			{
 				holder.name.setBackgroundColor(Color.parseColor("#C6E6E8"));//cyan
 				holder.amount.setBackgroundColor(Color.parseColor("#C6E6E8"));//cyan
 //				holder.imageView.setBackgroundColor(Color.CYAN);

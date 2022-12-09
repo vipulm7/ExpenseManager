@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -178,7 +180,7 @@ public class HomeFragment extends Fragment {
 									delTitle.setTypeface(null, Typeface.BOLD);
 
 									AlertDialog.Builder builder;
-									if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+									if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 										builder = new AlertDialog.Builder(mainActivity, android.R.style.ThemeOverlay_Material_Dialog);
 									else
 										builder = new AlertDialog.Builder(mainActivity);
@@ -283,7 +285,7 @@ public class HomeFragment extends Fragment {
 		viewTitle.setTypeface(null, Typeface.BOLD);
 
 		AlertDialog.Builder builder;
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
 		}
 		else
@@ -322,6 +324,23 @@ public class HomeFragment extends Fragment {
 		RVTransactions.setAdapter(transactionAdapter);
 		RVTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 		RVTransactions.setNestedScrollingEnabled(false);
+
+		RVTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+			}
+
+			@Override
+			public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+
+				if(dy > 0)
+					mainActivity.FABAdd.hide();
+				else
+					mainActivity.FABAdd.show();
+				super.onScrolled(recyclerView, dx, dy);
+			}
+		});
 		return view;
 	}
 
