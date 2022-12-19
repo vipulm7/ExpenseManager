@@ -236,11 +236,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 	}
 
-	//    android:background="@drawable/icon_account_not_selected"
-	public interface CLickListener {
-		void onItemClick(TransViewHolder viewHolder, View view);
-	}
-
 	public void setTransactions(List<Transaction> transactions)
 	{
 		this.transactions=transactions;
@@ -311,5 +306,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 //        subcat.clear();
 		for(int i=-1;++i<subCategoryAdapter.allSubCats.size();)
 			subcat.put(subCategoryAdapter.allSubCats.get(i).id, subCategoryAdapter.allSubCats.get(i).name);
+	}
+
+	public interface CLickListener {
+		void onItemClick(TransViewHolder viewHolder, View view);
 	}
 }

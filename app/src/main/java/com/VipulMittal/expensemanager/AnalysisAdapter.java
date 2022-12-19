@@ -46,6 +46,8 @@ public class AnalysisAdapter extends RecyclerView.Adapter<AnalysisAdapter.Analys
 		a*=100d;
 		holder.TVpercent.setText(""+df.format(a)+"%");
 		int b=(int)a;
+		if(b==0)
+			b=1;
 		holder.progressBar.setProgress(b);
 		holder.imageView.setImageResource(percent.get(position).imageID);
 	}

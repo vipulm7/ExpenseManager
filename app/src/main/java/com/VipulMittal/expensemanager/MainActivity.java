@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		icon_category_expense = new int[]{};
 
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		viewMode=sharedPreferences.getInt("view", R.id.RBM);
+		viewMode = sharedPreferences.getInt("view", R.id.RBM);
 		first_time = sharedPreferences.getBoolean("first_time", true);
 		Log.d(TAG, "onCreate: viewMode = "+viewMode);
 		menuShow = true;
