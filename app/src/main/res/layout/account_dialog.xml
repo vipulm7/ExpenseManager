@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Enter Initial balance"
-            android:inputType="numberSigned|number|phone"
+            android:inputType="number"
             android:singleLine="true"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"

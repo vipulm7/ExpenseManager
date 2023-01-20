@@ -67,7 +67,7 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 		// Set up shared element transition
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_transaction);
+		setContentView(R.layout.activity_transaction);
 
 		Intent intent=getIntent();
 		Object objReceived = ((ObjectWrapper)intent.getExtras().getBinder("bind")).getData();
@@ -259,7 +259,6 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 		transform.setDuration(500L);
 		return transform;
 	}
-
 
 
 	private void enableDisableSaveButton() {
