@@ -75,9 +75,7 @@ import java.util.concurrent.Executor;
 public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public static final String TAG="Vipul_tag";
-
 	ExtendedFloatingActionButton FABAdd;
-
 	public TransactionAdapter transactionAdapter;
 	public TransactionViewModel transactionViewModel, transactionViewModel2;
 	public AccountAdapter accountAdapter;
@@ -105,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public static int sum_amounts;
 
 	public static NotificationManagerCompat notificationManager;
-//	public static final String ACTION_SNOOZE="com.example.android.wearable.wear.wearnotifications.handlers.action.SNOOZE";
-//	public static final String ACTION_DISMISS="com.example.android.wearable.wear.wearnotifications.handlers.action.DISMISS";
 	public final String CHANNEL_ID="1";
 	public static final int notifID=2;
 	ActivityResultLauncher<Intent> abc;
@@ -116,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	int viewMode;
 	boolean exit, login, menuShow;
 	public int[] icon_account, icon_category_income, icon_category_expense;
-
 
 	public Executor executor;
 	public BiometricPrompt biometricPrompt;
@@ -129,21 +124,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	Map<Integer, List<SubCategory>> subcategoriesMap;
 	IconsAdapter iconsAdapterCat, iconsAdapter;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate: called ");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		System.out.println("hi");
-
-		if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-			Log.d(TAG, "onCreate: granted");
-		else {
-			Log.d(TAG, "onCreate: not granted");
-			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 124);
-		}
 
 		FABAdd=findViewById(R.id.FABAdd);
 		navigationBarView=findViewById(R.id.BottomNavigation);
@@ -208,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		actionBar = getSupportActionBar();
 		if(actionBar!=null)
 			actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
-//		actionBar.setBackgroundDrawable();
 
 		if(first_time)
 		{
@@ -303,9 +287,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		accView=layoutInflater.inflate(R.layout.account_dialog, null);
 
 
-//
-//		EditText ETForAccN=new EditText(this);
-//		EditText ETForAccIB=new EditText(this);
 		EditText ETForAccN=accView.findViewById(R.id.ETDialogAccName);
 		EditText ETForAccIB=accView.findViewById(R.id.ETDialogAccBalance);
 
@@ -363,10 +344,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			public void afterTextChanged(Editable editable) {
 			}
 		});
-
-
-
-
 
 
 
@@ -1027,8 +1004,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			int b=0;
 			int index=3;
-			for(;a>0;)
-			{
+			while (a>0) {
 				if(b==0)
 					c[index++]=',';
 				c[index++]=(char)(money%10+48);
