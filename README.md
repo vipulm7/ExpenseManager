@@ -1,2 +1,2 @@
 # ExpenseManager
-Android app to record expenses
+Android app to record expenses and incomes
