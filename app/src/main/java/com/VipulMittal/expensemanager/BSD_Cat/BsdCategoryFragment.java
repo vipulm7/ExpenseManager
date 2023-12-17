@@ -169,7 +169,7 @@ public class BsdCategoryFragment extends Fragment {
 			categoryAdapter.cID = cID;
 		categoryAdapter.cardListener = listener;
 
-		RVCategories.setLayoutManager(new LinearLayoutManager(getContext()));
+		RVCategories.setLayoutManager(new LinearLayoutManager(requireContext()));
 		RVCategories.setAdapter(categoryAdapter);
 		RVCategories.setNestedScrollingEnabled(false);
 
@@ -187,7 +187,7 @@ public class BsdCategoryFragment extends Fragment {
 	}
 
 	private void addNewCat() {
-		LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+		LayoutInflater layoutInflater = LayoutInflater.from(requireContext());
 		catView = layoutInflater.inflate(R.layout.category_dialog, null);
 
 		EditText ETForCatN = catView.findViewById(R.id.ETDialogCatName);
@@ -202,9 +202,9 @@ public class BsdCategoryFragment extends Fragment {
 
 		AlertDialog.Builder builder;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+			builder = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 		} else
-			builder = new AlertDialog.Builder(getContext());
+			builder = new AlertDialog.Builder(requireContext());
 		builder
 				.setNegativeButton("Cancel", (dialog, which) -> {
 

@@ -41,9 +41,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 		SwitchPreference fingerprintSwitch = findPreference("fingerprint");
 //		editTextPreference.setVisible(passwordSwitch.isChecked());
 //		fingerprintSwitch.setVisible(passwordSwitch.isChecked());
-		mainActivity = (MainActivity) getActivity();
+		mainActivity = (MainActivity) requireActivity();
+		mainActivity.actionBar.setDisplayHomeAsUpEnabled(true);
 
-		biometricManager = BiometricManager.from(getContext());
+		biometricManager = BiometricManager.from(requireContext());
 		fingerprintSwitch.setEnabled(true);
 		switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
 			case BiometricManager.BIOMETRIC_SUCCESS:
@@ -65,7 +66,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 		abc = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
 			@Override
 			public void onActivityResult(ActivityResult result) {
-//				biometricManager = BiometricManager.from(getContext());
+//				biometricManager = BiometricManager.from(requireContext());
 				switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
 					case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
 						Log.d(TAG, "Biometric: None enrolled again");
@@ -83,7 +84,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 //			fingerprintSwitch.setVisible(on);
 //
 //			if(on) {
-//				biometricManager = BiometricManager.from(getContext());
+//				biometricManager = BiometricManager.from(requireContext());
 //				fingerprintSwitch.setEnabled(true);
 //				switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
 //					case BiometricManager.BIOMETRIC_SUCCESS:
@@ -140,7 +141,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 //				fingerprintSwitch.setOnPreferenceChangeListener(fps_listener);
 
 				if (checked) {
-					biometricManager = BiometricManager.from(getContext());
+					biometricManager = BiometricManager.from(requireContext());
 					if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED) {
 						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
 							Intent addFingerIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
@@ -155,14 +156,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 							abc.launch(addFingerIntent);
 						}
 					} else if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS) {
-						mainActivity.executor = ContextCompat.getMainExecutor(getContext());
-						mainActivity.biometricPrompt = new BiometricPrompt(getActivity(), mainActivity.executor, new BiometricPrompt.AuthenticationCallback() {
+						mainActivity.executor = ContextCompat.getMainExecutor(requireContext());
+						mainActivity.biometricPrompt = new BiometricPrompt(requireActivity(), mainActivity.executor, new BiometricPrompt.AuthenticationCallback() {
 							@Override
 							public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
 								super.onAuthenticationError(errorCode, errString);
 								if (mainActivity.toast != null)
 									mainActivity.toast.cancel();
-								mainActivity.toast = Toast.makeText(getContext(), "Cancelled!", Toast.LENGTH_SHORT);
+								mainActivity.toast = Toast.makeText(requireContext(), "Cancelled!", Toast.LENGTH_SHORT);
 								mainActivity.toast.show();
 							}
 
@@ -171,7 +172,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 								super.onAuthenticationSucceeded(result);
 								if (mainActivity.toast != null)
 									mainActivity.toast.cancel();
-								mainActivity.toast = Toast.makeText(getContext(), "Fingerprint setup completed!", Toast.LENGTH_SHORT);
+								mainActivity.toast = Toast.makeText(requireContext(), "Fingerprint setup completed!", Toast.LENGTH_SHORT);
 								mainActivity.toast.show();
 
 //								fingerprintSwitch.setOnPreferenceChangeListener(null);
@@ -186,7 +187,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 								super.onAuthenticationFailed();
 //								if (mainActivity.toast != null)
 //									mainActivity.toast.cancel();
-//								mainActivity.toast = Toast.makeText(getContext(), "Not user!", Toast.LENGTH_SHORT);
+//								mainActivity.toast = Toast.makeText(requireContext(), "Not user!", Toast.LENGTH_SHORT);
 //								mainActivity.toast.show();
 							}
 						});

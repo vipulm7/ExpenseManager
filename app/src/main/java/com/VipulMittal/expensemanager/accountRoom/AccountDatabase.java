@@ -15,7 +15,7 @@ import com.VipulMittal.expensemanager.R;
 @Database(entities = Account.class, version = 2)
 public abstract class AccountDatabase extends RoomDatabase {
 
-	private static AccountDatabase instance;
+	public static AccountDatabase instance;
 	private static final Callback roomCallback = new Callback() {
 		@Override
 		public void onCreate(@NonNull SupportSQLiteDatabase db) {

@@ -92,7 +92,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 						if (mainActivity.toast != null)
 							mainActivity.toast.cancel();
 
-						mainActivity.toast = Toast.makeText(getContext(), "Can't select this account", Toast.LENGTH_SHORT);
+						mainActivity.toast = Toast.makeText(requireContext(), "Can't select this account", Toast.LENGTH_SHORT);
 						mainActivity.toast.show();
 					} else {
 						Account accountToBeDeleted = accountViewModel.getAcc(transactionsToBeModified.get(0).accountID);
@@ -110,7 +110,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 					if (mainActivity.toast != null)
 						mainActivity.toast.cancel();
 
-					mainActivity.toast = Toast.makeText(getContext(), "Can't select same accounts", Toast.LENGTH_SHORT);
+					mainActivity.toast = Toast.makeText(requireContext(), "Can't select same accounts", Toast.LENGTH_SHORT);
 					mainActivity.toast.show();
 				} else {
 					if (aType == 1)
@@ -124,7 +124,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 		accountAdapter.listener = listener;
 
-		RVAccounts.setLayoutManager(new LinearLayoutManager(getContext()));
+		RVAccounts.setLayoutManager(new LinearLayoutManager(requireContext()));
 		Log.d(TAG, "onCreate: transaction done");
 		RVAccounts.setNestedScrollingEnabled(false);
 		RVAccounts.setAdapter(accountAdapter);
@@ -136,13 +136,13 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	}
 
 	private void alertDialogForAddAcc() {
-		LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+		LayoutInflater layoutInflater = LayoutInflater.from(requireContext());
 		accView = layoutInflater.inflate(R.layout.account_dialog, null);
 
 		EditText ETForAccN = accView.findViewById(R.id.ETDialogAccName);
 		EditText ETForAccIB = accView.findViewById(R.id.ETDialogAccBalance);
 
-		TextView accTitle = new TextView(getContext());
+		TextView accTitle = new TextView(requireContext());
 		accTitle.setText("Add New Account");
 		accTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 		accTitle.setPadding(2, 16, 2, 10);
@@ -153,9 +153,9 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 		AlertDialog.Builder builder;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+			builder = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 		} else
-			builder = new AlertDialog.Builder(getContext());
+			builder = new AlertDialog.Builder(requireContext());
 		builder.setCustomTitle(accTitle)
 				.setNegativeButton("Cancel", (dialog, which) -> {
 
@@ -235,7 +235,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 			};
 			iconsAdapter.listener = listener;
 			recyclerView.setAdapter(iconsAdapter);
-			recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false));
+			recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false));
 
 			Log.d(TAG, "onCreateView: dialog created");
 

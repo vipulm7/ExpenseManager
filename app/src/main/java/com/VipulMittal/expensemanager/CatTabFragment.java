@@ -35,7 +35,7 @@ public class CatTabFragment extends Fragment {
 		nestedScrollView = view.findViewById(R.id.NestedScrollView);
 
 		rv_cat.setAdapter(adapter);
-		rv_cat.setLayoutManager(new LinearLayoutManager(getContext()));
+		rv_cat.setLayoutManager(new LinearLayoutManager(requireContext()));
 		rv_cat.setNestedScrollingEnabled(false);
 
 		rv_cat.addOnScrollListener(new RecyclerView.OnScrollListener() {

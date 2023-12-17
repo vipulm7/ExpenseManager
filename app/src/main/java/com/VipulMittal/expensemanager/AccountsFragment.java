@@ -57,7 +57,7 @@ public class AccountsFragment extends Fragment {
 
 		RVAccount = view.findViewById(R.id.RVAccount);
 
-		MainActivity mainActivity = (MainActivity) getActivity();
+		MainActivity mainActivity = (MainActivity) requireActivity();
 		accountAdapter = mainActivity.accountAdapter;
 		accountAdapter.who = 2;
 		accountAdapter.aID = -1;
@@ -75,13 +75,13 @@ public class AccountsFragment extends Fragment {
 				Account accountSelected = accountAdapter.accounts.get(position);
 
 
-				LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+				LayoutInflater layoutInflater = LayoutInflater.from(requireContext());
 				accView = layoutInflater.inflate(R.layout.account_dialog, null);
 
 				EditText ETForAccN = accView.findViewById(R.id.ETDialogAccName);
 				EditText ETForAccIB = accView.findViewById(R.id.ETDialogAccBalance);
 
-				TextView accTitle = new TextView(getContext());
+				TextView accTitle = new TextView(requireContext());
 				accTitle.setText("Update Account");
 				accTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 				accTitle.setPadding(2, 16, 2, 10);
@@ -91,9 +91,9 @@ public class AccountsFragment extends Fragment {
 
 				AlertDialog.Builder builder;
 				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-					builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+					builder = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 				} else
-					builder = new AlertDialog.Builder(getContext());
+					builder = new AlertDialog.Builder(requireContext());
 				builder.setCustomTitle(accTitle)
 						.setNegativeButton("Cancel", (dialog, which) -> {
 
@@ -176,7 +176,7 @@ public class AccountsFragment extends Fragment {
 				iconsAdapter.listener = listener;
 				recyclerView.setAdapter(iconsAdapter);
 				recyclerView.setHasFixedSize(true);
-				recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false));
+				recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false));
 			}
 		};
 
@@ -188,9 +188,9 @@ public class AccountsFragment extends Fragment {
 
 			AlertDialog.Builder builder;
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-				builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+				builder = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 			} else
-				builder = new AlertDialog.Builder(getContext());
+				builder = new AlertDialog.Builder(requireContext());
 			builder.setTitle("Delete Account")
 					.setMessage("Are you sure want to delete this account!")
 					.setNegativeButton("Cancel", (dialog, which) -> {
@@ -247,7 +247,7 @@ public class AccountsFragment extends Fragment {
 		accountAdapter.listener = listener;
 		accountAdapter.deleteListener = deleteListener;
 
-		RVAccount.setLayoutManager(new LinearLayoutManager(getContext()));
+		RVAccount.setLayoutManager(new LinearLayoutManager(requireContext()));
 		RVAccount.setAdapter(accountAdapter);
 		RVAccount.setNestedScrollingEnabled(false);
 

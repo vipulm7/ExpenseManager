@@ -74,7 +74,7 @@ public class CategoryFragment extends Fragment {
 
 		catTabLayout = view.findViewById(R.id.catTabLayout);
 		viewPager = view.findViewById(R.id.catViewPager);
-		mainActivity = (MainActivity) getActivity();
+		mainActivity = (MainActivity) requireActivity();
 		categoryViewModel = mainActivity.categoryViewModel2;
 		transactionViewModel = mainActivity.transactionViewModel;
 		accountViewModel = mainActivity.accountViewModel;
@@ -151,9 +151,9 @@ public class CategoryFragment extends Fragment {
 								ETForCatN.setHint("Enter Category Name");
 
 								if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-									builder2 = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+									builder2 = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 								else
-									builder2 = new AlertDialog.Builder(getContext());
+									builder2 = new AlertDialog.Builder(requireContext());
 								builder2.setNegativeButton("Cancel", (dialog2, which) -> {
 
 										})
@@ -257,9 +257,9 @@ public class CategoryFragment extends Fragment {
 								List<Transaction> transactionsToBeDeleted = transactionViewModel.getAllTransactionsCat(categorySelected.catId);
 
 								if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-									builder2 = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+									builder2 = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 								} else
-									builder2 = new AlertDialog.Builder(getContext());
+									builder2 = new AlertDialog.Builder(requireContext());
 
 								String msg;
 								if (categorySelected.noOfSubCat == 0)
@@ -517,9 +517,9 @@ public class CategoryFragment extends Fragment {
 								ETForCatN.setHint("Enter Category Name");
 
 								if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-									builder2 = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+									builder2 = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 								else
-									builder2 = new AlertDialog.Builder(getContext());
+									builder2 = new AlertDialog.Builder(requireContext());
 								builder2.setNegativeButton("Cancel", (dialog2, which) -> {
 
 										})
@@ -623,9 +623,9 @@ public class CategoryFragment extends Fragment {
 								List<Transaction> transactionsToBeDeleted = transactionViewModel.getAllTransactionsCat(categorySelected.catId);
 
 								if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-									builder2 = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+									builder2 = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 								} else
-									builder2 = new AlertDialog.Builder(getContext());
+									builder2 = new AlertDialog.Builder(requireContext());
 
 								String msg;
 								if (categorySelected.noOfSubCat == 0)

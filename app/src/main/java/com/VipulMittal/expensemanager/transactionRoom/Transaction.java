@@ -1,7 +1,5 @@
 package com.VipulMittal.expensemanager.transactionRoom;
 
-import android.util.Log;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -40,7 +38,7 @@ public class Transaction {
 		year = calendar.get(Calendar.YEAR);
 		week = calendar.get(Calendar.WEEK_OF_YEAR);
 
-		Log.d(TAG, "Transaction:database m=" + month + " y=" + year);
+//		Log.d(TAG, "Transaction:database m=" + month + " y=" + year);
 	}
 
 	public int getId() {

@@ -74,11 +74,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 	@Override
 	public void onBindViewHolder(@NonNull BSDCatViewHolder holder, int position) {
 		Category category = categories.get(position);
-		Log.d(TAG, "onBindViewHolder: categoryv = " + category.catName + "         id = " + category.catId);
+//		Log.d(TAG, "onBindViewHolder: categoryv = " + category.catName + "         id = " + category.catId);
 		if (who == 1) {
 			holder.name.setText(category.catName);
-			Log.d(TAG, "onBindViewHolder: ofCat position=" + position);
-			Log.d(TAG, "onBindViewHolder: ofCat name=" + category.catName + " noOfSubCat=" + category.noOfSubCat + " id=" + category.catId);
+//			Log.d(TAG, "onBindViewHolder: ofCat position=" + position);
+//			Log.d(TAG, "onBindViewHolder: ofCat name=" + category.catName + " noOfSubCat=" + category.noOfSubCat + " id=" + category.catId);
 			if (category.catId == cID)
 				holder.name.setBackgroundColor(Color.parseColor("#C6E6E8"));//cyan
 			else
@@ -113,7 +113,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 			if (category.catBudget != 0) {
 				int progress = (int) ((-100L * category.catAmount) / category.catBudget);
-				Log.d(TAG, "onBindViewHolder: catName = " + category.catName + " progress = " + progress);
+//				Log.d(TAG, "onBindViewHolder: catName = " + category.catName + " progress = " + progress);
 				if (progress > 100)
 					progress = 100;
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -133,8 +133,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.BSDCat
 
 	@Override
 	public int getItemCount() {
-		Log.d(TAG, "getItemCount: categories.size() = " + categories.size());
-		Log.d(TAG, "getItemCount: categories = " + categories);
+//		Log.d(TAG, "getItemCount: categories.size() = " + categories.size());
+//		Log.d(TAG, "getItemCount: categories = " + categories);
 		return categories.size();
 	}
 

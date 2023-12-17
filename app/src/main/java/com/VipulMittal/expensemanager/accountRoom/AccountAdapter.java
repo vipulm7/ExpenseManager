@@ -40,7 +40,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 
 	@Override
 	public void onBindViewHolder(@NonNull AccViewHolder holder, int position) {
-		Log.d(TAG, "onBindViewHolder: accounts name = " + accounts.get(position).name + " id = " + accounts.get(position).id + " amt = " + accounts.get(position).amount + " bal = " + accounts.get(position).initialBalance);
+//		Log.d(TAG, "onBindViewHolder: accounts name = " + accounts.get(position).name + " id = " + accounts.get(position).id + " amt = " + accounts.get(position).amount + " bal = " + accounts.get(position).initialBalance);
 		int amt = accounts.get(position).amount + accounts.get(position).initialBalance;
 		if (who == 1) {
 			if (accounts.get(position).id == aID) {

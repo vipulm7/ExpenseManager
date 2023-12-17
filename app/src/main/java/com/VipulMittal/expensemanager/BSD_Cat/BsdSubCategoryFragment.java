@@ -121,7 +121,7 @@ public class BsdSubCategoryFragment extends Fragment {
 		subCategoryAdapter.sID = sID;
 		subCategoryAdapter.catSelected = categorySelected;
 
-		RVSubCategories.setLayoutManager(new LinearLayoutManager((getContext())));
+		RVSubCategories.setLayoutManager(new LinearLayoutManager((requireContext())));
 		RVSubCategories.setAdapter(subCategoryAdapter);
 		RVSubCategories.setNestedScrollingEnabled(false);
 

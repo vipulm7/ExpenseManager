@@ -16,7 +16,7 @@ import com.VipulMittal.expensemanager.subCategoryRoom.SubCategory;
 @Database(entities = {SubCategory.class, Category.class}, version = 2)
 public abstract class CategoryDatabase extends RoomDatabase {
 
-	private static CategoryDatabase instance;
+	public static CategoryDatabase instance;
 	private static final Callback roomCallback = new Callback() {
 		@Override
 		public void onCreate(@NonNull SupportSQLiteDatabase db) {

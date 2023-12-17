@@ -1,6 +1,5 @@
 package com.VipulMittal.expensemanager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,7 @@ public class AnalysisAdapter extends RecyclerView.Adapter<AnalysisAdapter.Analys
 
 		holder.TVCatName.setText(percent.get(position).catName);
 		double a = percent.get(position).catPercent;
-		Log.d(TAG, "onBindViewHolder: analysis percent=" + a);
+//		Log.d(TAG, "onBindViewHolder: analysis percent=" + a);
 		a *= 100d;
 		holder.TVpercent.setText(df.format(a) + "%");
 		int b = (int) a;
