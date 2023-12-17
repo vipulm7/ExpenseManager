@@ -16,7 +16,7 @@ import java.util.Calendar;
 @Database(entities = Transaction.class, version = 1)
 public abstract class TransactionDatabase extends RoomDatabase {
 
-	private static TransactionDatabase instance;
+	public static TransactionDatabase instance;
 	private static final Callback roomCallback = new Callback() {
 		@Override
 		public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -37,8 +37,7 @@ public abstract class TransactionDatabase extends RoomDatabase {
 	}
 
 	public static long getDate(Calendar calendar) {
-		long a = calendar.getTimeInMillis() - calendar.get(Calendar.SECOND) * 1000 - calendar.get(Calendar.MINUTE) * 60000 - calendar.get(Calendar.MILLISECOND) - calendar.get(Calendar.HOUR_OF_DAY) * 3600000;
-		return a;
+		return calendar.getTimeInMillis() - calendar.get(Calendar.SECOND) * 1000 - calendar.get(Calendar.MINUTE) * 60000 - calendar.get(Calendar.MILLISECOND) - calendar.get(Calendar.HOUR_OF_DAY) * 3600000;
 	}
 
 	public abstract TransactionDAO transactionDAO();
@@ -61,11 +60,14 @@ public abstract class TransactionDatabase extends RoomDatabase {
 //            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*4L));
 //            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*5L));
 
-			for (int i = -1; ++i < 10; ) {
+			int size = 1000;
+			Transaction[] transactions = new Transaction[size];
+			for (int i = -1; ++i < size; ) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.add(Calendar.DATE, -2 * i);
-				transactionDAO.Insert(new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 13, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i));
+				transactions[i] = new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 13, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i);
 			}
+			transactionDAO.InsertTransactions(transactions);
 
 
 //            for(int i=-1;++i<30;) {

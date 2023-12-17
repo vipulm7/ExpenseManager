@@ -30,16 +30,8 @@ public class TransactionViewModel extends AndroidViewModel {
 		repo.Update(transaction);
 	}
 
-	public LiveData<List<Transaction>> getAllTransactionsMONTH(int month, int year) {
-		return repo.getAllTransactionsMONTH(month, year);
-	}
-
-	public LiveData<List<Transaction>> getAllTransactionsWEEK(int week, int year) {
-		return repo.getAllTransactionsWEEK(week, year);
-	}
-
-	public LiveData<List<Transaction>> getAllTransactionsDAY(int day, int month, int year) {
-		return repo.getAllTransactionsDAY(day, month, year);
+	public LiveData<List<Transaction>> getAllTransactions() {
+		return repo.getAllTransactions();
 	}
 
 	public List<Transaction> getAllTransactionsAcc(int accountID) {

@@ -15,20 +15,18 @@ public interface TransactionDAO {
 	@Insert
 	void Insert(Transaction transaction);
 
+	@androidx.room.Transaction
+	@Insert
+	void InsertTransactions(Transaction... transactions);
+
 	@Update
 	void Update(Transaction transaction);
 
 	@Delete
 	void Delete(Transaction transaction);
 
-	@Query("SELECT * FROM transaction_table WHERE month=:month AND year=:year ORDER BY dateTime DESC")
-	LiveData<List<Transaction>> getAllTransactionsMONTH(int month, int year);
-
-	@Query("SELECT * FROM transaction_table WHERE week=:week AND year=:year ORDER BY dateTime DESC")
-	LiveData<List<Transaction>> getAllTransactionsWEEK(int week, int year);
-
-	@Query("SELECT * FROM transaction_table WHERE dateOfMonth=:day AND month=:month AND year=:year ORDER BY dateTime DESC")
-	LiveData<List<Transaction>> getAllTransactionsDAY(int day, int month, int year);
+	@Query("SELECT * FROM transaction_table ORDER BY dateTime DESC")
+	LiveData<List<Transaction>> getAllTransactions();
 
 	@Query("SELECT * FROM transaction_table WHERE accountID=:accountID")
 	List<Transaction> getAllTransactionsAcc(int accountID);

@@ -36,6 +36,7 @@ import androidx.biometric.BiometricPrompt;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public static PendingIntent pendingIntent;
 	public final String CHANNEL_ID = "1";
 	public TransactionAdapter transactionAdapter;
-	public TransactionViewModel transactionViewModel, transactionViewModel2;
+	public TransactionViewModel transactionViewModel;
 	public AccountAdapter accountAdapter;
 	public AccountViewModel accountViewModel;
 	public CategoryAdapter categoryAdapter, categoryAdapter2;
@@ -115,12 +116,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	SettingsFragment settingsFragment;
 	Map<Integer, List<SubCategory>> subcategoriesMap;
 	IconsAdapter iconsAdapterCat, iconsAdapter;
+	List<Transaction> transactions;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate: called ");
+		SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		splashScreen.setKeepOnScreenCondition(() -> transactions == null);
 
 		FABAdd = findViewById(R.id.FABAdd);
 		navigationBarView = findViewById(R.id.BottomNavigation);
@@ -187,9 +193,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
 
 		if (first_time) {
-			amount = new int[10];
-			for (int i = -1; ++i < 10; ) {
-				amount[i] = -(int) (Math.random() * 10000);
+			int size = 1000;
+			amount = new int[size];
+			for (int i = -1; ++i < size; ) {
+				double random = Math.random();
+				if (random < 0.5)
+					amount[i] = -(int) (Math.random() * 10000);
+				else
+					amount[i] = (int) (Math.random() * 10000);
 				sum_amounts += amount[i];
 			}
 
@@ -215,12 +226,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		categoryViewModel2 = new ViewModelProvider(this).get(CategoryViewModel.class);
 		subCategoryViewModel = new ViewModelProvider(this).get(SubCategoryViewModel.class);
 		transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
-		transactionViewModel2 = new ViewModelProvider(this).get(TransactionViewModel.class);
 
 		accountROOM();
 		categoryROOM();
 		subCategoryROOM(0);
 		subCatROOM();
+		transactionROOM();
 		notification();
 
 		Calendar calendar = Calendar.getInstance();
@@ -692,6 +703,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			navigationBarView.setVisibility(View.VISIBLE);
 			setActionBarTitle("Expense Manager");
 			showMenu();
+			actionBar.setDisplayHomeAsUpEnabled(false);
 		} else {
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
 				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = " + (System.currentTimeMillis() - systemTimeInMillies));
@@ -711,93 +723,58 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		}
 	}
 
-	public void transactionROOM() {
+	public void showTransactions() {
 		int date = toShow.get(Calendar.DATE);
 		int week = toShow.get(Calendar.WEEK_OF_YEAR);
 		int month = toShow.get(Calendar.MONTH);
 		int year = toShow.get(Calendar.YEAR);
-		if (viewMode == R.id.RBM) {
-			transactionViewModel.getAllTransactionsMONTH(month, year).observe(this, transactions -> {
-				Log.d(TAG, "transactionROOM: transactions month before = " + transactionAdapter.transactions.size());
-				int a = transactionAdapter.transactions.size();
-				transactionAdapter.setTransactions(transactions);
-				transactionAdapter.notifyDataSetChanged();
-				Log.d(TAG, "transactionROOM: transactions month a = " + a);
-//				showTransactions(transactions);
-				Log.d(TAG, "transactionROOM: transactions month = " + transactions.size());
-//				Log.d(TAG, "transactionROOM: transactions month dates = " + transactionAdapter.dates);
-				tellDate();
 
-				homeFragment.TVMainIncome.setText("\u20b9" + moneyToString(income));
-				homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
-				if (income + expense >= 0) {
-					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
-					homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
-				} else {
-					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
-					homeFragment.TVMainTotal.setTextColor(Color.RED);
+		List<Transaction> showTransactions = new ArrayList<>();
+
+		if (transactions == null)
+			return;
+
+		for (int i = -1; ++i < transactions.size(); ) {
+			if (viewMode == R.id.RBM) {
+				if (transactions.get(i).month == month && transactions.get(i).year == year) {
+					showTransactions.add(transactions.get(i));
 				}
-
-				if (transactions.size() == 0)
-					homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
-				else
-					homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
-			});
-		} else if (viewMode == R.id.RBW) {
-			transactionViewModel.getAllTransactionsWEEK(week, year).observe(this, new Observer<List<Transaction>>() {
-				@Override
-				public void onChanged(List<Transaction> transactions) {
-					transactionAdapter.setTransactions(transactions);
-					transactionAdapter.notifyDataSetChanged();
-					Log.d(TAG, "transactionROOM: transactions week = " + transactions.size());
-
-					homeFragment.TVMainIncome.setText("\u20b9" + moneyToString(income));
-					homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
-					if (income + expense >= 0) {
-						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
-						homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
-					} else {
-						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
-						homeFragment.TVMainTotal.setTextColor(Color.RED);
-					}
-
-					if (transactions.size() == 0)
-						homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
-					else
-						homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
+			} else if (viewMode == R.id.RBW) {
+				if (transactions.get(i).week == week && transactions.get(i).year == year) {
+					showTransactions.add(transactions.get(i));
 				}
-			});
-		} else if (viewMode == R.id.RBD) {
-			tellDate();
-			transactionViewModel.getAllTransactionsDAY(date, month, year).observe(this, new Observer<List<Transaction>>() {
-				@Override
-				public void onChanged(List<Transaction> transactions) {
-					transactionAdapter.setTransactions(transactions);
-					transactionAdapter.notifyDataSetChanged();
-					Log.d(TAG, "transactionROOM: transactions week = " + transactions.size());
-
-					homeFragment.TVMainIncome.setText("\u20b9" + moneyToString(income));
-					homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
-					if (income + expense >= 0) {
-						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
-						homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
-					} else {
-						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
-						homeFragment.TVMainTotal.setTextColor(Color.RED);
-					}
-					if (transactions.size() == 0)
-						homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
-					else
-						homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
+			} else if (viewMode == R.id.RBD) {
+				if (transactions.get(i).dateOfMonth == date && transactions.get(i).month == month && transactions.get(i).year == year) {
+					showTransactions.add(transactions.get(i));
 				}
-			});
+			}
 		}
+
+		transactionAdapter.setTransactions(showTransactions);
+		transactionAdapter.notifyDataSetChanged();
+
+		homeFragment.TVMainIncome.setText("\u20b9" + moneyToString(income));
+		homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
+		if (income + expense >= 0) {
+			homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
+			homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
+		} else {
+			homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
+			homeFragment.TVMainTotal.setTextColor(Color.RED);
+		}
+
+		if (showTransactions.size() == 0)
+			homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
+		else
+			homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
 	}
 
-	private void showTransactions(List<Transaction> transactions) {
-		for (int i = -1; ++i < transactions.size(); )
-			Log.d(TAG, "transactionROOM: " + i + " " + transactions.get(i).note);
-		Log.d(TAG, "transactionROOM: =======================================================================");
+	public void transactionROOM() {
+		transactionViewModel.getAllTransactions().observe(this, transactions -> {
+			this.transactions = transactions;
+
+			showTransactions();
+		});
 	}
 
 	public void subCategoryROOM(int catID) {
@@ -854,7 +831,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		categoryViewModel.getAllCategories(1).observe(this, new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
-				int pos1 = posCat(categories, categoryAdapter.categories);
+//				int pos1 = posCat(categories, categoryAdapter.categories);
 //				Log.d(TAG, "onCreateView: view model called");
 //				Log.d(TAG, "onCreateView: type = "+type);
 				categoryAdapter.setCategories(categories);
@@ -869,7 +846,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		categoryViewModel.getAllCategories(2).observe(this, new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
-				int pos1 = posCat(categories, categoryAdapter2.categories);
+//				int pos1 = posCat(categories, categoryAdapter2.categories);
 //				Log.d(TAG, "onCreateView: view model called");
 //				Log.d(TAG, "onCreateView: type = "+type);
 				Log.d(TAG, "onChanged: categories2.size()= " + categories.size());
@@ -893,6 +870,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			return new AccountsFragment();
 		else
 			return new AnalysisFragment();
+	}
+
+	@Override
+	public boolean onSupportNavigateUp() {
+		onBackPressed();
+		return super.onSupportNavigateUp();
 	}
 
 	public void setActionBarTitle(String title) {
@@ -1021,21 +1004,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			setActionBarTitle("Settings");
 
 			return true;
+		} else if (id == R.id.action_backup) {
+			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+			fragmentTransaction.addToBackStack("backup");
+			fragmentTransaction.replace(R.id.layoutForFragment, new BackupRestoreFragment())
+					.commit();
+
+			FABAdd.hide();
+			navigationBarView.setVisibility(View.INVISIBLE);
+			hideMenu();
+			setActionBarTitle("Backup and Restore");
+
+			return true;
 		}
-//		else if(id == R.id.action_backup)
-//		{
-//			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//			fragmentTransaction.addToBackStack("backup");
-//			fragmentTransaction.replace(R.id.layoutForFragment, new BackupRestoreFragment())
-//					.commit();
-//
-//			FABAdd.hide();
-//			navigationBarView.setVisibility(View.INVISIBLE);
-//			hideMenu();
-//			setActionBarTitle("Backup and Restore");
-//
-//			return true;
-//		}
 
 		return super.onOptionsItemSelected(item);
 	}

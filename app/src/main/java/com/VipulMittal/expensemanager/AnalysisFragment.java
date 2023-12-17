@@ -71,7 +71,7 @@ public class AnalysisFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_analysis, container, false);
 
 		pieChart = view.findViewById(R.id.pieChart);
-		mainActivity = (MainActivity) getActivity();
+		mainActivity = (MainActivity) requireActivity();
 		rg_chart = view.findViewById(R.id.RGChart);
 		TVAfter = view.findViewById(R.id.TVafter);
 		TVBefore = view.findViewById(R.id.TVbefore);
@@ -79,7 +79,7 @@ public class AnalysisFragment extends Fragment {
 		toShow = Calendar.getInstance();
 		TVFilter = view.findViewById(R.id.TVFilter);
 		rv_analysis = view.findViewById(R.id.rv_analysis);
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 		viewMode = sharedPreferences.getInt("viewAnalysis", R.id.RBM);
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		catAmount = new HashMap<>();
@@ -98,7 +98,7 @@ public class AnalysisFragment extends Fragment {
 
 		rv_analysis.setAdapter(analysisAdapter);
 		rv_analysis.setNestedScrollingEnabled(false);
-		rv_analysis.setLayoutManager(new LinearLayoutManager(getContext()));
+		rv_analysis.setLayoutManager(new LinearLayoutManager(requireContext()));
 
 		radioGroupSetListener();
 		setRadioButton(2);
@@ -109,7 +109,7 @@ public class AnalysisFragment extends Fragment {
 		View filterView = inflater.inflate(R.layout.filter_dialog, null);
 		rg_Filter = filterView.findViewById(R.id.RGFilter);
 
-		TextView viewTitle = new TextView(getContext());
+		TextView viewTitle = new TextView(requireContext());
 		viewTitle.setText("View Mode");
 		viewTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 		viewTitle.setPadding(2, 16, 2, 10);
@@ -118,9 +118,9 @@ public class AnalysisFragment extends Fragment {
 
 		AlertDialog.Builder builder;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+			builder = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 		else
-			builder = new AlertDialog.Builder(getContext());
+			builder = new AlertDialog.Builder(requireContext());
 		builder.setCustomTitle(viewTitle)
 				.setView(filterView);
 		AlertDialog dialog = builder.create();
@@ -210,7 +210,7 @@ public class AnalysisFragment extends Fragment {
 		else {
 			if (toast != null)
 				toast.cancel();
-			toast = Toast.makeText(getContext(), "Error in chart type selection", Toast.LENGTH_SHORT);
+			toast = Toast.makeText(requireContext(), "Error in chart type selection", Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
@@ -315,30 +315,40 @@ public class AnalysisFragment extends Fragment {
 		int week = toShow.get(Calendar.WEEK_OF_YEAR);
 		int month = toShow.get(Calendar.MONTH);
 		int year = toShow.get(Calendar.YEAR);
+
+		List<Transaction> showTransactions = new ArrayList<>();
+
+		for (int i = -1; ++i < mainActivity.transactions.size(); ) {
+			if (viewMode == R.id.RBM) {
+				if (mainActivity.transactions.get(i).month == month && mainActivity.transactions.get(i).year == year) {
+					showTransactions.add(mainActivity.transactions.get(i));
+				}
+			} else if (viewMode == R.id.RBW) {
+				if (mainActivity.transactions.get(i).week == week && mainActivity.transactions.get(i).year == year) {
+					showTransactions.add(mainActivity.transactions.get(i));
+				}
+			} else if (viewMode == R.id.RBD) {
+				if (mainActivity.transactions.get(i).dateOfMonth == date && mainActivity.transactions.get(i).month == month && mainActivity.transactions.get(i).year == year) {
+					showTransactions.add(mainActivity.transactions.get(i));
+				}
+			}
+		}
+
 		if (viewMode == R.id.RBM) {
-			mainActivity.transactionViewModel2.getAllTransactionsMONTH(month, year).observe(getViewLifecycleOwner(), transactions -> {
-				Log.d(TAG, "transactionROOM: transactions month = " + transactions.size());
-				setCatAmount(transactions);
-				int check = rg_chart.getCheckedRadioButtonId();
-				rg_chart.clearCheck();
-				rg_chart.check(check);
-			});
+			setCatAmount(showTransactions);
+			int check = rg_chart.getCheckedRadioButtonId();
+			rg_chart.clearCheck();
+			rg_chart.check(check);
 		} else if (viewMode == R.id.RBW) {
-			mainActivity.transactionViewModel2.getAllTransactionsWEEK(week, year).observe(getViewLifecycleOwner(), transactions -> {
-				Log.d(TAG, "transactionROOM: transactions week = " + transactions.size());
-				setCatAmount(transactions);
-				int check = rg_chart.getCheckedRadioButtonId();
-				rg_chart.clearCheck();
-				rg_chart.check(check);
-			});
+			setCatAmount(showTransactions);
+			int check = rg_chart.getCheckedRadioButtonId();
+			rg_chart.clearCheck();
+			rg_chart.check(check);
 		} else if (viewMode == R.id.RBD) {
-			mainActivity.transactionViewModel2.getAllTransactionsDAY(date, month, year).observe(getViewLifecycleOwner(), transactions -> {
-				Log.d(TAG, "transactionROOM: transactions day = " + transactions.size());
-				setCatAmount(transactions);
-				int check = rg_chart.getCheckedRadioButtonId();
-				rg_chart.clearCheck();
-				rg_chart.check(check);
-			});
+			setCatAmount(showTransactions);
+			int check = rg_chart.getCheckedRadioButtonId();
+			rg_chart.clearCheck();
+			rg_chart.check(check);
 		}
 	}
 

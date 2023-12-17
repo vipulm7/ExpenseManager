@@ -71,17 +71,17 @@ public class HomeFragment extends Fragment {
 		TVPeriodShown = view.findViewById(R.id.TVDateChange);
 		TVNoTransFound = view.findViewById(R.id.TVNoTransactionsFound);
 		TVFilter = view.findViewById(R.id.TVFilter);
-		mainActivity = (MainActivity) getActivity();
+		mainActivity = (MainActivity) requireActivity();
 		transactionAdapter = mainActivity.transactionAdapter;
 		accountViewModel = mainActivity.accountViewModel;
 		transactionViewModel = mainActivity.transactionViewModel;
 		categoryViewModel = mainActivity.categoryViewModel;
 		subCategoryViewModel = mainActivity.subCategoryViewModel;
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 
-		mainActivity.transactionROOM();
+		mainActivity.showTransactions();
 
 		setDate();
 
@@ -164,7 +164,7 @@ public class HomeFragment extends Fragment {
 									mainActivity.toast = Toast.makeText(mainActivity, "Select at least 1 transaction", Toast.LENGTH_LONG);
 									mainActivity.toast.show();
 								} else {
-									TextView delTitle = new TextView(getContext());
+									TextView delTitle = new TextView(requireContext());
 									delTitle.setText("Delete Transaction(s)");
 									delTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 									delTitle.setPadding(2, 16, 2, 10);
@@ -249,7 +249,7 @@ public class HomeFragment extends Fragment {
 				mainActivity.toShow.add(Calendar.DATE, -1);
 			else if (mainActivity.viewMode == R.id.RBW)
 				mainActivity.toShow.add(Calendar.WEEK_OF_YEAR, -1);
-			mainActivity.transactionROOM();
+			mainActivity.showTransactions();
 			setDate();
 		});
 
@@ -260,14 +260,14 @@ public class HomeFragment extends Fragment {
 				mainActivity.toShow.add(Calendar.DATE, 1);
 			else if (mainActivity.viewMode == R.id.RBW)
 				mainActivity.toShow.add(Calendar.WEEK_OF_YEAR, 1);
-			mainActivity.transactionROOM();
+			mainActivity.showTransactions();
 			setDate();
 		});
 
 		View filterView = inflater.inflate(R.layout.filter_dialog, null);
 		rg_Filter = filterView.findViewById(R.id.RGFilter);
 
-		TextView viewTitle = new TextView(getContext());
+		TextView viewTitle = new TextView(requireContext());
 		viewTitle.setText("View Mode");
 		viewTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 		viewTitle.setPadding(2, 16, 2, 10);
@@ -276,9 +276,9 @@ public class HomeFragment extends Fragment {
 
 		AlertDialog.Builder builder;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
+			builder = new AlertDialog.Builder(requireContext(), android.R.style.ThemeOverlay_Material_Dialog);
 		else
-			builder = new AlertDialog.Builder(getContext());
+			builder = new AlertDialog.Builder(requireContext());
 		builder.setCustomTitle(viewTitle)
 				.setView(filterView);
 		AlertDialog dialog = builder.create();
@@ -296,7 +296,7 @@ public class HomeFragment extends Fragment {
 
 				mainActivity.toShow.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
 				mainActivity.tellDate();
-				mainActivity.transactionROOM();
+				mainActivity.showTransactions();
 				setDate();
 				rg_Filter.setOnCheckedChangeListener(null);
 			}
@@ -311,7 +311,7 @@ public class HomeFragment extends Fragment {
 		});
 
 		RVTransactions.setAdapter(transactionAdapter);
-		RVTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
+		RVTransactions.setLayoutManager(new LinearLayoutManager(requireContext()));
 		RVTransactions.setNestedScrollingEnabled(false);
 
 		RVTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {

@@ -28,16 +28,8 @@ public class TransactionRepo {
 		new UpdateNoteASyncTask(transactionDAO).execute(transaction);
 	}
 
-	public LiveData<List<Transaction>> getAllTransactionsMONTH(int month, int year) {
-		return transactionDAO.getAllTransactionsMONTH(month, year);
-	}
-
-	public LiveData<List<Transaction>> getAllTransactionsWEEK(int week, int year) {
-		return transactionDAO.getAllTransactionsWEEK(week, year);
-	}
-
-	public LiveData<List<Transaction>> getAllTransactionsDAY(int day, int month, int year) {
-		return transactionDAO.getAllTransactionsDAY(day, month, year);
+	public LiveData<List<Transaction>> getAllTransactions() {
+		return transactionDAO.getAllTransactions();
 	}
 
 	public List<Transaction> getAllTransactionsAcc(int accountID) {
