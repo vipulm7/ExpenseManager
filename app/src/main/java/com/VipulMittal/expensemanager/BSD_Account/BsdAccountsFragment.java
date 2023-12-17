@@ -3,11 +3,6 @@ package com.VipulMittal.expensemanager.BSD_Account;
 import android.app.AlertDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,6 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.VipulMittal.expensemanager.IconsAdapter;
 import com.VipulMittal.expensemanager.MainActivity;
@@ -35,18 +34,8 @@ import java.util.List;
 
 public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
-	//constructor
-	public BsdAccountsFragment(int aID, int other, int aType, int type, TransactionActivity transactionActivity, List<Transaction> transactionsToBeModified, MainActivity mainActivity) {
-		this.aID = aID;
-		this.transactionActivity = transactionActivity;
-		this.aType = aType;
-		this.other=other;
-		this.type=type;
-		this.transactionsToBeModified = transactionsToBeModified;
-		this.mainActivity=mainActivity;
-	}
-
 	private static final String TAG = "Vipul_tag";
+	public List<Transaction> transactionsToBeModified;
 	RecyclerView RVAccounts;
 	Button addNew;
 	AccountAdapter accountAdapter;
@@ -56,54 +45,59 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	List<Account> accounts;
 	MainActivity mainActivity;
 	View accView;
-	boolean b1=false, b2=false;
+	boolean b1 = false, b2 = false;
 	TransactionViewModel transactionViewModel;
-	public List<Transaction> transactionsToBeModified;
 	Toast toast;
 
+	//constructor
+	public BsdAccountsFragment(int aID, int other, int aType, int type, TransactionActivity transactionActivity, List<Transaction> transactionsToBeModified, MainActivity mainActivity) {
+		this.aID = aID;
+		this.transactionActivity = transactionActivity;
+		this.aType = aType;
+		this.other = other;
+		this.type = type;
+		this.transactionsToBeModified = transactionsToBeModified;
+		this.mainActivity = mainActivity;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_bsd_accounts, container, false);
-		RVAccounts =view.findViewById(R.id.bsd_rv_accounts);
-		addNew=view.findViewById(R.id.BSD_BaddAccount);
+		RVAccounts = view.findViewById(R.id.bsd_rv_accounts);
+		addNew = view.findViewById(R.id.BSD_BaddAccount);
 
 		transactionViewModel = mainActivity.transactionViewModel;
-		accountAdapter=mainActivity.accountAdapter;
-		accounts=accountAdapter.accounts;
+		accountAdapter = mainActivity.accountAdapter;
+		accounts = accountAdapter.accounts;
 		accountAdapter.aID = aID;
-		accountAdapter.who=1;
-		toast=mainActivity.toast;
+		accountAdapter.who = 1;
+		toast = mainActivity.toast;
 
-		accountViewModel=mainActivity.accountViewModel;
+		accountViewModel = mainActivity.accountViewModel;
 
 
-		AccountAdapter.ClickListener listener=new AccountAdapter.ClickListener() {
+		AccountAdapter.ClickListener listener = new AccountAdapter.ClickListener() {
 			@Override
 			public void onItemClick(AccountAdapter.AccViewHolder viewHolder) {
-				int pos=viewHolder.getAdapterPosition();
-				Log.d(TAG, "onItemClick: "+pos);
-				aID =accounts.get(pos).id;
+				int pos = viewHolder.getAdapterPosition();
+				Log.d(TAG, "onItemClick: " + pos);
+				aID = accounts.get(pos).id;
 				mainActivity.getSupportFragmentManager();
 
 
-				if(type == 4)
-				{
-					if(aID == other) {
+				if (type == 4) {
+					if (aID == other) {
 						if (mainActivity.toast != null)
 							mainActivity.toast.cancel();
 
 						mainActivity.toast = Toast.makeText(getContext(), "Can't select this account", Toast.LENGTH_SHORT);
 						mainActivity.toast.show();
-					}
-					else
-					{
+					} else {
 						Account accountToBeDeleted = accountViewModel.getAcc(transactionsToBeModified.get(0).accountID);
 
-						for(int i=-1;++i< transactionsToBeModified.size();)
-						{
+						for (int i = -1; ++i < transactionsToBeModified.size(); ) {
 							transactionsToBeModified.get(i).accountID = aID;
 							transactionViewModel.Update(transactionsToBeModified.get(i));
 							accountViewModel.UpdateAmt(transactionsToBeModified.get(i).amount, aID);
@@ -112,16 +106,13 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 						accountViewModel.Delete(accountToBeDeleted);
 						dismiss();
 					}
-				}
-				else if(type == 3 && aID == other)
-				{
-					if(mainActivity.toast!=null)
+				} else if (type == 3 && aID == other) {
+					if (mainActivity.toast != null)
 						mainActivity.toast.cancel();
 
 					mainActivity.toast = Toast.makeText(getContext(), "Can't select same accounts", Toast.LENGTH_SHORT);
 					mainActivity.toast.show();
-				}
-				else {
+				} else {
 					if (aType == 1)
 						transactionActivity.saveSelectedAccount(aID, accounts.get(pos)); //bsdAccountsFragment.selected can also be used
 					else
@@ -131,7 +122,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 			}
 		};
 
-		accountAdapter.listener=listener;
+		accountAdapter.listener = listener;
 
 		RVAccounts.setLayoutManager(new LinearLayoutManager(getContext()));
 		Log.d(TAG, "onCreate: transaction done");
@@ -145,16 +136,16 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	}
 
 	private void alertDialogForAddAcc() {
-		LayoutInflater layoutInflater=LayoutInflater.from(getContext());
-		accView=layoutInflater.inflate(R.layout.account_dialog, null);
+		LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+		accView = layoutInflater.inflate(R.layout.account_dialog, null);
 
-		EditText ETForAccN=accView.findViewById(R.id.ETDialogAccName);
-		EditText ETForAccIB=accView.findViewById(R.id.ETDialogAccBalance);
+		EditText ETForAccN = accView.findViewById(R.id.ETDialogAccName);
+		EditText ETForAccIB = accView.findViewById(R.id.ETDialogAccBalance);
 
 		TextView accTitle = new TextView(getContext());
 		accTitle.setText("Add New Account");
 		accTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-		accTitle.setPadding(2,16,2,10);
+		accTitle.setPadding(2, 16, 2, 10);
 		accTitle.setTextSize(22);
 		accTitle.setTypeface(null, Typeface.BOLD);
 		IconsAdapter iconsAdapter = new IconsAdapter(mainActivity.icon_account);
@@ -163,8 +154,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 		AlertDialog.Builder builder;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
-		}
-		else
+		} else
 			builder = new AlertDialog.Builder(getContext());
 		builder.setCustomTitle(accTitle)
 				.setNegativeButton("Cancel", (dialog, which) -> {
@@ -183,7 +173,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				b1=charSequence.toString().trim().length() != 0;
+				b1 = charSequence.toString().trim().length() != 0;
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b1 && b2);
 			}
 
@@ -200,7 +190,7 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				b2=charSequence.toString().trim().length() != 0;
+				b2 = charSequence.toString().trim().length() != 0;
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b1 && b2);
 			}
 
@@ -209,23 +199,21 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 			}
 		});
 
-		addNew.setOnClickListener(v->{
-			Log.d(TAG, "onCreateView: builder = "+builder);
+		addNew.setOnClickListener(v -> {
+			Log.d(TAG, "onCreateView: builder = " + builder);
 //			builder.create();
 
 			dialog.show();
-			Button del1=dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-			del1.setOnClickListener(view->{
-				if(possible(ETForAccIB.getText().toString().trim())) {
-					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(),0, Integer.parseInt(ETForAccIB.getText().toString().trim()), mainActivity.icon_account[iconsAdapter.selected]));
+			Button del1 = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+			del1.setOnClickListener(view -> {
+				if (possible(ETForAccIB.getText().toString().trim())) {
+					accountViewModel.Insert(new Account(ETForAccN.getText().toString().trim(), 0, Integer.parseInt(ETForAccIB.getText().toString().trim()), mainActivity.icon_account[iconsAdapter.selected]));
 					dialog.dismiss();
-				}
-				else
-				{
-					if(toast!=null)
+				} else {
+					if (toast != null)
 						toast.cancel();
 
-					toast=Toast.makeText(mainActivity, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+					toast = Toast.makeText(mainActivity, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
 					toast.show();
 				}
 			});
@@ -237,10 +225,10 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 			RecyclerView recyclerView = accView.findViewById(R.id.rv_icons_account);
 
 			IconsAdapter.ClickListener listener = viewHolder1 -> {
-				int pos=viewHolder1.getAdapterPosition();
+				int pos = viewHolder1.getAdapterPosition();
 
-				int a=iconsAdapter.selected;
-				iconsAdapter.selected=pos;
+				int a = iconsAdapter.selected;
+				iconsAdapter.selected = pos;
 
 				iconsAdapter.notifyItemChanged(a);
 				iconsAdapter.notifyItemChanged(pos);
@@ -255,10 +243,9 @@ public class BsdAccountsFragment extends BottomSheetDialogFragment {
 	}
 
 	private boolean possible(String trim) {
-		int n=trim.length();
-		for(int i=-1;++i<n;)
-		{
-			if(trim.charAt(i)>='0' && trim.charAt(i)<='9')
+		int n = trim.length();
+		for (int i = -1; ++i < n; ) {
+			if (trim.charAt(i) >= '0' && trim.charAt(i) <= '9')
 				continue;
 			return false;
 		}

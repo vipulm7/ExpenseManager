@@ -3,17 +3,16 @@ package com.VipulMittal.expensemanager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHolder> {
-	LayoutInflater inflater;
 	public int[] icons;
 	public int selected;
 	public ClickListener listener;
+	LayoutInflater inflater;
 
 	public IconsAdapter(int[] icons) {
 		this.icons = icons;
@@ -22,7 +21,7 @@ public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHold
 	@NonNull
 	@Override
 	public IconViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		if(inflater == null)
+		if (inflater == null)
 			inflater = LayoutInflater.from(parent.getContext());
 
 		View view = inflater.inflate(R.layout.icon_layout_per_item, null);
@@ -33,7 +32,7 @@ public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHold
 	public void onBindViewHolder(@NonNull IconViewHolder holder, int position) {
 		holder.iv_icon.setImageResource(icons[position]);
 
-		if(position == selected)
+		if (position == selected)
 			holder.iv_icon.setBackgroundResource(R.drawable.icon_account_selected);
 		else
 			holder.iv_icon.setBackgroundResource(R.drawable.icon_account_not_selected);
@@ -44,19 +43,20 @@ public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHold
 		return icons.length;
 	}
 
+	public interface ClickListener {
+		void OnItemClick(IconViewHolder viewHolder);
+	}
+
 	public class IconViewHolder extends RecyclerView.ViewHolder {
 		ImageView iv_icon;
+
 		public IconViewHolder(@NonNull View itemView) {
 			super(itemView);
 
-			iv_icon=itemView.findViewById(R.id.iv_icon);
+			iv_icon = itemView.findViewById(R.id.iv_icon);
 
-			if(listener != null)
+			if (listener != null)
 				itemView.setOnClickListener(v -> listener.OnItemClick(this));
 		}
-	}
-
-	public interface ClickListener{
-		void OnItemClick(IconViewHolder viewHolder);
 	}
 }

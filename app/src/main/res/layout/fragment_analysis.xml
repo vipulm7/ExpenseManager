@@ -1,138 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?backgroundSplit"
-    tools:context=".AnalysisFragment">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="?backgroundSplit"
+	tools:context=".AnalysisFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="76dp"
-        tools:layout_editor_absoluteY="77dp"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/constraintDateChange"
-        >
-
-
-        <TextView
-            android:id="@+id/TVDateChange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="20sp"
-            tools:layout_editor_absoluteX="148dp"
-            tools:layout_editor_absoluteY="31dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:padding="3dp"
-            />
-
-        <TextView
-            android:id="@+id/TVbefore"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:gravity="center|left"
-            android:padding="3dp"
-            android:text="-1"
-            android:textSize="20sp"
-            app:layout_constraintRight_toLeftOf="@id/TVDateChange"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="5dp"
-            />
-
-        <TextView
-            android:id="@+id/TVafter"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:gravity="center|right"
-            android:padding="3dp"
-            android:text="+1"
-            android:textSize="20sp"
-            app:layout_constraintLeft_toRightOf="@id/TVDateChange"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="5dp"
-            />
-
-        <TextView
-            android:id="@+id/TVFilter"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:background="@drawable/ic_filter"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/constraintDateChange"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintEnd_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:layout_editor_absoluteX="76dp"
+		tools:layout_editor_absoluteY="77dp">
 
 
-    <RadioGroup
-        android:id="@+id/RGChart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintDateChange">
+		<TextView
+			android:id="@+id/TVDateChange"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="3dp"
+			android:text="TextView"
+			android:textSize="20sp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:layout_editor_absoluteX="148dp"
+			tools:layout_editor_absoluteY="31dp" />
+
+		<TextView
+			android:id="@+id/TVbefore"
+			android:layout_width="35dp"
+			android:layout_height="35dp"
+			android:layout_marginEnd="5dp"
+			android:gravity="center|left"
+			android:padding="3dp"
+			android:text="-1"
+			android:textSize="20sp"
+			app:layout_constraintRight_toLeftOf="@id/TVDateChange"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/TVafter"
+			android:layout_width="35dp"
+			android:layout_height="35dp"
+			android:layout_marginStart="5dp"
+			android:gravity="center|right"
+			android:padding="3dp"
+			android:text="+1"
+			android:textSize="20sp"
+			app:layout_constraintLeft_toRightOf="@id/TVDateChange"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/TVFilter"
+			android:layout_width="34dp"
+			android:layout_height="34dp"
+			android:background="@drawable/ic_filter"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <RadioButton
-            android:id="@+id/radioCatIncomeChart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@null"
-            android:padding="10dp"
-            android:text="Income"
-            android:textSize="22sp"
-            android:layout_marginEnd="10dp"
-            />
+	<RadioGroup
+		android:id="@+id/RGChart"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="horizontal"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/constraintDateChange">
 
-        <TextView
-            android:layout_width="2dp"
-            android:layout_height="20dp"
-            android:textSize="27dp"
-            android:background="@color/black" />
 
-        <RadioButton
-            android:id="@+id/radioCatExpenseChart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@null"
-            android:padding="10dp"
-            android:text="Expense"
-            android:textSize="22sp"
-            android:layout_marginStart="10dp"
-            />
+		<RadioButton
+			android:id="@+id/radioCatIncomeChart"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="10dp"
+			android:button="@null"
+			android:padding="10dp"
+			android:text="Income"
+			android:textSize="22sp" />
 
-    </RadioGroup>
+		<TextView
+			android:layout_width="2dp"
+			android:layout_height="20dp"
+			android:background="@color/black"
+			android:textSize="27dp" />
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/RGChart"
-        android:id="@+id/pieChart"
-        />
+		<RadioButton
+			android:id="@+id/radioCatExpenseChart"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:button="@null"
+			android:padding="10dp"
+			android:text="Expense"
+			android:textSize="22sp" />
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pieChart"
-        app:layout_constraintBottom_toBottomOf="parent"
-        >
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/rv_analysis"
-            />
+	</RadioGroup>
 
-    </androidx.core.widget.NestedScrollView>
-    
+	<com.github.mikephil.charting.charts.PieChart
+		android:id="@+id/pieChart"
+		android:layout_width="match_parent"
+		android:layout_height="350dp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/RGChart" />
+
+	<androidx.core.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/pieChart">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rv_analysis"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+
+	</androidx.core.widget.NestedScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

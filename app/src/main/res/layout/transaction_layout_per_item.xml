@@ -1,90 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true"
-    android:paddingBottom="4dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
-    >
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginStart="5dp"
+	android:layout_marginEnd="5dp"
+	android:clickable="true"
+	android:paddingBottom="4dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="90dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/constraintLayAccount"
-        >
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/constraintLayAccount"
+		android:layout_width="90dp"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/TVLayCat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:textSize="14sp"
-            android:singleLine="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="10dp"
-            />
+		<TextView
+			android:id="@+id/TVLayCat"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:singleLine="true"
+			android:text="Category"
+			android:textSize="14sp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/TVLaySubCat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SubCategory"
-            android:singleLine="true"
-            android:textSize="11sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TVLayCat"
-            android:layout_marginStart="10dp"
-            />
+		<TextView
+			android:id="@+id/TVLaySubCat"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:singleLine="true"
+			android:text="SubCategory"
+			android:textSize="11sp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/TVLayCat" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/TVLayAmt"
-        android:layout_width="100dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="10dp"
-        android:autoSizeMaxTextSize="14sp"
-        android:autoSizeMinTextSize="10sp"
-        android:autoSizeStepGranularity="1px"
+	<TextView
+		android:id="@+id/TVLayAmt"
+		android:layout_width="100dp"
+		android:layout_height="0dp"
+		android:layout_marginEnd="10dp"
+		android:autoSizeMaxTextSize="14sp"
+		android:autoSizeMinTextSize="10sp"
+		android:autoSizeStepGranularity="1px"
 
-        android:autoSizeTextType="uniform"
-        android:gravity="center|end"
-        android:paddingTop="2dp"
-        android:maxLines="1"
-        android:text="\u20b90"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+		android:autoSizeTextType="uniform"
+		android:gravity="center|end"
+		android:maxLines="1"
+		android:paddingTop="2dp"
+		android:text="\u20b90"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/TVLayNote"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Note"
-        android:textSize="14sp"
-        android:singleLine="true"
-        android:layout_marginStart="4dp"
-        app:layout_constraintStart_toEndOf="@+id/constraintLayAccount"
-        app:layout_constraintEnd_toStartOf="@+id/TVLayAmt"
-        app:layout_constraintTop_toTopOf="parent" />
+	<TextView
+		android:id="@+id/TVLayNote"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="4dp"
+		android:singleLine="true"
+		android:text="Note"
+		android:textSize="14sp"
+		app:layout_constraintEnd_toStartOf="@+id/TVLayAmt"
+		app:layout_constraintStart_toEndOf="@+id/constraintLayAccount"
+		app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/TVLayAcc"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:text="Account"
-        android:layout_marginStart="4dp"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/TVLayAmt"
-        app:layout_constraintStart_toEndOf="@+id/constraintLayAccount"
-        app:layout_constraintTop_toBottomOf="@+id/TVLayNote" />
+	<TextView
+		android:id="@+id/TVLayAcc"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="4dp"
+		android:singleLine="true"
+		android:text="Account"
+		android:textSize="14sp"
+		app:layout_constraintEnd_toStartOf="@+id/TVLayAmt"
+		app:layout_constraintStart_toEndOf="@+id/constraintLayAccount"
+		app:layout_constraintTop_toBottomOf="@+id/TVLayNote" />
 </androidx.constraintlayout.widget.ConstraintLayout>

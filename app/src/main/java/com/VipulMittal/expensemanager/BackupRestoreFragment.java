@@ -1,24 +1,15 @@
 package com.VipulMittal.expensemanager;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.room.util.FileUtil;
-
-import android.os.Environment;
-import android.os.FileUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,8 +19,8 @@ import java.nio.channels.FileChannel;
 
 public class BackupRestoreFragment extends PreferenceFragmentCompat {
 
+	public static final String TAG = "Vipul_tag";
 	MainActivity mainActivity;
-	public static final String TAG="Vipul_tag";
 
 	@Override
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -48,13 +39,11 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 
 				int permission = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-				if(true)
-				{
-					File folder = new File (Environment.getExternalStorageDirectory() + File.separator + "Expense Tracker");
+				if (true) {
+					File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "Expense Tracker");
 
-					if(!folder.exists()) {
-						if(!folder.mkdirs())
-						{
+					if (!folder.exists()) {
+						if (!folder.mkdirs()) {
 							if (mainActivity.toast != null)
 								mainActivity.toast.cancel();
 							mainActivity.toast = Toast.makeText(getContext(), "Can't create directory!", Toast.LENGTH_SHORT);
@@ -62,11 +51,10 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 						}
 					}
 
-					File sd= Environment.getExternalStorageDirectory();
+					File sd = Environment.getExternalStorageDirectory();
 					File data = Environment.getDataDirectory();
 
-					if(sd.canWrite())
-					{
+					if (sd.canWrite()) {
 						String currentDBPath = "//data//ExpenseTracker//databases//trans_database";
 						String backupDBPath = "/BackupFolder/trans_database";
 						File currentDB = new File(data, currentDBPath);
@@ -94,10 +82,8 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 							mainActivity.toast = Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG);
 							mainActivity.toast.show();
 						}
-					}
-					else
-					{
-						mainActivity.toast = Toast.makeText(getContext(),"Can't write!", Toast.LENGTH_LONG);
+					} else {
+						mainActivity.toast = Toast.makeText(getContext(), "Can't write!", Toast.LENGTH_LONG);
 						mainActivity.toast.show();
 					}
 
@@ -131,9 +117,7 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 //								}
 //							})
 //							.execute();
-				}
-				else
-				{
+				} else {
 					if (mainActivity.toast != null)
 						mainActivity.toast.cancel();
 					mainActivity.toast = Toast.makeText(getContext(), "No write permission!", Toast.LENGTH_SHORT);

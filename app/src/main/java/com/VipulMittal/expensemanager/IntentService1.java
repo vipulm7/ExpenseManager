@@ -17,30 +17,29 @@ import androidx.preference.PreferenceManager;
 
 public class IntentService1 extends IntentService {
 
+	public static final String TAG = "Vipul";
+	public static final String ACTION_SNOOZE = "com.example.android.wearable.wear.wearnotifications.handlers.action.SNOOZE";
+	public static final String ACTION_DISMISS = "com.example.android.wearable.wear.wearnotifications.handlers.action.DISMISS";
+	public static final int notifID = 2;
+	public final String CHANNEL_ID = "1";
+	//	public int snoozeTimeInMillies=3600000;
+	public int snoozeTimeInMillies = 30000;
+	NotificationCompat.Builder builder;
+	NotificationManagerCompat notificationManagerCompat;
+
 	public IntentService1() {
 		super("Receiver");
 	}
 
-	public static final String TAG="Vipul";
-	public static final String ACTION_SNOOZE="com.example.android.wearable.wear.wearnotifications.handlers.action.SNOOZE";
-	public static final String ACTION_DISMISS="com.example.android.wearable.wear.wearnotifications.handlers.action.DISMISS";
-	NotificationCompat.Builder builder;
-	NotificationManagerCompat notificationManagerCompat;
-//	public int snoozeTimeInMillies=3600000;
-	public int snoozeTimeInMillies=30000;
-	public final String CHANNEL_ID="1";
-	public static final int notifID =2;
-
 	@Override
 	protected void onHandleIntent(@Nullable Intent intent) {
 		Log.d(TAG, "onHandleIntent: ");
-		if(intent!=null)
-		{
+		if (intent != null) {
 //			Toast.makeText(getApplicationContext(),"Hey there!!!", Toast.LENGTH_LONG).show();
-			final String actionReceived=intent.getAction();
-			Log.d(TAG, "onHandleIntent: intent = "+intent);
-			Log.d(TAG, "onHandleIntent: string = "+actionReceived);
-			if(actionReceived!=null) {
+			final String actionReceived = intent.getAction();
+			Log.d(TAG, "onHandleIntent: intent = " + intent);
+			Log.d(TAG, "onHandleIntent: string = " + actionReceived);
+			if (actionReceived != null) {
 				if (actionReceived.equals(ACTION_SNOOZE)) {
 					Log.d(TAG, "onHandleIntent: ACTION_SNOOZE");
 					snooze();
@@ -58,16 +57,15 @@ public class IntentService1 extends IntentService {
 	}
 
 	private void snooze() {
-		builder= GlobalNotificationBuilder.getGlobalNotificationCompatBuilder();
+		builder = GlobalNotificationBuilder.getGlobalNotificationCompatBuilder();
 
-		if(builder==null)
+		if (builder == null)
 			recreateBuilder();
 
-		Notification notification=builder.build();
-		if(notification != null)
-		{
-			Log.d(TAG, "onHandleIntent: "+builder);
-			notificationManagerCompat=NotificationManagerCompat.from(getApplicationContext());
+		Notification notification = builder.build();
+		if (notification != null) {
+			Log.d(TAG, "onHandleIntent: " + builder);
+			notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
 			notificationManagerCompat.cancel(notifID);
 
 			try {
@@ -81,7 +79,7 @@ public class IntentService1 extends IntentService {
 	}
 
 	private void recreateBuilder() {
-		builder=new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
+		builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
 		GlobalNotificationBuilder.setGlobalNotificationCompatBuilder(builder);
 
 		Log.d(TAG, "recreateBuilder: ");
@@ -114,7 +112,7 @@ public class IntentService1 extends IntentService {
 			snoozePendingIntent = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 		else
 			snoozePendingIntent = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		NotificationCompat.Action snoozeAction=new NotificationCompat.Action.Builder(R.drawable.ic_notifications, "Snooze it!", snoozePendingIntent).build();
+		NotificationCompat.Action snoozeAction = new NotificationCompat.Action.Builder(R.drawable.ic_notifications, "Snooze it!", snoozePendingIntent).build();
 
 		Intent dismissIntent = new Intent(this, IntentService1.class);
 		dismissIntent.setAction(ACTION_DISMISS);
@@ -136,11 +134,11 @@ public class IntentService1 extends IntentService {
 		context.startService(intent1);
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		long notifTime = sharedPreferences.getLong("notifTime", -1);
-		editor.putLong("notifTime", notifTime+ AlarmManager.INTERVAL_DAY);
+		editor.putLong("notifTime", notifTime + AlarmManager.INTERVAL_DAY);
 		editor.apply();
 
-		Log.d(TAG, "notifTime before: recreate"+notifTime);
-		Log.d(TAG, "notifTime after: recreate"+sharedPreferences.getLong("notifTime", -1));
+		Log.d(TAG, "notifTime before: recreate" + notifTime);
+		Log.d(TAG, "notifTime after: recreate" + sharedPreferences.getLong("notifTime", -1));
 
 		GlobalNotificationBuilder.setGlobalNotificationCompatBuilder(builder);
 	}

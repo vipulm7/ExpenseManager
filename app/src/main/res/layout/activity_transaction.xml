@@ -1,371 +1,344 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".TransactionActivity"
-    android:background="?backgroundSplit"
-    >
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="?backgroundSplit"
+	tools:context=".TransactionActivity">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/constraint12"
-        android:background="@drawable/box"
-        android:layout_marginTop="15dp"
-        >
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/constraintDateTime"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="7dp"
-            >
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/constraint12"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="15dp"
+		android:background="@drawable/box"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/constraintDateTime2"
-                android:id="@+id/constraintDateTime1"
-                >
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/constraintDateTime"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="7dp"
+			android:orientation="horizontal"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
 
-                <TextSwitcher
-                    android:id="@+id/TVDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="date"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:background="@drawable/item_sel"
-                    android:padding="3dp"
-                    />
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/constraintDateTime1"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				app:layout_constraintEnd_toStartOf="@id/constraintDateTime2"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+				<TextSwitcher
+					android:id="@+id/TVDate"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:background="@drawable/item_sel"
+					android:gravity="center"
+					android:padding="3dp"
+					android:text="date"
+					android:textSize="20sp"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:layout_constraintStart_toEndOf="@id/constraintDateTime1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/constraintDateTime2"
-                >
-                <TextSwitcher
-                    android:id="@+id/TVTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="time"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:background="@drawable/item_sel"
-                    android:padding="3dp"
-                    />
+			</androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/constraintDateTime2"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toEndOf="@id/constraintDateTime1"
+				app:layout_constraintTop_toTopOf="parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+				<TextSwitcher
+					android:id="@+id/TVTime"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:background="@drawable/item_sel"
+					android:gravity="center"
+					android:padding="3dp"
+					android:text="time"
+					android:textSize="20sp"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintDateTime"
-            android:id="@+id/constraintChooseType">
+			</androidx.constraintlayout.widget.ConstraintLayout>
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/constraintChooseType"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/constraintDateTime">
 
 
-            <RadioGroup
-                android:id="@+id/RadioGroupType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+			<RadioGroup
+				android:id="@+id/RadioGroupType"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
 
 
-                <RadioButton
-                    android:id="@+id/radioCatIncome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="Income"
-                    android:textSize="27sp"
-                    android:layout_marginEnd="5dp"
-                    />
+				<RadioButton
+					android:id="@+id/radioCatIncome"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="5dp"
+					android:button="@null"
+					android:padding="10dp"
+					android:text="Income"
+					android:textSize="27sp" />
 
-                <TextView
-                    android:layout_width="2dp"
-                    android:layout_height="20dp"
-                    android:textSize="27dp"
-                    android:background="@color/black" />
+				<TextView
+					android:layout_width="2dp"
+					android:layout_height="20dp"
+					android:background="@color/black"
+					android:textSize="27dp" />
 
-                <RadioButton
-                    android:id="@+id/radioCatExpense"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="Expense"
-                    android:textSize="27sp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginStart="5dp"
-                    />
+				<RadioButton
+					android:id="@+id/radioCatExpense"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="5dp"
+					android:layout_marginEnd="5dp"
+					android:button="@null"
+					android:padding="10dp"
+					android:text="Expense"
+					android:textSize="27sp" />
 
-                <TextView
-                    android:layout_width="2dp"
-                    android:layout_height="20dp"
-                    android:textSize="27dp"
-                    android:background="@color/black"
-                    />
+				<TextView
+					android:layout_width="2dp"
+					android:layout_height="20dp"
+					android:background="@color/black"
+					android:textSize="27dp" />
 
-                <RadioButton
-                    android:id="@+id/radioCatTransfer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="Transfer"
-                    android:textSize="27sp"
-                    android:layout_marginStart="5dp"
-                    />
+				<RadioButton
+					android:id="@+id/radioCatTransfer"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="5dp"
+					android:button="@null"
+					android:padding="10dp"
+					android:text="Transfer"
+					android:textSize="27sp" />
 
-            </RadioGroup>
+			</RadioGroup>
 
-            <!--        <Button-->
-            <!--            android:id="@+id/buttonCatIncome"-->
-            <!--            android:layout_width="0dp"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:text="Income"-->
-            <!--            android:textSize="13sp"-->
-            <!--            app:layout_constraintEnd_toStartOf="@id/buttonCatExpense"-->
-            <!--            app:layout_constraintStart_toStartOf="parent"-->
-            <!--            app:layout_constraintTop_toTopOf="parent" />-->
+			<!--        <Button-->
+			<!--            android:id="@+id/buttonCatIncome"-->
+			<!--            android:layout_width="0dp"-->
+			<!--            android:layout_height="wrap_content"-->
+			<!--            android:text="Income"-->
+			<!--            android:textSize="13sp"-->
+			<!--            app:layout_constraintEnd_toStartOf="@id/buttonCatExpense"-->
+			<!--            app:layout_constraintStart_toStartOf="parent"-->
+			<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-            <!--        <Button-->
-            <!--            android:id="@+id/buttonCatExpense"-->
-            <!--            android:layout_width="0dp"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:text="Expense"-->
-            <!--            android:textSize="13sp"-->
-            <!--            app:layout_constraintEnd_toStartOf="@id/buttonCatTransfer"-->
-            <!--            app:layout_constraintStart_toEndOf="@+id/buttonCatIncome"-->
-            <!--            app:layout_constraintTop_toTopOf="parent" />-->
+			<!--        <Button-->
+			<!--            android:id="@+id/buttonCatExpense"-->
+			<!--            android:layout_width="0dp"-->
+			<!--            android:layout_height="wrap_content"-->
+			<!--            android:text="Expense"-->
+			<!--            android:textSize="13sp"-->
+			<!--            app:layout_constraintEnd_toStartOf="@id/buttonCatTransfer"-->
+			<!--            app:layout_constraintStart_toEndOf="@+id/buttonCatIncome"-->
+			<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-            <!--        <Button-->
-            <!--            android:id="@+id/buttonCatTransfer"-->
-            <!--            android:layout_width="0dp"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:text="Transfer"-->
-            <!--            android:textSize="13sp"-->
-            <!--            app:layout_constraintEnd_toEndOf="parent"-->
-            <!--            app:layout_constraintStart_toEndOf="@+id/buttonCatExpense"-->
-            <!--            app:layout_constraintTop_toTopOf="parent" />-->
+			<!--        <Button-->
+			<!--            android:id="@+id/buttonCatTransfer"-->
+			<!--            android:layout_width="0dp"-->
+			<!--            android:layout_height="wrap_content"-->
+			<!--            android:text="Transfer"-->
+			<!--            android:textSize="13sp"-->
+			<!--            app:layout_constraintEnd_toEndOf="parent"-->
+			<!--            app:layout_constraintStart_toEndOf="@+id/buttonCatExpense"-->
+			<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+		</androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/constraintChooseCat"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/constraint12">
 
 
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/constraintChooseType1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			app:layout_constraintEnd_toStartOf="@id/constraintChooseType2"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/constraintChooseCat"
-        app:layout_constraintTop_toBottomOf="@id/constraint12"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
-        >
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
 
+				<ImageView
+					android:id="@+id/IVAccounts"
+					android:layout_width="57dp"
+					android:layout_height="36dp"
+					android:padding="5dp"
+					app:layout_constraintEnd_toStartOf="@+id/TVAccount"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/constraintChooseType2"
-            android:id="@+id/constraintChooseType1"
-            >
+				<TextSwitcher
+					android:id="@+id/TVAccount"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:background="@drawable/item_sel"
+					android:padding="5dp"
+					android:text="Account "
+					android:textSize="18sp"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toEndOf="@+id/IVAccounts"
+					app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                >
-
-                <ImageView
-                    android:id="@+id/IVAccounts"
-                    android:layout_width="57dp"
-                    android:layout_height="36dp"
-                    android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/TVAccount"
-                    />
-
-                <TextSwitcher
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Account "
-                    android:id="@+id/TVAccount"
-                    app:layout_constraintStart_toEndOf="@+id/IVAccounts"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:textSize="18sp"
-                    android:padding="5dp"
-                    android:background="@drawable/item_sel"
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+			</androidx.constraintlayout.widget.ConstraintLayout>
 
 
+		</androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/constraintChooseType2"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/constraintChooseType1"
+			app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toEndOf="@id/constraintChooseType1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/constraintChooseType2"
-            >
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                >
+				<ImageView
+					android:id="@+id/IVCategory"
+					android:layout_width="57dp"
+					android:layout_height="36dp"
+					android:padding="5dp"
+					app:layout_constraintEnd_toStartOf="@+id/TVCategory"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/IVCategory"
-                    android:layout_width="57dp"
-                    android:layout_height="36dp"
-                    android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/TVCategory"
-                    />
+				<TextSwitcher
+					android:id="@+id/TVCategory"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:background="@drawable/item_sel"
+					android:padding="5dp"
+					android:text="Category"
+					android:textSize="18sp"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toEndOf="@+id/IVCategory"
+					app:layout_constraintTop_toTopOf="parent" />
 
-                <TextSwitcher
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Category"
-                    android:id="@+id/TVCategory"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/IVCategory"
-                    android:textSize="18sp"
-                    android:padding="5dp"
-                    android:background="@drawable/item_sel"
-                    />
+			</androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+		</androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintChooseCat"
-        android:id="@+id/constraintNoteDes"
-        android:layout_marginTop="10dp"
-        >
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/constraintNoteDes"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/constraintChooseCat">
 
-        <EditText
-            android:id="@+id/ETNote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter title"
-            android:singleLine="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/rounded_corner_10"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            />
+		<EditText
+			android:id="@+id/ETNote"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:layout_marginEnd="10dp"
+			android:background="@drawable/rounded_corner_10"
+			android:hint="Enter title"
+			android:paddingTop="5dp"
+			android:paddingBottom="5dp"
+			android:singleLine="true"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ETDes"
-            android:hint="Enter description"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ETAmount"
-            android:background="@drawable/rounded_corner_10"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="14dp"
-            />
+		<EditText
+			android:id="@+id/ETDes"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:layout_marginTop="14dp"
+			android:layout_marginEnd="10dp"
+			android:background="@drawable/rounded_corner_10"
+			android:hint="Enter description"
+			android:paddingTop="5dp"
+			android:paddingBottom="5dp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/ETAmount" />
 
-        <EditText
-            android:id="@+id/ETAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_corner_10"
-            android:hint="Enter amount"
-            android:inputType="number"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ETNote" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+		<EditText
+			android:id="@+id/ETAmount"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:layout_marginTop="14dp"
+			android:layout_marginEnd="10dp"
+			android:background="@drawable/rounded_corner_10"
+			android:hint="Enter amount"
+			android:inputType="number"
+			android:paddingTop="5dp"
+			android:paddingBottom="5dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/ETNote" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/transaction_save_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/transaction_repeat_button"
-        app:layout_constraintTop_toBottomOf="@+id/constraintNoteDes"
-        android:layout_marginTop="10dp"
-        />
+	<Button
+		android:id="@+id/transaction_save_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:text="Save"
+		app:layout_constraintEnd_toStartOf="@+id/transaction_repeat_button"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/constraintNoteDes" />
 
-    <Button
-        android:id="@+id/transaction_repeat_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Repeat"
-        app:layout_constraintStart_toEndOf="@+id/transaction_save_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintNoteDes"
-        android:layout_marginTop="10dp"
-        />
+	<Button
+		android:id="@+id/transaction_repeat_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:text="Repeat"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@+id/transaction_save_button"
+		app:layout_constraintTop_toBottomOf="@+id/constraintNoteDes" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

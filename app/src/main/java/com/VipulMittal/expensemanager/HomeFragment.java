@@ -7,15 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -29,7 +20,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.VipulMittal.expensemanager.accountRoom.Account;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.VipulMittal.expensemanager.accountRoom.AccountViewModel;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryViewModel;
 import com.VipulMittal.expensemanager.subCategoryRoom.SubCategoryViewModel;
@@ -42,12 +39,9 @@ import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
 
-	public HomeFragment() {
-		// Required empty public constructor
-	}
-	public static final String TAG="Vipul_tag";
-
-	TextView TVMainExpense,TVMainIncome,TVMainTotal, TVBefore, TVAfter, TVPeriodShown, TVFilter, TVNoTransFound;
+	public static final String TAG = "Vipul_tag";
+	public ActionMode actionMode;
+	TextView TVMainExpense, TVMainIncome, TVMainTotal, TVBefore, TVAfter, TVPeriodShown, TVFilter, TVNoTransFound;
 	RecyclerView RVTransactions;
 	RadioGroup rg_Filter;
 
@@ -57,26 +51,29 @@ public class HomeFragment extends Fragment {
 	TransactionViewModel transactionViewModel;
 	CategoryViewModel categoryViewModel;
 	SubCategoryViewModel subCategoryViewModel;
-	public ActionMode actionMode;
+
+	public HomeFragment() {
+		// Required empty public constructor
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-		TVMainIncome=view.findViewById(R.id.TVIncomeAmt);
-		TVMainExpense=view.findViewById(R.id.TVExpenseAmt);
-		TVMainTotal=view.findViewById(R.id.TVTotalAmt);
-		RVTransactions=view.findViewById(R.id.RecyclerViewID);
-		TVAfter=view.findViewById(R.id.TVafter);
-		TVBefore=view.findViewById(R.id.TVbefore);
-		TVPeriodShown =view.findViewById(R.id.TVDateChange);
+		TVMainIncome = view.findViewById(R.id.TVIncomeAmt);
+		TVMainExpense = view.findViewById(R.id.TVExpenseAmt);
+		TVMainTotal = view.findViewById(R.id.TVTotalAmt);
+		RVTransactions = view.findViewById(R.id.RecyclerViewID);
+		TVAfter = view.findViewById(R.id.TVafter);
+		TVBefore = view.findViewById(R.id.TVbefore);
+		TVPeriodShown = view.findViewById(R.id.TVDateChange);
 		TVNoTransFound = view.findViewById(R.id.TVNoTransactionsFound);
-		TVFilter=view.findViewById(R.id.TVFilter);
-		mainActivity=(MainActivity) getActivity();
-		transactionAdapter= mainActivity.transactionAdapter;
-		accountViewModel= mainActivity.accountViewModel;
+		TVFilter = view.findViewById(R.id.TVFilter);
+		mainActivity = (MainActivity) getActivity();
+		transactionAdapter = mainActivity.transactionAdapter;
+		accountViewModel = mainActivity.accountViewModel;
 		transactionViewModel = mainActivity.transactionViewModel;
 		categoryViewModel = mainActivity.categoryViewModel;
 		subCategoryViewModel = mainActivity.subCategoryViewModel;
@@ -92,14 +89,13 @@ public class HomeFragment extends Fragment {
 		TVBefore.setText("<");
 
 
-		TransactionAdapter.CLickListener listener= (viewHolder, view1) -> {
-			int position=viewHolder.getAdapterPosition();
+		TransactionAdapter.CLickListener listener = (viewHolder, view1) -> {
+			int position = viewHolder.getAdapterPosition();
 
-			if(!transactionAdapter.selectionModeOn)
-			{
+			if (!transactionAdapter.selectionModeOn) {
 				Transaction transaction = transactionAdapter.transactions.get(position);
 
-				Intent intent=new Intent(mainActivity, TransactionActivity.class);
+				Intent intent = new Intent(mainActivity, TransactionActivity.class);
 				intent.putExtra("EXTRA_DURATION", 500L);
 				intent.putExtra("calendar", transaction.dateTime);
 				intent.putExtra("amount", transaction.amount);
@@ -123,19 +119,17 @@ public class HomeFragment extends Fragment {
 //				mainActivity.FABAdd.hide();
 				mainActivity.systemTimeInMillies = 0;
 				mainActivity.hideMenu();
-			}
-			else
-			{
+			} else {
 				viewHolder.changeSelection();
 			}
 		};
 
 
 		TransactionAdapter.CLickListener longListener = (viewHolder, view1) -> {
-			if(!transactionAdapter.selectionModeOn) {
+			if (!transactionAdapter.selectionModeOn) {
 				transactionAdapter.selectionModeOn = true;
 				transactionAdapter.transactionsToBeDeleted.clear();
-				boolean select []=new boolean[transactionAdapter.transactions.size()];
+				boolean[] select = new boolean[transactionAdapter.transactions.size()];
 				transactionAdapter.select = select;
 				mainActivity.FABAdd.hide();
 				mainActivity.navigationBarView.setVisibility(View.INVISIBLE);
@@ -160,22 +154,20 @@ public class HomeFragment extends Fragment {
 					@Override
 					public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 						int id = item.getItemId();
-						switch (id){
+						switch (id) {
 							case R.id.menuSelectDelete:
 
-								if(transactionAdapter.transactionsToBeDeleted.size()==0) {
+								if (transactionAdapter.transactionsToBeDeleted.size() == 0) {
 									if (mainActivity.toast != null)
 										mainActivity.toast.cancel();
 
 									mainActivity.toast = Toast.makeText(mainActivity, "Select at least 1 transaction", Toast.LENGTH_LONG);
 									mainActivity.toast.show();
-								}
-								else
-								{
+								} else {
 									TextView delTitle = new TextView(getContext());
 									delTitle.setText("Delete Transaction(s)");
 									delTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-									delTitle.setPadding(2,16,2,10);
+									delTitle.setPadding(2, 16, 2, 10);
 									delTitle.setTextSize(22);
 									delTitle.setTypeface(null, Typeface.BOLD);
 
@@ -185,23 +177,21 @@ public class HomeFragment extends Fragment {
 									else
 										builder = new AlertDialog.Builder(mainActivity);
 									builder.setCustomTitle(delTitle)
-											.setMessage("Are you sure to delete "+ transactionAdapter.transactionsToBeDeleted.size()+ " transaction(s)")
+											.setMessage("Are you sure to delete " + transactionAdapter.transactionsToBeDeleted.size() + " transaction(s)")
 											.setNegativeButton("Cancel", (dialog, which) -> {
 
 											})
 											.setPositiveButton("Delete", (dialog, which) -> {
-												for(int i=-1;++i<transactionAdapter.transactionsToBeDeleted.size();)
-												{
+												for (int i = -1; ++i < transactionAdapter.transactionsToBeDeleted.size(); ) {
 													Transaction transaction = transactionAdapter.transactionsToBeDeleted.get(i);
 
 													transactionViewModel.Delete(transaction);
 													accountViewModel.UpdateAmt(-transaction.amount, transaction.accountID);
-													if(transaction.type == 3)
+													if (transaction.type == 3)
 														accountViewModel.UpdateAmt(transaction.amount, transaction.catID);
-													else
-													{
+													else {
 														categoryViewModel.UpdateAmt(-transaction.amount, transaction.catID);
-														if(transaction.subCatID!=-1)
+														if (transaction.subCatID != -1)
 															subCategoryViewModel.UpdateAmt(-transaction.amount, transaction.subCatID);
 													}
 												}
@@ -215,16 +205,16 @@ public class HomeFragment extends Fragment {
 								break;
 							case R.id.menuSelectAll:
 								transactionAdapter.transactionsToBeDeleted.clear();
-								if(!allSelected()) {
-									for(int i=-1;++i<transactionAdapter.transactions.size();) {
-										if(transactionAdapter.transactions.get(i).id == -1)
+								if (!allSelected()) {
+									for (int i = -1; ++i < transactionAdapter.transactions.size(); ) {
+										if (transactionAdapter.transactions.get(i).id == -1)
 											continue;
 										transactionAdapter.transactionsToBeDeleted.add(transactionAdapter.transactions.get(i));
 									}
 								}
 								Arrays.fill(transactionAdapter.select, !allSelected());
 								transactionAdapter.notifyDataSetChanged();
-								mode.setTitle(""+transactionAdapter.transactionsToBeDeleted.size());
+								mode.setTitle(String.valueOf(transactionAdapter.transactionsToBeDeleted.size()));
 						}
 						return true;
 					}
@@ -242,52 +232,51 @@ public class HomeFragment extends Fragment {
 					}
 				};
 
-				((AppCompatActivity)view.getContext()).startActionMode(callback);
+				((AppCompatActivity) view.getContext()).startActionMode(callback);
 			}
 			viewHolder.changeSelection();
 
 		};
 
 
-		transactionAdapter.listener=listener;
+		transactionAdapter.listener = listener;
 		transactionAdapter.longListener = longListener;
 
-		TVBefore.setOnClickListener(v->{
-			if(mainActivity.viewMode == R.id.RBM)
+		TVBefore.setOnClickListener(v -> {
+			if (mainActivity.viewMode == R.id.RBM)
 				mainActivity.toShow.add(Calendar.MONTH, -1);
-			else if(mainActivity.viewMode == R.id.RBD)
+			else if (mainActivity.viewMode == R.id.RBD)
 				mainActivity.toShow.add(Calendar.DATE, -1);
-			else if(mainActivity.viewMode == R.id.RBW)
+			else if (mainActivity.viewMode == R.id.RBW)
 				mainActivity.toShow.add(Calendar.WEEK_OF_YEAR, -1);
 			mainActivity.transactionROOM();
 			setDate();
 		});
 
-		TVAfter.setOnClickListener(v->{
-			if(mainActivity.viewMode == R.id.RBM)
+		TVAfter.setOnClickListener(v -> {
+			if (mainActivity.viewMode == R.id.RBM)
 				mainActivity.toShow.add(Calendar.MONTH, 1);
-			else if(mainActivity.viewMode == R.id.RBD)
+			else if (mainActivity.viewMode == R.id.RBD)
 				mainActivity.toShow.add(Calendar.DATE, 1);
-			else if(mainActivity.viewMode == R.id.RBW)
+			else if (mainActivity.viewMode == R.id.RBW)
 				mainActivity.toShow.add(Calendar.WEEK_OF_YEAR, 1);
 			mainActivity.transactionROOM();
 			setDate();
 		});
 
 		View filterView = inflater.inflate(R.layout.filter_dialog, null);
-		rg_Filter =filterView.findViewById(R.id.RGFilter);
+		rg_Filter = filterView.findViewById(R.id.RGFilter);
 
 		TextView viewTitle = new TextView(getContext());
 		viewTitle.setText("View Mode");
 		viewTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-		viewTitle.setPadding(2,16,2,10);
+		viewTitle.setPadding(2, 16, 2, 10);
 		viewTitle.setTextSize(22);
 		viewTitle.setTypeface(null, Typeface.BOLD);
 
 		AlertDialog.Builder builder;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
-		}
 		else
 			builder = new AlertDialog.Builder(getContext());
 		builder.setCustomTitle(viewTitle)
@@ -300,9 +289,9 @@ public class HomeFragment extends Fragment {
 			public void onCheckedChanged(RadioGroup radioGroup, int checkedID) {
 				editor.putInt("view", checkedID);
 				editor.apply();
-				mainActivity.viewMode=checkedID;
-				Log.d(TAG, "onCheckedChanged: mainActivity.viewMode"+mainActivity.viewMode);
-				Log.d(TAG, "onCheckedChanged: shared = "+sharedPreferences.getInt("view", -1));
+				mainActivity.viewMode = checkedID;
+				Log.d(TAG, "onCheckedChanged: mainActivity.viewMode" + mainActivity.viewMode);
+				Log.d(TAG, "onCheckedChanged: shared = " + sharedPreferences.getInt("view", -1));
 				dialog.dismiss();
 
 				mainActivity.toShow.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
@@ -314,7 +303,7 @@ public class HomeFragment extends Fragment {
 		};
 
 
-		TVFilter.setOnClickListener(v->{
+		TVFilter.setOnClickListener(v -> {
 			dialog.show();
 			rg_Filter.check(mainActivity.viewMode);
 			rg_Filter.setOnCheckedChangeListener(listener1);
@@ -334,7 +323,7 @@ public class HomeFragment extends Fragment {
 			@Override
 			public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 
-				if(dy > 0)
+				if (dy > 0)
 					mainActivity.FABAdd.hide();
 				else
 					mainActivity.FABAdd.show();
@@ -345,8 +334,8 @@ public class HomeFragment extends Fragment {
 	}
 
 	private boolean allSelected() {
-		for(int i=-1;++i<transactionAdapter.select.length;) {
-			if(transactionAdapter.transactions.get(i).id == -1)
+		for (int i = -1; ++i < transactionAdapter.select.length; ) {
+			if (transactionAdapter.transactions.get(i).id == -1)
 				continue;
 			if (!transactionAdapter.select[i])
 				return false;
@@ -355,29 +344,28 @@ public class HomeFragment extends Fragment {
 	}
 
 	private void setDate() {
-		int date=mainActivity.toShow.get(Calendar.DATE);
+		int date = mainActivity.toShow.get(Calendar.DATE);
 		int week = mainActivity.toShow.get(Calendar.WEEK_OF_YEAR);
-		int month=mainActivity.toShow.get(Calendar.MONTH);
-		int year=mainActivity.toShow.get(Calendar.YEAR);
+		int month = mainActivity.toShow.get(Calendar.MONTH);
+		int year = mainActivity.toShow.get(Calendar.YEAR);
 
-		if(mainActivity.viewMode == R.id.RBM)
-			TVPeriodShown.setText(getM(month)+", "+year);
-		else if(mainActivity.viewMode == R.id.RBW) {
-			Calendar calendar=Calendar.getInstance();
+		if (mainActivity.viewMode == R.id.RBM)
+			TVPeriodShown.setText(getM(month) + ", " + year);
+		else if (mainActivity.viewMode == R.id.RBW) {
+			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(mainActivity.toShow.getTimeInMillis());
-			calendar.add(Calendar.DATE, -calendar.get(Calendar.DAY_OF_WEEK)+1);
-			String s=calendar.get(Calendar.DATE)+" "+getM(calendar.get(Calendar.MONTH))+" - ";
-			calendar.add(Calendar.DATE,6);
+			calendar.add(Calendar.DATE, -calendar.get(Calendar.DAY_OF_WEEK) + 1);
+			String s = calendar.get(Calendar.DATE) + " " + getM(calendar.get(Calendar.MONTH)) + " - ";
+			calendar.add(Calendar.DATE, 6);
 
 
-			TVPeriodShown.setText(s+calendar.get(Calendar.DATE)+" "+getM(calendar.get(Calendar.MONTH)));
-		}
-		else if(mainActivity.viewMode == R.id.RBD)
-			TVPeriodShown.setText(date+" "+getM(month)+", "+year);
+			TVPeriodShown.setText(s + calendar.get(Calendar.DATE) + " " + getM(calendar.get(Calendar.MONTH)));
+		} else if (mainActivity.viewMode == R.id.RBD)
+			TVPeriodShown.setText(date + " " + getM(month) + ", " + year);
 	}
 
 	private String getM(int m) {
-		String a[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+		String[] a = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 		return a[m];
 	}
 }

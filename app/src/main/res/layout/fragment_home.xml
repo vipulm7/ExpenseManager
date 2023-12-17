@@ -1,244 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?backgroundSplit"
-    tools:context=".AnalysisFragment">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="?backgroundSplit"
+	tools:context=".AnalysisFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintDateChange"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="8dp"
-        >
-
-
-        <TextView
-            android:id="@+id/TVDateChange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text="TextView"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="?android:textColor"
-            android:background="?cardBackgroundColor"
-            android:textAlignment="center"
-            />
-
-        <TextView
-            android:id="@+id/TVbefore"
-            android:layout_width="35dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="3dp"
-            android:text="-"
-            android:textSize="20sp"
-            app:layout_constraintRight_toLeftOf="@id/TVDateChange"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/rc_left"
-            android:textAlignment="center"
-            />
-
-        <TextView
-            android:id="@+id/TVafter"
-            android:layout_width="35dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="3dp"
-            android:text="+"
-            android:textSize="20sp"
-            app:layout_constraintLeft_toRightOf="@id/TVDateChange"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/rc_right"
-            android:textAlignment="center"
-            />
-
-        <Button
-            android:id="@+id/TVFilter"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:background="@drawable/ic_filter"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/constraintDateChange"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="8dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintEnd_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintSummary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintDateChange"
+		<TextView
+			android:id="@+id/TVDateChange"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="?cardBackgroundColor"
+			android:padding="3dp"
+			android:paddingStart="10dp"
+			android:paddingEnd="10dp"
+			android:text="TextView"
+			android:textAlignment="center"
+			android:textColor="?android:textColor"
+			android:textSize="20sp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
 
-        >
+		<TextView
+			android:id="@+id/TVbefore"
+			android:layout_width="35dp"
+			android:layout_height="wrap_content"
+			android:background="@drawable/rc_left"
+			android:gravity="center"
+			android:padding="3dp"
+			android:text="-"
+			android:textAlignment="center"
+			android:textSize="20sp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintRight_toLeftOf="@id/TVDateChange"
+			app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/TVExpense"
-            android:layout_width="0dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginStart="3dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/rounded_corner_10"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="Expense"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/TVIncome"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="?android:textColor"
-            />
+		<TextView
+			android:id="@+id/TVafter"
+			android:layout_width="35dp"
+			android:layout_height="wrap_content"
+			android:background="@drawable/rc_right"
+			android:gravity="center"
+			android:padding="3dp"
+			android:text="+"
+			android:textAlignment="center"
+			android:textSize="20sp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintLeft_toRightOf="@id/TVDateChange"
+			app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/TVExpenseAmt"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginStart="3dp"
-            android:autoSizeMaxTextSize="18sp"
-            android:autoSizeMinTextSize="11sp"
-            android:autoSizeStepGranularity="1px"
-            android:autoSizeTextType="uniform"
-            android:background="@drawable/rounded_corner_10"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingStart="7dp"
-            android:paddingEnd="7dp"
-            android:text="\u20b90"
-            android:textColor="#FF0000"
-            app:layout_constraintEnd_toStartOf="@id/TVIncomeAmt"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TVExpense" />
+		<Button
+			android:id="@+id/TVFilter"
+			android:layout_width="34dp"
+			android:layout_height="34dp"
+			android:background="@drawable/ic_filter"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
 
-
-        <TextView
-            android:id="@+id/TVIncome"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginStart="3dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corner_10"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="Income"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@id/TVTotal"
-            app:layout_constraintStart_toEndOf="@+id/TVExpense"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="?android:textColor"
-            />
-
-        <TextView
-            android:id="@+id/TVIncomeAmt"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginStart="3dp"
-            android:layout_weight="1"
-            android:autoSizeMaxTextSize="18sp"
-            android:autoSizeMinTextSize="10sp"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            android:background="@drawable/rounded_corner_10"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingStart="7dp"
-            android:paddingEnd="7dp"
-            android:text="\u20b90"
-            android:textColor="#4fb85f"
-            app:layout_constraintEnd_toStartOf="@id/TVTotalAmt"
-            app:layout_constraintStart_toEndOf="@id/TVExpenseAmt"
-            app:layout_constraintTop_toBottomOf="@+id/TVIncome" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <TextView
-            android:id="@+id/TVTotal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginStart="3dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corner_10"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="Total"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/TVIncome"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="?android:textColor"
-            />
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/constraintSummary"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/constraintDateChange"
 
-        <TextView
-            android:id="@+id/TVTotalAmt"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginStart="3dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:autoSizeMaxTextSize="18sp"
-            android:autoSizeMinTextSize="10sp"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            android:background="@drawable/rounded_corner_10"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingStart="7dp"
-            android:paddingEnd="7dp"
-            android:text="\u20b90"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/TVIncomeAmt"
-            app:layout_constraintTop_toBottomOf="@+id/TVTotal" />
+		>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+		<TextView
+			android:id="@+id/TVExpense"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="3dp"
+			android:layout_marginEnd="3dp"
+			android:background="@drawable/rounded_corner_10"
+			android:gravity="center"
+			android:singleLine="true"
+			android:text="Expense"
+			android:textAlignment="center"
+			android:textColor="?android:textColor"
+			android:textSize="20sp"
+			app:layout_constraintEnd_toStartOf="@+id/TVIncome"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/TVExpenseAmt"
+			android:layout_width="0dp"
+			android:layout_height="32dp"
+			android:layout_marginStart="3dp"
+			android:layout_marginEnd="3dp"
+			android:autoSizeMaxTextSize="18sp"
+			android:autoSizeMinTextSize="11sp"
+			android:autoSizeStepGranularity="1px"
+			android:autoSizeTextType="uniform"
+			android:background="@drawable/rounded_corner_10"
+			android:gravity="center"
+			android:maxLines="1"
+			android:paddingStart="7dp"
+			android:paddingEnd="7dp"
+			android:text="\u20b90"
+			android:textColor="#FF0000"
+			app:layout_constraintEnd_toStartOf="@id/TVIncomeAmt"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/TVExpense" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RecyclerViewID"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintSummary" />
+		<TextView
+			android:id="@+id/TVIncome"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="3dp"
+			android:layout_marginEnd="3dp"
+			android:layout_weight="1"
+			android:background="@drawable/rounded_corner_10"
+			android:gravity="center"
+			android:singleLine="true"
+			android:text="Income"
+			android:textAlignment="center"
+			android:textColor="?android:textColor"
+			android:textSize="20sp"
+			app:layout_constraintEnd_toStartOf="@id/TVTotal"
+			app:layout_constraintStart_toEndOf="@+id/TVExpense"
+			app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/TVNoTransactionsFound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintDateChange"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="No transactions found!"
-        android:textSize="20sp"
-        />
+		<TextView
+			android:id="@+id/TVIncomeAmt"
+			android:layout_width="0dp"
+			android:layout_height="32dp"
+			android:layout_marginStart="3dp"
+			android:layout_marginEnd="3dp"
+			android:layout_weight="1"
+			android:autoSizeMaxTextSize="18sp"
+			android:autoSizeMinTextSize="10sp"
+			android:autoSizeStepGranularity="1sp"
+			android:autoSizeTextType="uniform"
+			android:background="@drawable/rounded_corner_10"
+			android:gravity="center"
+			android:maxLines="1"
+			android:paddingStart="7dp"
+			android:paddingEnd="7dp"
+			android:text="\u20b90"
+			android:textColor="#4fb85f"
+			app:layout_constraintEnd_toStartOf="@id/TVTotalAmt"
+			app:layout_constraintStart_toEndOf="@id/TVExpenseAmt"
+			app:layout_constraintTop_toBottomOf="@+id/TVIncome" />
+
+
+		<TextView
+			android:id="@+id/TVTotal"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="3dp"
+			android:layout_marginEnd="3dp"
+			android:layout_weight="1"
+			android:background="@drawable/rounded_corner_10"
+			android:gravity="center"
+			android:singleLine="true"
+			android:text="Total"
+			android:textAlignment="center"
+			android:textColor="?android:textColor"
+			android:textSize="20sp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/TVIncome"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/TVTotalAmt"
+			android:layout_width="0dp"
+			android:layout_height="32dp"
+			android:layout_gravity="center"
+			android:layout_marginStart="3dp"
+			android:layout_marginEnd="3dp"
+			android:layout_weight="1"
+			android:autoSizeMaxTextSize="18sp"
+			android:autoSizeMinTextSize="10sp"
+			android:autoSizeStepGranularity="1sp"
+			android:autoSizeTextType="uniform"
+			android:background="@drawable/rounded_corner_10"
+			android:gravity="center"
+			android:maxLines="1"
+			android:paddingStart="7dp"
+			android:paddingEnd="7dp"
+			android:text="\u20b90"
+			android:textAlignment="center"
+			android:textSize="24sp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/TVIncomeAmt"
+			app:layout_constraintTop_toBottomOf="@+id/TVTotal" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/RecyclerViewID"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/constraintSummary" />
+
+	<TextView
+		android:id="@+id/TVNoTransactionsFound"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="No transactions found!"
+		android:textSize="20sp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/constraintDateChange" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

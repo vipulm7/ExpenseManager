@@ -11,30 +11,25 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
-
-import java.util.Calendar;
 
 public class Receiver extends BroadcastReceiver {
 
-	public static final String ACTION_SNOOZE="com.example.android.wearable.wear.wearnotifications.handlers.action.SNOOZE";
-	public static final String ACTION_DISMISS="com.example.android.wearable.wear.wearnotifications.handlers.action.DISMISS";
-	public final String CHANNEL_ID="1";
-	public static final int notifID=2;
+	public static final String ACTION_SNOOZE = "com.example.android.wearable.wear.wearnotifications.handlers.action.SNOOZE";
+	public static final String ACTION_DISMISS = "com.example.android.wearable.wear.wearnotifications.handlers.action.DISMISS";
+	public static final int notifID = 2;
+	public static final String TAG = "Vipul_tag";
+	public final String CHANNEL_ID = "1";
 	NotificationManagerCompat notificationManager;
-	public static final String TAG="Vipul_tag";
-
 
 	@Override
 	public void onReceive(Context context, Intent intent2) {
 
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		boolean showNotif=sharedPreferences.getBoolean("notifs", true);
+		boolean showNotif = sharedPreferences.getBoolean("notifs", true);
 
-		if(showNotif && MainActivity.notificationManager!=null)
-		{
-			NotificationCompat.Builder builder= new NotificationCompat.Builder(context, CHANNEL_ID);
+		if (showNotif && MainActivity.notificationManager != null) {
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
 			builder.setSmallIcon(R.drawable.ic_notifications)
 					.setContentTitle("Add today's records!")
 					.setContentText("Where did you transact today!")
@@ -89,11 +84,11 @@ public class Receiver extends BroadcastReceiver {
 			context.startService(intent1);
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			long notifTime = sharedPreferences.getLong("notifTime", -1);
-			editor.putLong("notifTime", notifTime+AlarmManager.INTERVAL_DAY);
+			editor.putLong("notifTime", notifTime + AlarmManager.INTERVAL_DAY);
 			editor.apply();
 
-			Log.d(TAG, "notifTime before: "+notifTime);
-			Log.d(TAG, "notifTime after: "+sharedPreferences.getLong("notifTime", -1));
+			Log.d(TAG, "notifTime before: " + notifTime);
+			Log.d(TAG, "notifTime after: " + sharedPreferences.getLong("notifTime", -1));
 
 		}
 	}

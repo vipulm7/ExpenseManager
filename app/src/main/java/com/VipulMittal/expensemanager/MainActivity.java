@@ -1,26 +1,5 @@
 package com.VipulMittal.expensemanager;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import androidx.biometric.BiometricPrompt;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.Manifest;
 import android.app.ActivityOptions;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -29,7 +8,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -48,6 +26,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.VipulMittal.expensemanager.accountRoom.Account;
 import com.VipulMittal.expensemanager.accountRoom.AccountAdapter;
@@ -74,8 +70,13 @@ import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
-	public static final String TAG="Vipul_tag";
-	ExtendedFloatingActionButton FABAdd;
+	public static final String TAG = "Vipul_tag";
+	public static final int notifID = 2;
+	public static int[] amount;
+	public static int sum_amounts;
+	public static NotificationManagerCompat notificationManager;
+	public static PendingIntent pendingIntent;
+	public final String CHANNEL_ID = "1";
 	public TransactionAdapter transactionAdapter;
 	public TransactionViewModel transactionViewModel, transactionViewModel2;
 	public AccountAdapter accountAdapter;
@@ -85,42 +86,33 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	public SubCategoryAdapter subCategoryAdapter;
 	public SubCategoryViewModel subCategoryViewModel;
 	public List<SubCategory> allSubcats;
-
-	NavigationBarView navigationBarView;
-	ConstraintLayout layoutForFragment;
 	public Toast toast;
-	Calendar toShow;
 	public int expense, income;
 	public HomeFragment homeFragment;
-	AccountsFragment accountsFragment;
-	AnalysisFragment analysisFragment;
 	public CategoryFragment categoryFragment;
-	View accView, catView;
-	boolean b1, b2, b3, b4;
 	public long systemTimeInMillies;
-	boolean first_time;
-	public static int[] amount;
-	public static int sum_amounts;
-
-	public static NotificationManagerCompat notificationManager;
-	public final String CHANNEL_ID="1";
-	public static final int notifID=2;
-	ActivityResultLauncher<Intent> abc;
-	boolean areNotifAllowed;
-	ActionBar actionBar;
-	public static PendingIntent pendingIntent;
-	int viewMode;
-	boolean exit, login, menuShow;
 	public int[] icon_account, icon_category_income, icon_category_expense;
-
 	public Executor executor;
 	public BiometricPrompt biometricPrompt;
 	public BiometricPrompt.PromptInfo promptInfo;
+	public LayoutInflater inflater;
+	ExtendedFloatingActionButton FABAdd;
+	NavigationBarView navigationBarView;
+	ConstraintLayout layoutForFragment;
+	Calendar toShow;
+	AccountsFragment accountsFragment;
+	AnalysisFragment analysisFragment;
+	View accView, catView;
+	boolean b1, b2, b3, b4;
+	boolean first_time;
+	ActivityResultLauncher<Intent> abc;
+	boolean areNotifAllowed;
+	ActionBar actionBar;
+	int viewMode;
+	boolean exit, login, menuShow;
 	SharedPreferences sharedPreferences;
 	SwitchPreference notifSwitchPreference;
 	SettingsFragment settingsFragment;
-	public LayoutInflater inflater;
-
 	Map<Integer, List<SubCategory>> subcategoriesMap;
 	IconsAdapter iconsAdapterCat, iconsAdapter;
 
@@ -130,21 +122,21 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		FABAdd=findViewById(R.id.FABAdd);
-		navigationBarView=findViewById(R.id.BottomNavigation);
-		layoutForFragment=findViewById(R.id.layoutForFragment);
+		FABAdd = findViewById(R.id.FABAdd);
+		navigationBarView = findViewById(R.id.BottomNavigation);
+		layoutForFragment = findViewById(R.id.layoutForFragment);
 		settingsFragment = new SettingsFragment();
 		notifSwitchPreference = settingsFragment.notif;
 
-		subCategoryAdapter=new SubCategoryAdapter();
-		accountAdapter=new AccountAdapter();
-		categoryAdapter=new CategoryAdapter(this);
+		subCategoryAdapter = new SubCategoryAdapter();
+		accountAdapter = new AccountAdapter();
+		categoryAdapter = new CategoryAdapter(this);
 		categoryAdapter2 = new CategoryAdapter(this);
-		allSubcats=new ArrayList<>();
-		toShow=Calendar.getInstance();
+		allSubcats = new ArrayList<>();
+		toShow = Calendar.getInstance();
 		subcategoriesMap = new HashMap<>();
 		inflater = LayoutInflater.from(this);
-		icon_account= new int[]{R.drawable.ia_airtel_money, R.drawable.ia_amazon, R.drawable.ia_american_express, R.drawable.ia_apple_pay,
+		icon_account = new int[]{R.drawable.ia_airtel_money, R.drawable.ia_amazon, R.drawable.ia_american_express, R.drawable.ia_apple_pay,
 				R.drawable.ia_bitcoin_cash, R.drawable.ia_cash, R.drawable.ia_dogecoin, R.drawable.ia_ethereum,
 				R.drawable.ia_facebook_pay, R.drawable.ia_freecharge, R.drawable.ia_gift_card, R.drawable.ia_google_pay,
 				R.drawable.ia_google_wallet, R.drawable.ia_litecoin, R.drawable.ia_maestro, R.drawable.ia_master,
@@ -187,20 +179,18 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		viewMode = sharedPreferences.getInt("view", R.id.RBM);
 		first_time = sharedPreferences.getBoolean("first_time", true);
-		Log.d(TAG, "onCreate: viewMode = "+viewMode);
+		Log.d(TAG, "onCreate: viewMode = " + viewMode);
 		menuShow = true;
 
 		actionBar = getSupportActionBar();
-		if(actionBar!=null)
+		if (actionBar != null)
 			actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#154b5e")));
 
-		if(first_time)
-		{
+		if (first_time) {
 			amount = new int[10];
-			for(int i=-1;++i<10;)
-			{
+			for (int i = -1; ++i < 10; ) {
 				amount[i] = -(int) (Math.random() * 10000);
-				sum_amounts+=amount[i];
+				sum_amounts += amount[i];
 			}
 
 			SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -216,16 +206,16 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			editor.putLong("notifTime", calendar.getTimeInMillis());
 			editor.apply();
 
-			Log.d(TAG, "createNotif: notiftime = "+sharedPreferences.getLong("notifTime", -1));
+			Log.d(TAG, "createNotif: notiftime = " + sharedPreferences.getLong("notifTime", -1));
 		}
 
 
-		accountViewModel=new ViewModelProvider(this).get(AccountViewModel.class);
-		categoryViewModel=new ViewModelProvider(this).get(CategoryViewModel.class);
-		categoryViewModel2=new ViewModelProvider(this).get(CategoryViewModel.class);
-		subCategoryViewModel=new ViewModelProvider(this).get(SubCategoryViewModel.class);
-		transactionViewModel=new ViewModelProvider(this).get(TransactionViewModel.class);
-		transactionViewModel2=new ViewModelProvider(this).get(TransactionViewModel.class);
+		accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+		categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+		categoryViewModel2 = new ViewModelProvider(this).get(CategoryViewModel.class);
+		subCategoryViewModel = new ViewModelProvider(this).get(SubCategoryViewModel.class);
+		transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+		transactionViewModel2 = new ViewModelProvider(this).get(TransactionViewModel.class);
 
 		accountROOM();
 		categoryROOM();
@@ -233,28 +223,28 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		subCatROOM();
 		notification();
 
-		Calendar calendar=Calendar.getInstance();
-		Log.d(TAG, "onCreate: telldate day = "+calendar.get(Calendar.DAY_OF_MONTH));
-		Log.d(TAG, "onCreate: telldate date = "+calendar.get(Calendar.DATE));
-		Log.d(TAG, "onCreate: telldate DAY_OF_WEEK = "+calendar.get(Calendar.DAY_OF_WEEK));
+		Calendar calendar = Calendar.getInstance();
+		Log.d(TAG, "onCreate: telldate day = " + calendar.get(Calendar.DAY_OF_MONTH));
+		Log.d(TAG, "onCreate: telldate date = " + calendar.get(Calendar.DATE));
+		Log.d(TAG, "onCreate: telldate DAY_OF_WEEK = " + calendar.get(Calendar.DAY_OF_WEEK));
 
-		transactionAdapter=new TransactionAdapter(this);
+		transactionAdapter = new TransactionAdapter(this);
 
-		Log.d(TAG, "onCreate: bn_home = "+R.id.bn_home);
-		Log.d(TAG, "onCreate: bn_accounts = "+R.id.bn_accounts);
-		Log.d(TAG, "onCreate: bn_cat = "+R.id.bn_cat);
-		Log.d(TAG, "onCreate: bn_analysis = "+R.id.bn_analysis);
+		Log.d(TAG, "onCreate: bn_home = " + R.id.bn_home);
+		Log.d(TAG, "onCreate: bn_accounts = " + R.id.bn_accounts);
+		Log.d(TAG, "onCreate: bn_cat = " + R.id.bn_cat);
+		Log.d(TAG, "onCreate: bn_analysis = " + R.id.bn_analysis);
 
 
-		if(sharedPreferences.getBoolean("fingerprint", false))
+		if (sharedPreferences.getBoolean("fingerprint", false))
 			fingerprint();
 
 //		showFragment(R.id.bn_home);
-		actionBar=getSupportActionBar();
+		actionBar = getSupportActionBar();
 
 		navigationBarView.setOnItemSelectedListener(item -> {
-			int id=item.getItemId();
-			Log.d(TAG, "onCreate: selected navigation bar id = "+id);
+			int id = item.getItemId();
+			Log.d(TAG, "onCreate: selected navigation bar id = " + id);
 			showFragment(id);
 
 			return true;
@@ -263,37 +253,37 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		navigationBarView.setSelectedItemId(R.id.bn_home);
 
-		navigationBarView.setOnItemReselectedListener (item -> {
-			int id=item.getItemId();
+		navigationBarView.setOnItemReselectedListener(item -> {
+			int id = item.getItemId();
 			String print;
 
-			if(id==R.id.bn_home)
-				print="Home";
-			else if(id==R.id.bn_cat)
-				print="Category";
-			else if(id==R.id.bn_accounts)
-				print="Accounts";
+			if (id == R.id.bn_home)
+				print = "Home";
+			else if (id == R.id.bn_cat)
+				print = "Category";
+			else if (id == R.id.bn_accounts)
+				print = "Accounts";
 			else
-				print="Analysis";
+				print = "Analysis";
 
-			if(toast!=null)
+			if (toast != null)
 				toast.cancel();
 
-			toast=Toast.makeText(MainActivity.this, print, Toast.LENGTH_SHORT);
+			toast = Toast.makeText(MainActivity.this, print, Toast.LENGTH_SHORT);
 			toast.show();
 		});
 
-		LayoutInflater layoutInflater=LayoutInflater.from(this);
-		accView=layoutInflater.inflate(R.layout.account_dialog, null);
+		LayoutInflater layoutInflater = LayoutInflater.from(this);
+		accView = layoutInflater.inflate(R.layout.account_dialog, null);
 
 
-		EditText ETForAccN=accView.findViewById(R.id.ETDialogAccName);
-		EditText ETForAccIB=accView.findViewById(R.id.ETDialogAccBalance);
+		EditText ETForAccN = accView.findViewById(R.id.ETDialogAccName);
+		EditText ETForAccIB = accView.findViewById(R.id.ETDialogAccBalance);
 
 		TextView accTitle = new TextView(this);
 		accTitle.setText("Add New Account");
 		accTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-		accTitle.setPadding(2,16,2,10);
+		accTitle.setPadding(2, 16, 2, 10);
 		accTitle.setTextSize(22);
 		accTitle.setTypeface(null, Typeface.BOLD);
 
@@ -319,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				b1=charSequence.toString().trim().length() != 0;
+				b1 = charSequence.toString().trim().length() != 0;
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b1 && b2);
 			}
 
@@ -336,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				b2=charSequence.toString().trim().length() != 0;
+				b2 = charSequence.toString().trim().length() != 0;
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(b1 && b2);
 			}
 
@@ -344,7 +334,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			public void afterTextChanged(Editable editable) {
 			}
 		});
-
 
 
 		catView = layoutInflater.inflate(R.layout.category_dialog, null);
@@ -356,8 +345,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		AlertDialog.Builder builder2;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 			builder2 = new AlertDialog.Builder(this, android.R.style.ThemeOverlay_Material_Dialog);
-		}
-		else
+		} else
 			builder2 = new AlertDialog.Builder(this);
 		builder2.setNegativeButton("Cancel", (dialog2, which) -> {
 
@@ -405,11 +393,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		});
 		MainActivity mainActivity = this;
 
-		FABAdd.setOnClickListener(v->{
+		FABAdd.setOnClickListener(v -> {
 
-			systemTimeInMillies=0;
-			if(navigationBarView.getSelectedItemId()==R.id.bn_home)
-			{
+			systemTimeInMillies = 0;
+			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
 				Intent intent = new Intent(this, TransactionActivity.class);
 				intent.putExtra("EXTRA_DURATION", 500L);
 				intent.putExtra("calendar", Calendar.getInstance().getTimeInMillis());
@@ -422,23 +409,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 				ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, FABAdd, "EXTRA_VIEW_FAB");
 				startActivity(intent, options.toBundle());
-			}
-			else if(navigationBarView.getSelectedItemId()==R.id.bn_accounts)
-			{
+			} else if (navigationBarView.getSelectedItemId() == R.id.bn_accounts) {
 				dialog.show();
 
-				Button del1=dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-				del1.setOnClickListener(view->{
-					if(possible(ETForAccIB.getText().toString().trim())) {
+				Button del1 = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				del1.setOnClickListener(view -> {
+					if (possible(ETForAccIB.getText().toString().trim())) {
 						accountViewModel.Insert(new Account(ETForAccN.getText().toString(), 0, Integer.parseInt(ETForAccIB.getText().toString().trim()), icon_account[iconsAdapter.selected]));
 						dialog.dismiss();
-					}
-					else
-					{
-						if(toast!=null)
+					} else {
+						if (toast != null)
 							toast.cancel();
 
-						toast=Toast.makeText(this, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+						toast = Toast.makeText(this, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
 						toast.show();
 					}
 				});
@@ -451,10 +434,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				RecyclerView recyclerView = accView.findViewById(R.id.rv_icons_account);
 
 				IconsAdapter.ClickListener listener = viewHolder -> {
-					int pos=viewHolder.getAdapterPosition();
+					int pos = viewHolder.getAdapterPosition();
 
-					int a=iconsAdapter.selected;
-					iconsAdapter.selected=pos;
+					int a = iconsAdapter.selected;
+					iconsAdapter.selected = pos;
 
 					iconsAdapter.notifyItemChanged(a);
 					iconsAdapter.notifyItemChanged(pos);
@@ -463,23 +446,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				recyclerView.setHasFixedSize(true);
 				recyclerView.setAdapter(iconsAdapter);
 				recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false));
-			}
-			else if(navigationBarView.getSelectedItemId()==R.id.bn_cat)
-			{
+			} else if (navigationBarView.getSelectedItemId() == R.id.bn_cat) {
 				dialog2.show();
-				Button del2=dialog2.getButton(AlertDialog.BUTTON_POSITIVE);
-				del2.setOnClickListener(view->{
-					if(possible(ETForCatIB.getText().toString().trim())) {
-						int type=categoryFragment.catTabLayout.getSelectedTabPosition()+1;
+				Button del2 = dialog2.getButton(AlertDialog.BUTTON_POSITIVE);
+				del2.setOnClickListener(view -> {
+					if (possible(ETForCatIB.getText().toString().trim())) {
+						int type = categoryFragment.catTabLayout.getSelectedTabPosition() + 1;
 						categoryViewModel.Insert(new Category(ETForCatN.getText().toString().trim(), 0, Integer.parseInt(ETForCatIB.getText().toString().trim()), 0, type, icon_category_income[iconsAdapterCat.selected]));
 						dialog2.dismiss();
-					}
-					else
-					{
-						if(toast!=null)
+					} else {
+						if (toast != null)
 							toast.cancel();
 
-						toast=Toast.makeText(this, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
+						toast = Toast.makeText(this, "Only 0-9 characters allowed", Toast.LENGTH_SHORT);
 						toast.show();
 					}
 				});
@@ -490,8 +469,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 				int pos = categoryFragment.catTabLayout.getSelectedTabPosition();
-				if(pos==0)
-				{
+				if (pos == 0) {
 					catTitle.setText("Add New Income Category");
 					ETForCatIB.setVisibility(View.GONE);
 					ETForCatIB.setText("0");
@@ -503,8 +481,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					IconsAdapter.ClickListener listener = viewHolder -> {
 						int pos2 = viewHolder.getAdapterPosition();
 
-						int a=iconsAdapterCat.selected;
-						iconsAdapterCat.selected=pos2;
+						int a = iconsAdapterCat.selected;
+						iconsAdapterCat.selected = pos2;
 
 						iconsAdapterCat.notifyItemChanged(a);
 						iconsAdapterCat.notifyItemChanged(pos2);
@@ -513,9 +491,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					recyclerView.setAdapter(iconsAdapterCat);
 					recyclerView.setHasFixedSize(true);
 					recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false));
-				}
-				else if(pos == 1)
-				{
+				} else if (pos == 1) {
 					catTitle.setText("Add New Expense Category");
 					ETForCatIB.setVisibility(View.VISIBLE);
 					catView.findViewById(R.id.TVDialogCB).setVisibility(View.VISIBLE);
@@ -526,8 +502,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 					IconsAdapter.ClickListener listener = viewHolder -> {
 						int pos2 = viewHolder.getAdapterPosition();
 
-						int a=iconsAdapterCat.selected;
-						iconsAdapterCat.selected=pos2;
+						int a = iconsAdapterCat.selected;
+						iconsAdapterCat.selected = pos2;
 
 						iconsAdapterCat.notifyItemChanged(a);
 						iconsAdapterCat.notifyItemChanged(pos2);
@@ -545,7 +521,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 		FABAdd.setOnLongClickListener(v -> {
 
-			if(FABAdd.isExtended())
+			if (FABAdd.isExtended())
 				FABAdd.shrink();
 			else
 				FABAdd.extend();
@@ -557,8 +533,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		boolean showNotif = sharedPreferences.getBoolean("notifs", true);
 
 		sharedPreferences.registerOnSharedPreferenceChangeListener((sharedPreferences1, key) -> {
-			if(key.equals("notifs"))
-			{
+			if (key.equals("notifs")) {
 				SharedPreferences.Editor editor = sharedPreferences.edit();
 
 				Calendar calendar1 = Calendar.getInstance();
@@ -570,7 +545,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				editor.putLong("notifTime", calendar1.getTimeInMillis());
 				editor.apply();
 
-				if(sharedPreferences1.getBoolean(key, true))
+				if (sharedPreferences1.getBoolean(key, true))
 					createNotif();
 				else
 					stopNotif();
@@ -579,10 +554,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	private boolean possible(String trim) {
-		int n=trim.length();
-		for(int i=-1;++i<n;)
-		{
-			if(trim.charAt(i)>='0' && trim.charAt(i)<='9')
+		int n = trim.length();
+		for (int i = -1; ++i < n; ) {
+			if (trim.charAt(i) >= '0' && trim.charAt(i) <= '9')
 				continue;
 			return false;
 		}
@@ -590,14 +564,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	private void fingerprint() {
-		executor= ContextCompat.getMainExecutor(this);
+		executor = ContextCompat.getMainExecutor(this);
 		biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
 			@Override
 			public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
 				super.onAuthenticationError(errorCode, errString);
-				if(toast!=null)
+				if (toast != null)
 					toast.cancel();
-				toast=Toast.makeText(getApplicationContext(), "User not identified!", Toast.LENGTH_SHORT);
+				toast = Toast.makeText(getApplicationContext(), "User not identified!", Toast.LENGTH_SHORT);
 				toast.show();
 
 				systemTimeInMillies = System.currentTimeMillis();
@@ -608,9 +582,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			@Override
 			public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
 				super.onAuthenticationSucceeded(result);
-				if(toast!=null)
+				if (toast != null)
 					toast.cancel();
-				toast=Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT);
+				toast = Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT);
 				toast.show();
 				login = true;
 			}
@@ -636,24 +610,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 	public void notification() {
-		abc=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-			notificationManager=NotificationManagerCompat.from(this);
+		abc = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+			notificationManager = NotificationManagerCompat.from(this);
 			createNotificationChannelForOreoAndAbove();
-			areNotifAllowed =notificationManager.areNotificationsEnabled();
+			areNotifAllowed = notificationManager.areNotificationsEnabled();
 
 			notifSwitchPreference.setChecked(areNotifAllowed);
 		});
 
-		notificationManager=NotificationManagerCompat.from(this);
+		notificationManager = NotificationManagerCompat.from(this);
 		createNotificationChannelForOreoAndAbove();
-		areNotifAllowed =notificationManager.areNotificationsEnabled();
+		areNotifAllowed = notificationManager.areNotificationsEnabled();
 
-		if(!areNotifAllowed) {
+		if (!areNotifAllowed) {
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			editor.putBoolean("notifs", false);
 			editor.apply();
-		}
-		else
+		} else
 			createNotif();
 	}
 
@@ -664,13 +637,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 		else
 			pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
+		intent.setData((Uri.parse("custom://" + System.currentTimeMillis())));
 
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 //		alarmManager.cancel(pendingIntent);
-		if(alarmManager != null) {
+		if (alarmManager != null) {
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, sharedPreferences.getLong("notifTime", -1), AlarmManager.INTERVAL_DAY, pendingIntent);
-			Log.d(TAG, "createNotif: notiftime = "+sharedPreferences.getLong("notifTime", -1));
+			Log.d(TAG, "createNotif: notiftime = " + sharedPreferences.getLong("notifTime", -1));
 		}
 	}
 
@@ -678,19 +651,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
 
-		if(toast!=null)
+		if (toast != null)
 			toast.cancel();
-		toast=Toast.makeText(this, "Notif turned off", Toast.LENGTH_SHORT);
+		toast = Toast.makeText(this, "Notif turned off", Toast.LENGTH_SHORT);
 		toast.show();
 	}
 
 	public void openNotifSettings(SwitchPreference notifSwitchPreference) {
-		Intent intent=new Intent();
+		Intent intent = new Intent();
 		intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
 		intent.putExtra("app_package", getPackageName());
 		intent.putExtra("app_uid", getApplicationInfo().uid);
 
-		intent.putExtra("android.provider.extra.APP_PACKAGE",getPackageName());
+		intent.putExtra("android.provider.extra.APP_PACKAGE", getPackageName());
 
 		this.notifSwitchPreference = notifSwitchPreference;
 		abc.launch(intent);
@@ -701,7 +674,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Notif", NotificationManager.IMPORTANCE_HIGH);
 			channel.setDescription("DesForNotifChannel");
 
-			NotificationManager notificationManager=getSystemService(NotificationManager.class);
+			NotificationManager notificationManager = getSystemService(NotificationManager.class);
 			notificationManager.createNotificationChannel(channel);
 		}
 	}
@@ -709,33 +682,29 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "onBackPressed: came here");
-		Log.d(TAG, "onBackPressed: getBackStackEntryCount = "+getSupportFragmentManager().getBackStackEntryCount());
-		if(getSupportFragmentManager().getBackStackEntryCount()>0) {
+		Log.d(TAG, "onBackPressed: getBackStackEntryCount = " + getSupportFragmentManager().getBackStackEntryCount());
+		if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
 			getSupportFragmentManager().popBackStack();
-			Fragment fragment=getSupportFragmentManager().findFragmentByTag("repeat");
-			if(fragment != null)
+			Fragment fragment = getSupportFragmentManager().findFragmentByTag("repeat");
+			if (fragment != null)
 				getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 			FABAdd.show();
 			navigationBarView.setVisibility(View.VISIBLE);
 			setActionBarTitle("Expense Manager");
 			showMenu();
-		}
-		else
-		{
+		} else {
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
-				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = "+(System.currentTimeMillis() - systemTimeInMillies));
-				if(exit  ||  System.currentTimeMillis() - systemTimeInMillies<2000) {
+				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = " + (System.currentTimeMillis() - systemTimeInMillies));
+				if (exit || System.currentTimeMillis() - systemTimeInMillies < 2000) {
 					super.onBackPressed();
-				}
-				else {
+				} else {
 					systemTimeInMillies = System.currentTimeMillis();
-					if(toast!=null)
+					if (toast != null)
 						toast.cancel();
-					toast=Toast.makeText(this, "Press again to exit!", Toast.LENGTH_LONG);
+					toast = Toast.makeText(this, "Press again to exit!", Toast.LENGTH_LONG);
 					toast.show();
 				}
-			}
-			else {
+			} else {
 				navigationBarView.setSelectedItemId(R.id.bn_home);
 				setActionBarTitle("Expense Manager");
 			}
@@ -743,15 +712,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	public void transactionROOM() {
-		int date=toShow.get(Calendar.DATE);
+		int date = toShow.get(Calendar.DATE);
 		int week = toShow.get(Calendar.WEEK_OF_YEAR);
-		int month=toShow.get(Calendar.MONTH);
-		int year=toShow.get(Calendar.YEAR);
-		if(viewMode == R.id.RBM)
-		{
+		int month = toShow.get(Calendar.MONTH);
+		int year = toShow.get(Calendar.YEAR);
+		if (viewMode == R.id.RBM) {
 			transactionViewModel.getAllTransactionsMONTH(month, year).observe(this, transactions -> {
 				Log.d(TAG, "transactionROOM: transactions month before = " + transactionAdapter.transactions.size());
-				int a=transactionAdapter.transactions.size();
+				int a = transactionAdapter.transactions.size();
 				transactionAdapter.setTransactions(transactions);
 				transactionAdapter.notifyDataSetChanged();
 				Log.d(TAG, "transactionROOM: transactions month a = " + a);
@@ -765,21 +733,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				if (income + expense >= 0) {
 					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
 					homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
-				}
-				else
-				{
+				} else {
 					homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 					homeFragment.TVMainTotal.setTextColor(Color.RED);
 				}
 
-				if(transactions.size() == 0)
+				if (transactions.size() == 0)
 					homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
 				else
 					homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
 			});
-		}
-		else if(viewMode == R.id.RBW)
-		{
+		} else if (viewMode == R.id.RBW) {
 			transactionViewModel.getAllTransactionsWEEK(week, year).observe(this, new Observer<List<Transaction>>() {
 				@Override
 				public void onChanged(List<Transaction> transactions) {
@@ -797,15 +761,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 						homeFragment.TVMainTotal.setTextColor(Color.RED);
 					}
 
-					if(transactions.size() == 0)
+					if (transactions.size() == 0)
 						homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
 					else
 						homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
 				}
 			});
-		}
-		else if(viewMode == R.id.RBD)
-		{
+		} else if (viewMode == R.id.RBD) {
 			tellDate();
 			transactionViewModel.getAllTransactionsDAY(date, month, year).observe(this, new Observer<List<Transaction>>() {
 				@Override
@@ -823,7 +785,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 						homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
 						homeFragment.TVMainTotal.setTextColor(Color.RED);
 					}
-					if(transactions.size() == 0)
+					if (transactions.size() == 0)
 						homeFragment.TVNoTransFound.setVisibility(View.VISIBLE);
 					else
 						homeFragment.TVNoTransFound.setVisibility(View.INVISIBLE);
@@ -833,8 +795,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	private void showTransactions(List<Transaction> transactions) {
-		for(int i=-1;++i<transactions.size();)
-			Log.d(TAG, "transactionROOM: "+i+" "+transactions.get(i).note);
+		for (int i = -1; ++i < transactions.size(); )
+			Log.d(TAG, "transactionROOM: " + i + " " + transactions.get(i).note);
 		Log.d(TAG, "transactionROOM: =======================================================================");
 	}
 
@@ -842,8 +804,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		subCategoryViewModel.getSubcategories(catID).observe(this, new Observer<List<SubCategory>>() {
 			@Override
 			public void onChanged(List<SubCategory> subCats) {
-				Log.d(TAG, "onChanged: "+subCats);
-				Log.d(TAG, "onChanged: subCats.size = "+subCats.size());
+				Log.d(TAG, "onChanged: " + subCats);
+				Log.d(TAG, "onChanged: subCats.size = " + subCats.size());
 				subCategoryAdapter.setSubCategories(subCats);
 				subCategoryAdapter.notifyDataSetChanged();
 			}
@@ -858,7 +820,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				accountAdapter.setAccounts(accounts);
 //				accountAdapter.notifyItemInserted(accounts.size()-1);
 				accountAdapter.notifyDataSetChanged();
-				Log.d(TAG, "onChanged: account = "+accounts);
+				Log.d(TAG, "onChanged: account = " + accounts);
 
 				transactionAdapter.setAcc();
 				transactionAdapter.notifyDataSetChanged();
@@ -873,9 +835,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				subCategoryAdapter.setAllSubCats(subCategories);
 
 				subcategoriesMap.clear();
-				for(int i=-1;++i<subCategories.size();)
-				{
-					if(!subcategoriesMap.containsKey(subCategories.get(i).categoryID))
+				for (int i = -1; ++i < subCategories.size(); ) {
+					if (!subcategoriesMap.containsKey(subCategories.get(i).categoryID))
 						subcategoriesMap.put(subCategories.get(i).categoryID, new ArrayList<>());
 
 					subcategoriesMap.get(subCategories.get(i).categoryID).add(subCategories.get(i));
@@ -893,7 +854,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		categoryViewModel.getAllCategories(1).observe(this, new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
-				int pos1= posCat(categories, categoryAdapter.categories);
+				int pos1 = posCat(categories, categoryAdapter.categories);
 //				Log.d(TAG, "onCreateView: view model called");
 //				Log.d(TAG, "onCreateView: type = "+type);
 				categoryAdapter.setCategories(categories);
@@ -908,10 +869,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		categoryViewModel.getAllCategories(2).observe(this, new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
-				int pos1= posCat(categories, categoryAdapter2.categories);
+				int pos1 = posCat(categories, categoryAdapter2.categories);
 //				Log.d(TAG, "onCreateView: view model called");
 //				Log.d(TAG, "onCreateView: type = "+type);
-				Log.d(TAG, "onChanged: categories2.size()= "+categories.size());
+				Log.d(TAG, "onChanged: categories2.size()= " + categories.size());
 				categoryAdapter2.setCategories(categories);
 //				categoryAdapter2.notifyItemInserted(pos1);
 				categoryAdapter2.notifyDataSetChanged();
@@ -924,97 +885,90 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 	private Fragment getFragment(int id) {
-		if(id==R.id.bn_home)
+		if (id == R.id.bn_home)
 			return new HomeFragment();
-		else if(id==R.id.bn_cat)
+		else if (id == R.id.bn_cat)
 			return new CategoryFragment();
-		else if(id==R.id.bn_accounts)
+		else if (id == R.id.bn_accounts)
 			return new AccountsFragment();
 		else
 			return new AnalysisFragment();
 	}
 
-	public void setActionBarTitle(String title)
-	{
+	public void setActionBarTitle(String title) {
 		actionBar.setTitle(title);
 	}
 
 	public void showFragment(int id) {
 		FABAdd.hide();
 
-		if(id!=R.id.bn_analysis) {
+		if (id != R.id.bn_analysis) {
 			FABAdd.show();
 			FABAdd.shrink();
 		}
 
-		FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 		fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-		if(id==R.id.bn_home) {
-			homeFragment=new HomeFragment();
+		if (id == R.id.bn_home) {
+			homeFragment = new HomeFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, homeFragment).commit();
 			Log.d(TAG, "showFragment: home");
 			setActionBarTitle("Expense Manager");
 			FABAdd.setText("Add Transaction");
-		}
-		else if(id==R.id.bn_cat) {
-			categoryFragment=new CategoryFragment();
+		} else if (id == R.id.bn_cat) {
+			categoryFragment = new CategoryFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, categoryFragment).commit();
 			Log.d(TAG, "showFragment: category");
-			systemTimeInMillies=0;
+			systemTimeInMillies = 0;
 			setActionBarTitle("Categories ->");
 			FABAdd.setText("Add Category");
-		}
-		else if(id==R.id.bn_accounts) {
-			accountsFragment=new AccountsFragment();
+		} else if (id == R.id.bn_accounts) {
+			accountsFragment = new AccountsFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, accountsFragment).commit();
 			Log.d(TAG, "showFragment: accounts");
-			systemTimeInMillies=0;
+			systemTimeInMillies = 0;
 			setActionBarTitle("Expense Manager");
 			FABAdd.setText("Add Account");
-		}
-		else if(id==R.id.bn_analysis) {
-			analysisFragment=new AnalysisFragment();
+		} else if (id == R.id.bn_analysis) {
+			analysisFragment = new AnalysisFragment();
 			fragmentTransaction.replace(R.id.layoutForFragment, analysisFragment).commit();
 			Log.d(TAG, "showFragment: analysis");
-			systemTimeInMillies=0;
+			systemTimeInMillies = 0;
 			setActionBarTitle("Expense Manager");
-		}
-		else {
+		} else {
 			Log.d(TAG, "showFragment: else");
-			if(toast!=null)
+			if (toast != null)
 				toast.cancel();
-			toast=Toast.makeText(this, "Slow Down", Toast.LENGTH_SHORT);
+			toast = Toast.makeText(this, "Slow Down", Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
 
 	public String moneyToString(long money) {
-		int a=countDigits(money);
-		if(a<4)
-			return ""+money;
-		else
-		{
-			char c[]=new char[27];
-			for(int i=-1;++i<3;)
-			{
-				c[i]=(char)(money%10+48);
-				money/=10;
+		int a = countDigits(money);
+		if (a < 4)
+			return String.valueOf(money);
+		else {
+			char[] c = new char[27];
+			for (int i = -1; ++i < 3; ) {
+				c[i] = (char) (money % 10 + 48);
+				money /= 10;
 			}
-			a-=3;
+			a -= 3;
 
-			int b=0;
-			int index=3;
-			while (a>0) {
-				if(b==0)
-					c[index++]=',';
-				c[index++]=(char)(money%10+48);
-				money/=10;
-				b^=1;
+			int b = 0;
+			int index = 3;
+			while (a > 0) {
+				if (b == 0)
+					c[index++] = ',';
+				c[index++] = (char) (money % 10 + 48);
+				money /= 10;
+				b ^= 1;
 				a--;
 			}
-			String s="";
-			for(int i=-1;++i<index;)
-				s=c[i]+s;
+			String s = "";
+			for (int i = -1; ++i < index; )
+				s = c[i] + s;
 			return s;
 		}
 	}
@@ -1041,9 +995,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		return 1;
 	}
 
-	public long getDate(Calendar calendar)
-	{
-		long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000;
+	public long getDate(Calendar calendar) {
+		long a = calendar.getTimeInMillis() - calendar.get(Calendar.SECOND) * 1000 - calendar.get(Calendar.MINUTE) * 60000 - calendar.get(Calendar.MILLISECOND) - calendar.get(Calendar.HOUR_OF_DAY) * 3600000;
 		return a;
 	}
 
@@ -1055,9 +1008,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		int id=item.getItemId();
-		if(id==R.id.action_settings)
-		{
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
 			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 			fragmentTransaction.addToBackStack("settings");
 			fragmentTransaction.replace(R.id.layoutForFragment, settingsFragment)
@@ -1090,18 +1042,18 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	private int posCat(List<Category> newCategories, List<Category> oldCategories) {
 
-		int i=-1;
-		while (++i<oldCategories.size()) {
-			if(newCategories.get(i) != oldCategories.get(i))
+		int i = -1;
+		while (++i < oldCategories.size()) {
+			if (newCategories.get(i) != oldCategories.get(i))
 				return i;
 		}
 		return i;
 	}
 
-	public void tellDate(){
-		Log.d(TAG, "tellDate: DATE = "+toShow.get(Calendar.DATE));
-		Log.d(TAG, "tellDate: MONTH = "+toShow.get(Calendar.MONTH));
-		Log.d(TAG, "tellDate: WEEK_OF_YEAR = "+toShow.get(Calendar.WEEK_OF_YEAR));
+	public void tellDate() {
+		Log.d(TAG, "tellDate: DATE = " + toShow.get(Calendar.DATE));
+		Log.d(TAG, "tellDate: MONTH = " + toShow.get(Calendar.MONTH));
+		Log.d(TAG, "tellDate: WEEK_OF_YEAR = " + toShow.get(Calendar.WEEK_OF_YEAR));
 		Log.d(TAG, "tellDate: ================================================================");
 //		Log.d(TAG, "tellDate: DAY_OF_WEEK = "+toShow.get(Calendar.DAY_OF_WEEK));
 	}
@@ -1119,12 +1071,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		super.onResume();
 		Log.d(TAG, "onResume: called");
 
-		if(!login && sharedPreferences.getBoolean("fingerprint", false))
+		if (!login && sharedPreferences.getBoolean("fingerprint", false))
 			fingerprint();
 
-		notificationManager=NotificationManagerCompat.from(getApplicationContext());
+		notificationManager = NotificationManagerCompat.from(getApplicationContext());
 		createNotificationChannelForOreoAndAbove();
-		areNotifAllowed =notificationManager.areNotificationsEnabled();
+		areNotifAllowed = notificationManager.areNotificationsEnabled();
 
 //		if(!areNotifAllowed)
 //			notifSwitchPreference.setChecked(false);
@@ -1147,15 +1099,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		Log.d(TAG, "onPause: ");
 	}
 
-	public void hideMenu()
-	{
+	public void hideMenu() {
 		menuShow = false;
 		invalidateOptionsMenu();
 	}
 
-	public void showMenu()
-	{
-		menuShow=true;
+	public void showMenu() {
+		menuShow = true;
 		invalidateOptionsMenu();
 	}
 }

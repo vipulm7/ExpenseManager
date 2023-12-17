@@ -1,6 +1,5 @@
 package com.VipulMittal.expensemanager;
 
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,20 +16,20 @@ import java.util.List;
 
 public class AnalysisAdapter extends RecyclerView.Adapter<AnalysisAdapter.AnalysisViewHolder> {
 
+	public static final String TAG = "Vipul_tag";
 	LayoutInflater inflater;
 	ClickListener listener;
-	public static final String TAG="Vipul_tag";
 	DecimalFormat df;
 	List<Cat> percent;
 
 	public AnalysisAdapter() {
-		df=new DecimalFormat("0.00");
+		df = new DecimalFormat("0.00");
 	}
 
 	@NonNull
 	@Override
 	public AnalysisViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		if(inflater == null)
+		if (inflater == null)
 			inflater = LayoutInflater.from(parent.getContext());
 
 		View view = inflater.inflate(R.layout.cat_analysis_layout_per_item, parent, false);
@@ -42,12 +41,12 @@ public class AnalysisAdapter extends RecyclerView.Adapter<AnalysisAdapter.Analys
 
 		holder.TVCatName.setText(percent.get(position).catName);
 		double a = percent.get(position).catPercent;
-		Log.d(TAG, "onBindViewHolder: analysis percent="+a);
-		a*=100d;
-		holder.TVpercent.setText(""+df.format(a)+"%");
-		int b=(int)a;
-		if(b==0)
-			b=1;
+		Log.d(TAG, "onBindViewHolder: analysis percent=" + a);
+		a *= 100d;
+		holder.TVpercent.setText(df.format(a) + "%");
+		int b = (int) a;
+		if (b == 0)
+			b = 1;
 		holder.progressBar.setProgress(b);
 		holder.imageView.setImageResource(percent.get(position).imageID);
 	}
@@ -57,7 +56,11 @@ public class AnalysisAdapter extends RecyclerView.Adapter<AnalysisAdapter.Analys
 		return percent.size();
 	}
 
-	public class AnalysisViewHolder extends RecyclerView.ViewHolder{
+	public interface ClickListener {
+		void OnItemClick(AnalysisViewHolder viewHolder);
+	}
+
+	public class AnalysisViewHolder extends RecyclerView.ViewHolder {
 
 		ImageView imageView;
 		TextView TVCatName, TVpercent;
@@ -71,12 +74,8 @@ public class AnalysisAdapter extends RecyclerView.Adapter<AnalysisAdapter.Analys
 			TVCatName = itemView.findViewById(R.id.TVCatName);
 			progressBar = itemView.findViewById(R.id.progressBar);
 
-			if(listener != null)
+			if (listener != null)
 				listener.OnItemClick(this);
 		}
-	}
-
-	public interface ClickListener{
-		void OnItemClick(AnalysisViewHolder viewHolder);
 	}
 }

@@ -12,53 +12,46 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 
-import java.util.Calendar;
-
 @Database(entities = Account.class, version = 2)
 public abstract class AccountDatabase extends RoomDatabase {
 
-    private static AccountDatabase instance;
+	private static AccountDatabase instance;
+	private static final Callback roomCallback = new Callback() {
+		@Override
+		public void onCreate(@NonNull SupportSQLiteDatabase db) {
+			super.onCreate(db);
+			new PopulateDBAsyncTask(instance).execute();
+		}
+	};
 
-    public abstract AccountDAO accountDAO();
+	public static synchronized AccountDatabase getInstance(Context context) {
+		if (instance == null)
+			instance = Room.databaseBuilder(context.getApplicationContext(),
+							AccountDatabase.class, "account_database")
+					.fallbackToDestructiveMigration()
+					.allowMainThreadQueries()
+					.setJournalMode(JournalMode.TRUNCATE)
+					.addCallback(roomCallback).build();
 
-    public static synchronized AccountDatabase getInstance(Context context)
-    {
-        if(instance==null)
-            instance= Room.databaseBuilder(context.getApplicationContext(),
-                    AccountDatabase.class, "account_database")
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
-                    .setJournalMode(JournalMode.TRUNCATE)
-                    .addCallback(roomCallback).build();
+		return instance;
+	}
 
-        return instance;
-    }
+	public abstract AccountDAO accountDAO();
 
-    private static Callback roomCallback=new Callback()
-    {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-            new PopulateDBAsyncTask(instance).execute();
-        }
-    };
+	private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void> {
+		AccountDAO accountDAO;
 
-    private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void>
-    {
-        AccountDAO accountDAO;
+		private PopulateDBAsyncTask(AccountDatabase database) {
+			accountDAO = database.accountDAO();
+		}
 
-        private PopulateDBAsyncTask(AccountDatabase database)
-        {
-            accountDAO =database.accountDAO();
-        }
+		@Override
+		protected Void doInBackground(Void... voids) {
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            accountDAO.Insert(new Account("Cash",0,0, R.drawable.ia_cash));
-            accountDAO.Insert(new Account("Debit Card", MainActivity.sum_amounts,0, R.drawable.ia_visa));
-            accountDAO.Insert(new Account("Paytm",0,0, R.drawable.ia_paytm));
-            return null;
-        }
-    }
+			accountDAO.Insert(new Account("Cash", 0, 0, R.drawable.ia_cash));
+			accountDAO.Insert(new Account("Debit Card", MainActivity.sum_amounts, 0, R.drawable.ia_visa));
+			accountDAO.Insert(new Account("Paytm", 0, 0, R.drawable.ia_paytm));
+			return null;
+		}
+	}
 }

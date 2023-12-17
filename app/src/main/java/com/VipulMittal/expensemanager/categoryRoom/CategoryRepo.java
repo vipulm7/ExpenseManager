@@ -7,99 +7,86 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-public class CategoryRepo
-{
-    private CategoryDAO categoryDAO;
+public class CategoryRepo {
+	private final CategoryDAO categoryDAO;
 
-    public CategoryRepo(Application application)
-    {
-        CategoryDatabase categoryDatabase = CategoryDatabase.getInstance(application);
-        categoryDAO = categoryDatabase.categoryDAO();
-    }
+	public CategoryRepo(Application application) {
+		CategoryDatabase categoryDatabase = CategoryDatabase.getInstance(application);
+		categoryDAO = categoryDatabase.categoryDAO();
+	}
 
-    public void Insert (Category category)
-    {
-        new InsertNoteASyncTask(categoryDAO).execute(category);
-    }
+	public void Insert(Category category) {
+		new InsertNoteASyncTask(categoryDAO).execute(category);
+	}
 
-    public void Delete(Category category)
-    {
-        new DeleteNoteASyncTask(categoryDAO).execute(category);
-    }
+	public void Delete(Category category) {
+		new DeleteNoteASyncTask(categoryDAO).execute(category);
+	}
 
-    public void Update(Category category)
-    {
-        new UpdateNoteASyncTask(categoryDAO).execute(category);
-    }
+	public void Update(Category category) {
+		new UpdateNoteASyncTask(categoryDAO).execute(category);
+	}
 
-    public LiveData<List<Category>> getAllCategories(int type)
-    {
-        return categoryDAO.getAllCategories(type);
-    }
+	public LiveData<List<Category>> getAllCategories(int type) {
+		return categoryDAO.getAllCategories(type);
+	}
 
-    public void catAdded(int catID)
-    {
-        categoryDAO.catAdded(catID);
-    }
+	public void catAdded(int catID) {
+		categoryDAO.catAdded(catID);
+	}
 
-    public void catDeleted(int catID)
-    {
-        categoryDAO.catDeleted(catID);
-    }
+	public void catDeleted(int catID) {
+		categoryDAO.catDeleted(catID);
+	}
 
-    public Category getCat(int catID)
-    {
-        return categoryDAO.getCat(catID);
-    }
+	public Category getCat(int catID) {
+		return categoryDAO.getCat(catID);
+	}
 
-    public void UpdateAmt(int increment, int cID)
-    {
-        categoryDAO.UpdateAmt(increment, cID);
-    }
+	public void UpdateAmt(int increment, int cID) {
+		categoryDAO.UpdateAmt(increment, cID);
+	}
 
 
-    private static class InsertNoteASyncTask extends AsyncTask<Category,Void,Void>
-    {
-        private CategoryDAO transactionDAO;
+	private static class InsertNoteASyncTask extends AsyncTask<Category, Void, Void> {
+		private final CategoryDAO transactionDAO;
 
-        private InsertNoteASyncTask(CategoryDAO transactionDAO)
-        {
-            this.transactionDAO=transactionDAO;
-        }
-        @Override
-        protected Void doInBackground(Category... categories) {
-            this.transactionDAO.Insert(categories[0]);
-            return null;
-        }
-    }
+		private InsertNoteASyncTask(CategoryDAO transactionDAO) {
+			this.transactionDAO = transactionDAO;
+		}
 
-    private static class DeleteNoteASyncTask extends AsyncTask<Category,Void,Void>
-    {
-        private CategoryDAO transactionDAO;
+		@Override
+		protected Void doInBackground(Category... categories) {
+			this.transactionDAO.Insert(categories[0]);
+			return null;
+		}
+	}
 
-        private DeleteNoteASyncTask(CategoryDAO transactionDAO)
-        {
-            this.transactionDAO=transactionDAO;
-        }
-        @Override
-        protected Void doInBackground(Category... categories) {
-            this.transactionDAO.Delete(categories[0]);
-            return null;
-        }
-    }
+	private static class DeleteNoteASyncTask extends AsyncTask<Category, Void, Void> {
+		private final CategoryDAO transactionDAO;
 
-    private static class UpdateNoteASyncTask extends AsyncTask<Category,Void,Void>
-    {
-        private CategoryDAO transactionDAO;
+		private DeleteNoteASyncTask(CategoryDAO transactionDAO) {
+			this.transactionDAO = transactionDAO;
+		}
 
-        private UpdateNoteASyncTask(CategoryDAO transactionDAO)
-        {
-            this.transactionDAO=transactionDAO;
-        }
-        @Override
-        protected Void doInBackground(Category... categories) {
-            this.transactionDAO.Update(categories[0]);
-            return null;
-        }
-    }
+		@Override
+		protected Void doInBackground(Category... categories) {
+			this.transactionDAO.Delete(categories[0]);
+			return null;
+		}
+	}
+
+	private static class UpdateNoteASyncTask extends AsyncTask<Category, Void, Void> {
+		private final CategoryDAO transactionDAO;
+
+		private UpdateNoteASyncTask(CategoryDAO transactionDAO) {
+			this.transactionDAO = transactionDAO;
+		}
+
+		@Override
+		protected Void doInBackground(Category... categories) {
+			this.transactionDAO.Update(categories[0]);
+			return null;
+		}
+	}
 }

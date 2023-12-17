@@ -16,15 +16,13 @@ import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
-import androidx.preference.SwitchPreferenceCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-	public static final String TAG="Vipul_tag";
+	public static final String TAG = "Vipul_tag";
 	ActivityResultLauncher<Intent> abc;
 	BiometricManager biometricManager;
 	MainActivity mainActivity;
@@ -35,8 +33,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 	@Override
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
 		setPreferencesFromResource(R.xml.main, rootKey);
-		Log.d(TAG, "onCreatePreferences: rootKey = "+rootKey);
-		Log.d(TAG, "onCreatePreferences: savedInstanceState = "+savedInstanceState);
+		Log.d(TAG, "onCreatePreferences: rootKey = " + rootKey);
+		Log.d(TAG, "onCreatePreferences: savedInstanceState = " + savedInstanceState);
 		notif = findPreference("notifs");
 //		EditTextPreference editTextPreference = findPreference("password");
 //		SwitchPreference passwordSwitch = findPreference("passwordOnOff");
@@ -114,21 +112,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
 				boolean on = (boolean) newValue;
 
-				if(on) {
+				if (on) {
 
-					MainActivity.notificationManager= NotificationManagerCompat.from(mainActivity.getApplicationContext());
+					MainActivity.notificationManager = NotificationManagerCompat.from(mainActivity.getApplicationContext());
 					mainActivity.createNotificationChannelForOreoAndAbove();
-					mainActivity.areNotifAllowed =MainActivity.notificationManager.areNotificationsEnabled();
+					mainActivity.areNotifAllowed = MainActivity.notificationManager.areNotificationsEnabled();
 
-					if(!mainActivity.areNotifAllowed) {
+					if (!mainActivity.areNotifAllowed) {
 						mainActivity.openNotifSettings(notif);
-						Log.d(TAG, "onPreferenceChange: mainActivity.areNotifAllowed = "+mainActivity.areNotifAllowed);
+						Log.d(TAG, "onPreferenceChange: mainActivity.areNotifAllowed = " + mainActivity.areNotifAllowed);
 						return false;
-					}
-					else
+					} else
 						return true;
-				}
-				else
+				} else
 					return true;
 			}
 		});
@@ -136,37 +132,29 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 		fps_listener = new Preference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
-				Log.d(TAG, "onPreferenceChange: newValue = "+newValue);
-				boolean checked=(boolean) newValue;
+				Log.d(TAG, "onPreferenceChange: newValue = " + newValue);
+				boolean checked = (boolean) newValue;
 
 //				fingerprintSwitch.setOnPreferenceChangeListener(null);
 //				fingerprintSwitch.setChecked(false);
 //				fingerprintSwitch.setOnPreferenceChangeListener(fps_listener);
 
-				if(checked)
-				{
+				if (checked) {
 					biometricManager = BiometricManager.from(getContext());
-					if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED)
-					{
-						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
-						{
+					if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED) {
+						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
 							Intent addFingerIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
 							addFingerIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED, BiometricManager.Authenticators.BIOMETRIC_STRONG);
 
 							abc.launch(addFingerIntent);
-						}
-						else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P)
-						{
+						} else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
 							Intent addFingerIntent = new Intent(Settings.ACTION_FINGERPRINT_ENROLL);
 							abc.launch(addFingerIntent);
-						}
-						else
-						{
+						} else {
 							Intent addFingerIntent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
 							abc.launch(addFingerIntent);
 						}
-					}
-					else if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS) {
+					} else if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS) {
 						mainActivity.executor = ContextCompat.getMainExecutor(getContext());
 						mainActivity.biometricPrompt = new BiometricPrompt(getActivity(), mainActivity.executor, new BiometricPrompt.AuthenticationCallback() {
 							@Override
@@ -211,8 +199,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 						mainActivity.biometricPrompt.authenticate(mainActivity.promptInfo);
 					}
 					return false;
-				}
-				else
+				} else
 					return true;
 			}
 		};

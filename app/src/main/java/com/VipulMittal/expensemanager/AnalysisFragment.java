@@ -5,12 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +14,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.VipulMittal.expensemanager.categoryRoom.Category;
 import com.VipulMittal.expensemanager.categoryRoom.CategoryAdapter;
@@ -43,18 +42,18 @@ import java.util.Map;
 
 public class AnalysisFragment extends Fragment {
 
-	public static final String TAG="Vipul_tag";
+	public static final String TAG = "Vipul_tag";
 	PieChart pieChart;
 	MainActivity mainActivity;
 	RadioGroup rg_chart;
 	Toast toast;
 	ArrayList<PieEntry> pieEntries;
 	CategoryAdapter categoryAdapter;
-	RadioButton RBI,RBE;
+	RadioButton RBI, RBE;
 	TextView TVBefore, TVAfter, TVPeriodShown, TVFilter;
 	Calendar toShow;
 	int viewMode;
-	Map <Integer, Integer> catAmount;
+	Map<Integer, Integer> catAmount;
 	RadioGroup rg_Filter;
 	RecyclerView rv_analysis;
 	int totalIncome, totalExpense;
@@ -67,26 +66,26 @@ public class AnalysisFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_analysis, container, false);
 
-		pieChart=view.findViewById(R.id.pieChart);
-		mainActivity=(MainActivity) getActivity();
-		rg_chart=view.findViewById(R.id.RGChart);
-		TVAfter=view.findViewById(R.id.TVafter);
-		TVBefore=view.findViewById(R.id.TVbefore);
-		TVPeriodShown =view.findViewById(R.id.TVDateChange);
+		pieChart = view.findViewById(R.id.pieChart);
+		mainActivity = (MainActivity) getActivity();
+		rg_chart = view.findViewById(R.id.RGChart);
+		TVAfter = view.findViewById(R.id.TVafter);
+		TVBefore = view.findViewById(R.id.TVbefore);
+		TVPeriodShown = view.findViewById(R.id.TVDateChange);
 		toShow = Calendar.getInstance();
-		TVFilter=view.findViewById(R.id.TVFilter);
-		rv_analysis=view.findViewById(R.id.rv_analysis);
+		TVFilter = view.findViewById(R.id.TVFilter);
+		rv_analysis = view.findViewById(R.id.rv_analysis);
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 		viewMode = sharedPreferences.getInt("viewAnalysis", R.id.RBM);
-		SharedPreferences.Editor editor= sharedPreferences.edit();
+		SharedPreferences.Editor editor = sharedPreferences.edit();
 		catAmount = new HashMap<>();
-		toast=mainActivity.toast;
-		RBE=view.findViewById(R.id.radioCatExpenseChart);
-		RBI=view.findViewById(R.id.radioCatIncomeChart);
+		toast = mainActivity.toast;
+		RBE = view.findViewById(R.id.radioCatExpenseChart);
+		RBI = view.findViewById(R.id.radioCatIncomeChart);
 		analysisAdapter = new AnalysisAdapter();
 
 		AnalysisAdapter.ClickListener listener = new AnalysisAdapter.ClickListener() {
@@ -108,19 +107,18 @@ public class AnalysisFragment extends Fragment {
 		setDate();
 
 		View filterView = inflater.inflate(R.layout.filter_dialog, null);
-		rg_Filter =filterView.findViewById(R.id.RGFilter);
+		rg_Filter = filterView.findViewById(R.id.RGFilter);
 
 		TextView viewTitle = new TextView(getContext());
 		viewTitle.setText("View Mode");
 		viewTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-		viewTitle.setPadding(2,16,2,10);
+		viewTitle.setPadding(2, 16, 2, 10);
 		viewTitle.setTextSize(22);
 		viewTitle.setTypeface(null, Typeface.BOLD);
 
 		AlertDialog.Builder builder;
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
 			builder = new AlertDialog.Builder(getContext(), android.R.style.ThemeOverlay_Material_Dialog);
-		}
 		else
 			builder = new AlertDialog.Builder(getContext());
 		builder.setCustomTitle(viewTitle)
@@ -132,23 +130,23 @@ public class AnalysisFragment extends Fragment {
 		TVAfter.setText(">");
 		TVBefore.setText("<");
 
-		TVAfter.setOnClickListener(v->{
-			if(viewMode == R.id.RBM)
+		TVAfter.setOnClickListener(v -> {
+			if (viewMode == R.id.RBM)
 				toShow.add(Calendar.MONTH, 1);
-			else if(viewMode == R.id.RBD)
+			else if (viewMode == R.id.RBD)
 				toShow.add(Calendar.DATE, 1);
-			else if(viewMode == R.id.RBW)
+			else if (viewMode == R.id.RBW)
 				toShow.add(Calendar.WEEK_OF_YEAR, 1);
 			transactionROOM();
 			setDate();
 		});
 
-		TVBefore.setOnClickListener(v->{
-			if(viewMode == R.id.RBM)
+		TVBefore.setOnClickListener(v -> {
+			if (viewMode == R.id.RBM)
 				toShow.add(Calendar.MONTH, -1);
-			else if(viewMode == R.id.RBD)
+			else if (viewMode == R.id.RBD)
 				toShow.add(Calendar.DATE, -1);
-			else if(viewMode == R.id.RBW)
+			else if (viewMode == R.id.RBW)
 				toShow.add(Calendar.WEEK_OF_YEAR, -1);
 			transactionROOM();
 			setDate();
@@ -159,9 +157,9 @@ public class AnalysisFragment extends Fragment {
 			public void onCheckedChanged(RadioGroup radioGroup, int checkedID) {
 				editor.putInt("viewAnalysis", checkedID);
 				editor.apply();
-				viewMode=checkedID;
-				Log.d(TAG, "onCheckedChanged: viewMode = "+viewMode);
-				Log.d(TAG, "onCheckedChanged: shared = "+sharedPreferences.getInt("viewAnalysis", -1));
+				viewMode = checkedID;
+				Log.d(TAG, "onCheckedChanged: viewMode = " + viewMode);
+				Log.d(TAG, "onCheckedChanged: shared = " + sharedPreferences.getInt("viewAnalysis", -1));
 				dialog.dismiss();
 
 				toShow.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
@@ -171,13 +169,11 @@ public class AnalysisFragment extends Fragment {
 			}
 		};
 
-		TVFilter.setOnClickListener(v->{
+		TVFilter.setOnClickListener(v -> {
 			dialog.show();
 			rg_Filter.check(viewMode);
 			rg_Filter.setOnCheckedChangeListener(listener1);
 		});
-
-
 
 
 		pieChart.setUsePercentValues(true);
@@ -199,33 +195,29 @@ public class AnalysisFragment extends Fragment {
 		});
 
 
-
-
 		return view;
 	}
 
 	private void setRadioButton(int type) {
-		int id=-1;
-		if(type==1)
-			id=R.id.radioCatIncomeChart;
-		else if(type==2)
-			id=R.id.radioCatExpenseChart;
+		int id = -1;
+		if (type == 1)
+			id = R.id.radioCatIncomeChart;
+		else if (type == 2)
+			id = R.id.radioCatExpenseChart;
 
-		if(id!=-1)
+		if (id != -1)
 			rg_chart.check(id);
-		else
-		{
-			if(toast!=null)
+		else {
+			if (toast != null)
 				toast.cancel();
-			toast= Toast.makeText(getContext(), "Error in chart type selection", Toast.LENGTH_SHORT);
+			toast = Toast.makeText(getContext(), "Error in chart type selection", Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
 
 	private void radioGroupSetListener() {
 		rg_chart.setOnCheckedChangeListener((radioGroup, type) -> {
-			if(type==R.id.radioCatIncomeChart)
-			{
+			if (type == R.id.radioCatIncomeChart) {
 				pieData(1);
 				pieChart.invalidate();
 
@@ -233,9 +225,7 @@ public class AnalysisFragment extends Fragment {
 				RBI.setTextSize(25);
 				RBE.setTextColor(Color.parseColor("#1a74a1"));
 				RBE.setTextSize(20);
-			}
-			else if(type==R.id.radioCatExpenseChart)
-			{
+			} else if (type == R.id.radioCatExpenseChart) {
 				pieData(2);
 				pieChart.invalidate();
 
@@ -247,50 +237,46 @@ public class AnalysisFragment extends Fragment {
 		});
 	}
 
-	public void pieData(int type)
-	{
-		pieEntries=new ArrayList<>();
+	public void pieData(int type) {
+		pieEntries = new ArrayList<>();
 
 		List<Integer> cat = new ArrayList<>(catAmount.keySet());
-		double s=0;
+		double s = 0;
 		List<Cat> percent = new ArrayList<>();
 		DecimalFormat df = new DecimalFormat("0.00");
-		double a=0;
+		double a = 0;
 
-		if(type ==1)
-		{
-			for(int i=-1;++i<cat.size();) {
+		if (type == 1) {
+			for (int i = -1; ++i < cat.size(); ) {
 				Category category = mainActivity.categoryViewModel.getCat(cat.get(i));
-				if(catAmount.get(cat.get(i))>0) {
+				if (catAmount.get(cat.get(i)) > 0) {
 					pieEntries.add(new PieEntry(catAmount.get(cat.get(i)), category.catName));
-					a = (double)catAmount.get(cat.get(i)) / totalIncome;
-					s+=a;
+					a = (double) catAmount.get(cat.get(i)) / totalIncome;
+					s += a;
 					percent.add(new Cat(a, category.catName, category.catImageID));
 				}
-				Log.d(TAG, "pieData: amt = "+catAmount.get(cat.get(i))+" name = "+category.catName);
+				Log.d(TAG, "pieData: amt = " + catAmount.get(cat.get(i)) + " name = " + category.catName);
 			}
 
-			if(percent.size()!=0) {
+			if (percent.size() != 0) {
 				s -= a;
 				a = 1 - s;
 				percent.set(percent.size() - 1, new Cat(a, percent.get(percent.size() - 1).catName, percent.get(percent.size() - 1).imageID));
 			}
 
 			pieChart.setNoDataText("No Income Entries");
-		}
-		else
-		{
-			for(int i=-1;++i<cat.size();) {
+		} else {
+			for (int i = -1; ++i < cat.size(); ) {
 				Category category = mainActivity.categoryViewModel.getCat(cat.get(i));
-				if(catAmount.get(cat.get(i))<0) {
+				if (catAmount.get(cat.get(i)) < 0) {
 					pieEntries.add(new PieEntry(-catAmount.get(cat.get(i)), category.catName));
-					a = (double)catAmount.get(cat.get(i)) / totalExpense;
-					s+=a;
+					a = (double) catAmount.get(cat.get(i)) / totalExpense;
+					s += a;
 					percent.add(new Cat(a, category.catName, category.catImageID));
 				}
 			}
 
-			if(percent.size()!=0) {
+			if (percent.size() != 0) {
 				s -= a;
 				a = 1 - s;
 				percent.set(percent.size() - 1, new Cat(a, percent.get(percent.size() - 1).catName, percent.get(percent.size() - 1).imageID));
@@ -302,9 +288,9 @@ public class AnalysisFragment extends Fragment {
 		analysisAdapter.percent = percent;
 		analysisAdapter.notifyDataSetChanged();
 
-		Log.d(TAG, "radioGroupSetListener: pie size="+pieEntries.size());
+		Log.d(TAG, "radioGroupSetListener: pie size=" + pieEntries.size());
 
-		PieDataSet pieDataSet=new PieDataSet(pieEntries, "");
+		PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
 		pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 		pieDataSet.setDrawValues(true);
 
@@ -312,7 +298,7 @@ public class AnalysisFragment extends Fragment {
 		pieData.setValueFormatter(new PercentFormatter());
 		pieData.setValueTextSize(12f);
 
-		if(pieEntries.size()>0)
+		if (pieEntries.size() > 0)
 			pieChart.setData(pieData);
 		else
 			pieChart.setData(null);
@@ -325,89 +311,81 @@ public class AnalysisFragment extends Fragment {
 	}
 
 	public void transactionROOM() {
-		int date=toShow.get(Calendar.DATE);
+		int date = toShow.get(Calendar.DATE);
 		int week = toShow.get(Calendar.WEEK_OF_YEAR);
-		int month=toShow.get(Calendar.MONTH);
-		int year=toShow.get(Calendar.YEAR);
-		if(viewMode == R.id.RBM)
-		{
+		int month = toShow.get(Calendar.MONTH);
+		int year = toShow.get(Calendar.YEAR);
+		if (viewMode == R.id.RBM) {
 			mainActivity.transactionViewModel2.getAllTransactionsMONTH(month, year).observe(getViewLifecycleOwner(), transactions -> {
 				Log.d(TAG, "transactionROOM: transactions month = " + transactions.size());
 				setCatAmount(transactions);
-				int check=rg_chart.getCheckedRadioButtonId();
+				int check = rg_chart.getCheckedRadioButtonId();
 				rg_chart.clearCheck();
 				rg_chart.check(check);
 			});
-		}
-		else if(viewMode == R.id.RBW)
-		{
+		} else if (viewMode == R.id.RBW) {
 			mainActivity.transactionViewModel2.getAllTransactionsWEEK(week, year).observe(getViewLifecycleOwner(), transactions -> {
 				Log.d(TAG, "transactionROOM: transactions week = " + transactions.size());
 				setCatAmount(transactions);
-				int check=rg_chart.getCheckedRadioButtonId();
+				int check = rg_chart.getCheckedRadioButtonId();
 				rg_chart.clearCheck();
 				rg_chart.check(check);
 			});
-		}
-		else if(viewMode == R.id.RBD)
-		{
+		} else if (viewMode == R.id.RBD) {
 			mainActivity.transactionViewModel2.getAllTransactionsDAY(date, month, year).observe(getViewLifecycleOwner(), transactions -> {
 				Log.d(TAG, "transactionROOM: transactions day = " + transactions.size());
 				setCatAmount(transactions);
-				int check=rg_chart.getCheckedRadioButtonId();
+				int check = rg_chart.getCheckedRadioButtonId();
 				rg_chart.clearCheck();
 				rg_chart.check(check);
 			});
 		}
 	}
 
-	public void setCatAmount(List<Transaction> transactions)
-	{
+	public void setCatAmount(List<Transaction> transactions) {
 		catAmount.clear();
 		totalExpense = 0;
 		totalIncome = 0;
 
-		for(int i=-1;++i<transactions.size();)
-		{
-			if(transactions.get(i).type==3)
+		for (int i = -1; ++i < transactions.size(); ) {
+			if (transactions.get(i).type == 3)
 				continue;
 
-			if(!catAmount.containsKey(transactions.get(i).catID))
+			if (!catAmount.containsKey(transactions.get(i).catID))
 				catAmount.put(transactions.get(i).catID, 0);
-			Integer a=catAmount.get(transactions.get(i).catID);
-			a+=transactions.get(i).amount;
+			Integer a = catAmount.get(transactions.get(i).catID);
+			a += transactions.get(i).amount;
 			catAmount.put(transactions.get(i).catID, a);
-			if(transactions.get(i).type ==1)
-				totalIncome+=transactions.get(i).amount;
+			if (transactions.get(i).type == 1)
+				totalIncome += transactions.get(i).amount;
 			else
-				totalExpense+=transactions.get(i).amount;
+				totalExpense += transactions.get(i).amount;
 		}
 	}
 
 	private void setDate() {
-		int date=toShow.get(Calendar.DATE);
+		int date = toShow.get(Calendar.DATE);
 		int week = toShow.get(Calendar.WEEK_OF_YEAR);
-		int month=toShow.get(Calendar.MONTH);
-		int year=toShow.get(Calendar.YEAR);
+		int month = toShow.get(Calendar.MONTH);
+		int year = toShow.get(Calendar.YEAR);
 
-		if(viewMode == R.id.RBM)
-			TVPeriodShown.setText(getM(month)+", "+year);
-		else if(viewMode == R.id.RBW) {
-			Calendar calendar=Calendar.getInstance();
+		if (viewMode == R.id.RBM)
+			TVPeriodShown.setText(getM(month) + ", " + year);
+		else if (viewMode == R.id.RBW) {
+			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(toShow.getTimeInMillis());
-			calendar.add(Calendar.DATE, -calendar.get(Calendar.DAY_OF_WEEK)+1);
-			String s=calendar.get(Calendar.DATE)+" "+getM(calendar.get(Calendar.MONTH))+" - ";
-			calendar.add(Calendar.DATE,6);
+			calendar.add(Calendar.DATE, -calendar.get(Calendar.DAY_OF_WEEK) + 1);
+			String s = calendar.get(Calendar.DATE) + " " + getM(calendar.get(Calendar.MONTH)) + " - ";
+			calendar.add(Calendar.DATE, 6);
 
 
-			TVPeriodShown.setText(s+calendar.get(Calendar.DATE)+" "+getM(calendar.get(Calendar.MONTH)));
-		}
-		else if(viewMode == R.id.RBD)
-			TVPeriodShown.setText(date+" "+getM(month)+", "+year);
+			TVPeriodShown.setText(s + calendar.get(Calendar.DATE) + " " + getM(calendar.get(Calendar.MONTH)));
+		} else if (viewMode == R.id.RBD)
+			TVPeriodShown.setText(date + " " + getM(month) + ", " + year);
 	}
 
 	private String getM(int m) {
-		String a[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+		String[] a = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 		return a[m];
 	}
 }

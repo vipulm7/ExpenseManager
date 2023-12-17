@@ -1,83 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="20dp"
-    >
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="20dp">
 
 
-    <RadioGroup
-        android:id="@+id/RGCatDialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+	<RadioGroup
+		android:id="@+id/RGCatDialog"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="horizontal"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
 
-        app:layout_constraintTop_toTopOf="parent">
+		app:layout_constraintTop_toTopOf="parent">
 
-        <RadioButton
-            android:id="@+id/RBI"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Income"
-            android:button="@drawable/ic_done"
-            android:checked="true"
-            />
+		<RadioButton
+			android:id="@+id/RBI"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:button="@drawable/ic_done"
+			android:checked="true"
+			android:text="Income" />
 
-        <RadioButton
-            android:id="@+id/RBE"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Expense"
-            android:button="@drawable/ic_done"
-            />
+		<RadioButton
+			android:id="@+id/RBE"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:button="@drawable/ic_done"
+			android:text="Expense" />
 
-    </RadioGroup>
+	</RadioGroup>
 
-    <TextView
-        android:id="@+id/TVDialogCN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Category Name"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/RGCatDialog"/>
+	<TextView
+		android:id="@+id/TVDialogCN"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Category Name"
+		android:textSize="18sp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/RGCatDialog" />
 
-    <EditText
-        android:id="@+id/ETDialogCatName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter Category Name"
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TVDialogCN" />
+	<EditText
+		android:id="@+id/ETDialogCatName"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:ems="10"
+		android:hint="Enter Category Name"
+		android:inputType="textPersonName"
+		android:singleLine="true"
+		android:textSize="18sp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/TVDialogCN" />
 
-    <TextView
-        android:id="@+id/TVDialogCB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Budget"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ETDialogCatName"
-        />
+	<TextView
+		android:id="@+id/TVDialogCB"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Budget"
+		android:textSize="18sp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/ETDialogCatName" />
 
-    <EditText
-        android:id="@+id/ETDialogCatBudget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter Budget"
-        android:inputType="number"
-        android:singleLine="true"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TVDialogCB" />
+	<EditText
+		android:id="@+id/ETDialogCatBudget"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:ems="10"
+		android:hint="Enter Budget"
+		android:inputType="number"
+		android:singleLine="true"
+		android:textSize="18sp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/TVDialogCB" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:interpolator="@android:anim/anticipate_overshoot_interpolator"
-	android:fillAfter="true">
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+	android:fillAfter="true"
+	android:interpolator="@android:anim/anticipate_overshoot_interpolator">
 
 	<translate
+		android:duration="650"
 		android:fromYDelta="0%"
-		android:toYDelta="100%"
-		android:duration="650"
-		/>
+		android:toYDelta="100%" />
 
-	<alpha android:toAlpha="0.0"
-		android:fromAlpha="1.0"
+	<alpha
 		android:duration="650"
-		/>
+		android:fromAlpha="1.0"
+		android:toAlpha="0.0" />
 </set>

@@ -17,23 +17,7 @@ import java.util.Calendar;
 public abstract class TransactionDatabase extends RoomDatabase {
 
 	private static TransactionDatabase instance;
-
-	public abstract TransactionDAO transactionDAO();
-
-	public static synchronized TransactionDatabase getInstance(Context context)
-	{
-		if(instance==null)
-			instance= Room.databaseBuilder(context.getApplicationContext(),
-					TransactionDatabase.class, "trans_database")
-					.fallbackToDestructiveMigration()
-					.allowMainThreadQueries()
-					.addCallback(roomCallback).build();
-
-		return instance;
-	}
-
-	private static Callback roomCallback=new Callback()
-	{
+	private static final Callback roomCallback = new Callback() {
 		@Override
 		public void onCreate(@NonNull SupportSQLiteDatabase db) {
 			super.onCreate(db);
@@ -41,13 +25,29 @@ public abstract class TransactionDatabase extends RoomDatabase {
 		}
 	};
 
-	private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void>
-	{
+	public static synchronized TransactionDatabase getInstance(Context context) {
+		if (instance == null)
+			instance = Room.databaseBuilder(context.getApplicationContext(),
+							TransactionDatabase.class, "trans_database")
+					.fallbackToDestructiveMigration()
+					.allowMainThreadQueries()
+					.addCallback(roomCallback).build();
+
+		return instance;
+	}
+
+	public static long getDate(Calendar calendar) {
+		long a = calendar.getTimeInMillis() - calendar.get(Calendar.SECOND) * 1000 - calendar.get(Calendar.MINUTE) * 60000 - calendar.get(Calendar.MILLISECOND) - calendar.get(Calendar.HOUR_OF_DAY) * 3600000;
+		return a;
+	}
+
+	public abstract TransactionDAO transactionDAO();
+
+	private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void> {
 		TransactionDAO transactionDAO;
 
-		private PopulateDBAsyncTask(TransactionDatabase database)
-		{
-			transactionDAO=database.transactionDAO();
+		private PopulateDBAsyncTask(TransactionDatabase database) {
+			transactionDAO = database.transactionDAO();
 		}
 
 		@Override
@@ -61,12 +61,11 @@ public abstract class TransactionDatabase extends RoomDatabase {
 //            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*4L));
 //            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*5L));
 
-			for(int i=-1;++i<10;) {
-				Calendar calendar=Calendar.getInstance();
-				calendar.add(Calendar.DATE, -2*i);
+			for (int i = -1; ++i < 10; ) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.add(Calendar.DATE, -2 * i);
 				transactionDAO.Insert(new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 13, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i));
 			}
-
 
 
 //            for(int i=-1;++i<30;) {
@@ -77,12 +76,6 @@ public abstract class TransactionDatabase extends RoomDatabase {
 
 			return null;
 		}
-	}
-
-	public static long getDate(Calendar calendar)
-	{
-		long a=calendar.getTimeInMillis()-calendar.get(Calendar.SECOND)*1000-calendar.get(Calendar.MINUTE)*60000-calendar.get(Calendar.MILLISECOND)-calendar.get(Calendar.HOUR_OF_DAY)*3600000;
-		return a;
 	}
 
 }

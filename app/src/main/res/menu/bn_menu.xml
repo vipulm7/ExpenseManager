@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/bn_home"
-        android:title="Home"
-        android:icon="@drawable/ic_home"
-        />
+	<item
+		android:id="@+id/bn_home"
+		android:icon="@drawable/ic_home"
+		android:title="Home" />
 
-    <item
-        android:id="@+id/bn_analysis"
-        android:title="Analysis"
-        android:icon="@drawable/ic_analysis"
-        />
+	<item
+		android:id="@+id/bn_analysis"
+		android:icon="@drawable/ic_analysis"
+		android:title="Analysis" />
 
-    <item
-        android:id="@+id/bn_accounts"
-        android:title="Accounts"
-        android:icon="@drawable/ic_account"
-        />
+	<item
+		android:id="@+id/bn_accounts"
+		android:icon="@drawable/ic_account"
+		android:title="Accounts" />
 
-    <item
-        android:id="@+id/bn_cat"
-        android:title="Category"
-        android:icon="@drawable/ic_category"
-        />
+	<item
+		android:id="@+id/bn_cat"
+		android:icon="@drawable/ic_category"
+		android:title="Category" />
 
 
 </menu>

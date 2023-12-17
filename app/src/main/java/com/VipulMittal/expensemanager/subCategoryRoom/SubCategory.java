@@ -8,7 +8,7 @@ public class SubCategory {
 	@PrimaryKey(autoGenerate = true)
 	public int id;
 
-   	public String name;
+	public String name;
 	public int subCatAmount;
 	public int subCatBudget;
 	public int categoryID;
@@ -20,11 +20,11 @@ public class SubCategory {
 		this.subCatAmount = subCatAmount;
 		this.subCatBudget = subCatBudget;
 		this.categoryID = categoryID;
-		this.type=type;
+		this.type = type;
 		this.subCatImageID = subCatImageID;
 	}
 
 	public int getId() {
-	  return id;
-   }
+		return id;
+	}
 }

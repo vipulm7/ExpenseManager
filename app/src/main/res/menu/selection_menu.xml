@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<item android:id="@+id/menuSelectDelete"
-		android:title="Delete"
+	<item
+		android:id="@+id/menuSelectDelete"
 		android:icon="@drawable/ic_delete"
-		app:showAsAction="always"
-		/>
+		android:title="Delete"
+		app:showAsAction="always" />
 
-	<item android:icon="@drawable/ic_select_all"
-		android:title="Select All"
-		app:showAsAction="always"
+	<item
 		android:id="@+id/menuSelectAll"
-		/>
+		android:icon="@drawable/ic_select_all"
+		android:title="Select All"
+		app:showAsAction="always" />
 </menu>

@@ -3,18 +3,15 @@
 
 	<item
 		android:id="@+id/m_add_new_subcat"
-		android:title="Add new Sub-Category"
-		/>
+		android:title="Add new Sub-Category" />
 
 	<item
 		android:id="@+id/m_delete_cat"
-		android:title="Delete Category"
-		/>
+		android:title="Delete Category" />
 
 	<item
 		android:id="@+id/m_edit_cat"
-		android:title="Edit Category"
-		/>
+		android:title="Edit Category" />
 
 
 </menu>

@@ -10,42 +10,36 @@ import java.util.List;
 
 public class AccountViewModel extends AndroidViewModel {
 
-    public AccountRepo repo;
-    private LiveData<List<Account>> accounts;
+	public AccountRepo repo;
+	private LiveData<List<Account>> accounts;
 
-    public AccountViewModel(@NonNull Application application) {
-        super(application);
-        repo =new AccountRepo(application);
-    }
+	public AccountViewModel(@NonNull Application application) {
+		super(application);
+		repo = new AccountRepo(application);
+	}
 
-    public void Insert(Account account)
-    {
-        repo.Insert(account);
-    }
+	public void Insert(Account account) {
+		repo.Insert(account);
+	}
 
-    public void Delete(Account account)
-    {
-        repo.Delete(account);
-    }
+	public void Delete(Account account) {
+		repo.Delete(account);
+	}
 
-    public void Update(Account account)
-    {
-        repo.Update(account);
-    }
+	public void Update(Account account) {
+		repo.Update(account);
+	}
 
-    public LiveData<List<Account>> getAllAccounts()
-    {
-        accounts = repo.getAllAccounts();
-        return accounts;
-    }
+	public LiveData<List<Account>> getAllAccounts() {
+		accounts = repo.getAllAccounts();
+		return accounts;
+	}
 
-    public Account getAcc(int aID)
-    {
-        return repo.getAcc(aID);
-    }
+	public Account getAcc(int aID) {
+		return repo.getAcc(aID);
+	}
 
-    public void UpdateAmt(int increment, int aID)
-    {
-        repo.UpdateAmt(increment, aID);
-    }
+	public void UpdateAmt(int increment, int aID) {
+		repo.UpdateAmt(increment, aID);
+	}
 }

@@ -12,21 +12,21 @@ import java.util.List;
 @Dao
 public interface AccountDAO {
 
-    @Insert
-    void Insert(Account account);
+	@Insert
+	void Insert(Account account);
 
-    @Update
-    void Update(Account account);
+	@Update
+	void Update(Account account);
 
-    @Delete
-    void Delete(Account account);
+	@Delete
+	void Delete(Account account);
 
-    @Query("SELECT * FROM account_table")
-    LiveData<List<Account>> getAllAccounts();
+	@Query("SELECT * FROM account_table")
+	LiveData<List<Account>> getAllAccounts();
 
-    @Query("SELECT * FROM account_table WHERE id=:aID")
-    Account getAcc(int aID);
+	@Query("SELECT * FROM account_table WHERE id=:aID")
+	Account getAcc(int aID);
 
-    @Query("UPDATE account_table SET amount=amount+:increment WHERE id=:aID")
-    void UpdateAmt(int increment, int aID);
+	@Query("UPDATE account_table SET amount=amount+:increment WHERE id=:aID")
+	void UpdateAmt(int increment, int aID);
 }

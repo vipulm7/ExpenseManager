@@ -1,134 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/rounded_corner_15"
-    android:layout_margin="5dp"
-    android:padding="3dp"
-    >
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="5dp"
+	android:background="@drawable/rounded_corner_15"
+	android:padding="3dp">
 
-    <ImageView
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/progressBar"
-        android:id="@+id/IVCat_image"
-        />
+	<ImageView
+		android:id="@+id/IVCat_image"
+		android:layout_width="42dp"
+		android:layout_height="42dp"
+		app:layout_constraintBottom_toTopOf="@id/progressBar"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/TVCat_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Cat Name"
-        app:layout_constraintStart_toEndOf="@id/IVCat_image"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/TVCat_ARROW"
-        android:padding="2dp"
-        android:textSize="16sp"
-        android:layout_marginStart="8dp"
-        />
+	<TextView
+		android:id="@+id/TVCat_name"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:padding="2dp"
+		android:text="Cat Name"
+		android:textSize="16sp"
+		app:layout_constraintEnd_toStartOf="@id/TVCat_ARROW"
+		app:layout_constraintStart_toEndOf="@id/IVCat_image"
+		app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/TVCat_AMOUNT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Amount : "
-        app:layout_constraintStart_toEndOf="@id/IVCat_image"
-        app:layout_constraintTop_toBottomOf="@id/TVCat_name"
-        android:textSize="13sp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        android:layout_marginStart="8dp"
-        />
+	<TextView
+		android:id="@+id/TVCat_AMOUNT"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:paddingStart="2dp"
+		android:paddingEnd="2dp"
+		android:text="Amount : "
+		android:textSize="13sp"
+		app:layout_constraintStart_toEndOf="@id/IVCat_image"
+		app:layout_constraintTop_toBottomOf="@id/TVCat_name" />
 
-    <TextView
-        android:id="@+id/TVCat_amt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Amt"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="41dp"
-        app:layout_constraintStart_toEndOf="@id/TVCat_AMOUNT"
-        app:layout_constraintTop_toBottomOf="@id/TVCat_name"
-        app:layout_constraintEnd_toStartOf="@id/TVCat_ARROW"
-        android:layout_marginStart="10dp"
-        android:textSize="13sp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        />
+	<TextView
+		android:id="@+id/TVCat_amt"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:paddingStart="2dp"
+		android:paddingEnd="2dp"
+		android:text="Amt"
+		android:textSize="13sp"
+		app:layout_constraintEnd_toStartOf="@id/TVCat_ARROW"
+		app:layout_constraintStart_toEndOf="@id/TVCat_AMOUNT"
+		app:layout_constraintTop_toBottomOf="@id/TVCat_name"
+		tools:layout_editor_absoluteX="142dp"
+		tools:layout_editor_absoluteY="41dp" />
 
-    <TextView
-        android:id="@+id/TVCat_BUDGET"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Budget   : "
-        app:layout_constraintStart_toEndOf="@id/IVCat_image"
-        app:layout_constraintTop_toBottomOf="@id/TVCat_AMOUNT"
-        android:textSize="13sp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        android:layout_marginStart="8dp"
-        />
+	<TextView
+		android:id="@+id/TVCat_BUDGET"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:paddingStart="2dp"
+		android:paddingEnd="2dp"
+		android:text="Budget   : "
+		android:textSize="13sp"
+		app:layout_constraintStart_toEndOf="@id/IVCat_image"
+		app:layout_constraintTop_toBottomOf="@id/TVCat_AMOUNT" />
 
-    <TextView
-        android:id="@+id/TVCat_budget"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Bgt"
-        app:layout_constraintStart_toEndOf="@id/TVCat_BUDGET"
-        app:layout_constraintTop_toBottomOf="@id/TVCat_amt"
-        app:layout_constraintEnd_toStartOf="@id/TVCat_ARROW"
-        android:layout_marginStart="10dp"
-        android:textSize="13sp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        />
+	<TextView
+		android:id="@+id/TVCat_budget"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:paddingStart="2dp"
+		android:paddingEnd="2dp"
+		android:text="Bgt"
+		android:textSize="13sp"
+		app:layout_constraintEnd_toStartOf="@id/TVCat_ARROW"
+		app:layout_constraintStart_toEndOf="@id/TVCat_BUDGET"
+		app:layout_constraintTop_toBottomOf="@id/TVCat_amt" />
 
-    <TextView
-        android:id="@+id/TVCat_ARROW"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/ic_three_dot"
-        app:layout_constraintBottom_toTopOf="@id/progressBar"
-        />
+	<TextView
+		android:id="@+id/TVCat_ARROW"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="8dp"
+		android:background="@drawable/ic_three_dot"
+		app:layout_constraintBottom_toTopOf="@id/progressBar"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/IVCat_image"
-        app:layout_constraintEnd_toEndOf="@id/TVCat_ARROW"
-        app:layout_constraintTop_toBottomOf="@id/TVCat_BUDGET"
-        android:layout_marginStart="8dp"
-        android:progressBackgroundTint="@color/cyan_dark"
-        />
+	<ProgressBar
+		android:id="@+id/progressBar"
+		style="?android:attr/progressBarStyleHorizontal"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:progressBackgroundTint="@color/cyan_dark"
+		app:layout_constraintEnd_toEndOf="@id/TVCat_ARROW"
+		app:layout_constraintStart_toEndOf="@id/IVCat_image"
+		app:layout_constraintTop_toBottomOf="@id/TVCat_BUDGET" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBar"
-        android:id="@+id/constraintLayoutCat"
-        >
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/constraintLayoutCat"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/progressBar">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/rv_SubcatList"
-            />
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rv_SubcatList"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
