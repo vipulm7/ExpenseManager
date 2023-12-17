@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 
 import com.VipulMittal.expensemanager.BSD_Account.BsdAccountsFragment;
 import com.VipulMittal.expensemanager.BSD_Cat.BsdCatFragment;
@@ -67,6 +68,8 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 
 		getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
 		// Set up shared element transition
+
+		SplashScreen.installSplashScreen(this);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_transaction);
@@ -395,6 +398,12 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 			}
 		});
 
+	}
+
+	@Override
+	public boolean onSupportNavigateUp() {
+		onBackPressed();
+		return true;
 	}
 
 	public void saveSelectedAccount(int aID, Account accountSelected) {

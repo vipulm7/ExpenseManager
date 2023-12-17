@@ -17,7 +17,7 @@
 		android:label="@string/app_name"
 		android:roundIcon="@mipmap/ic_app_icon_round"
 		android:supportsRtl="true"
-		android:theme="@style/Theme.ExpenseManager">
+		android:theme="@style/Theme.ExpenseManager.Starting">
 		<activity
 			android:name=".MainActivity"
 			android:exported="true"
