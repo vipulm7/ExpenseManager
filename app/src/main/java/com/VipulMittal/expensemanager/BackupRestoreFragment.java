@@ -3,6 +3,7 @@ package com.VipulMittal.expensemanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -49,15 +50,12 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 		assert backupPreference != null;
 		assert restorePreference != null;
 
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O)
-			return;
-
 		backupPreference.setOnPreferenceClickListener(preference -> {
 			try {
 				Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 				intent.addCategory(Intent.CATEGORY_OPENABLE);
 				intent.setType("application/zip");
-				intent.putExtra(Intent.EXTRA_TITLE, "ExpenseManager_db" + ".zip");
+				intent.putExtra(Intent.EXTRA_TITLE, "ExpenseManager_db_" + timeStamp() + ".zip");
 				exportDBLauncher.launch(intent);
 			} catch (Exception e) {
 				Log.d(TAG, "exportDatabase: error = " + e);
@@ -105,20 +103,22 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 	}
 
 	private void addDatabaseToZip(String databaseName, ZipOutputStream zipOutputStream) {
-		try {
-			String databasePath = requireActivity().getDatabasePath(databaseName).getAbsolutePath();
-			InputStream inputStream = Files.newInputStream(Paths.get(databasePath));
-			ZipEntry zipEntry = new ZipEntry(databaseName + ".db");
-			zipOutputStream.putNextEntry(zipEntry);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			try {
+				String databasePath = requireActivity().getDatabasePath(databaseName).getAbsolutePath();
+				InputStream inputStream = Files.newInputStream(Paths.get(databasePath));
+				ZipEntry zipEntry = new ZipEntry(databaseName + ".db");
+				zipOutputStream.putNextEntry(zipEntry);
 
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = inputStream.read(buffer)) > 0)
-				zipOutputStream.write(buffer, 0, length);
+				byte[] buffer = new byte[1024];
+				int length;
+				while ((length = inputStream.read(buffer)) > 0)
+					zipOutputStream.write(buffer, 0, length);
 
-			zipOutputStream.closeEntry();
-		} catch (Exception e) {
-			e.printStackTrace();
+				zipOutputStream.closeEntry();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -143,19 +143,21 @@ public class BackupRestoreFragment extends PreferenceFragmentCompat {
 	}
 
 	private void restoreDatabase(ZipInputStream zipInputStream, String entryName) {
-		try {
-			File dbFile = requireActivity().getDatabasePath(entryName);
-			OutputStream outputStream = Files.newOutputStream(dbFile.toPath());
-			byte[] buffer = new byte[1024];
-			int length;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			try {
+				File dbFile = requireActivity().getDatabasePath(entryName);
+				OutputStream outputStream = Files.newOutputStream(dbFile.toPath());
+				byte[] buffer = new byte[1024];
+				int length;
 
-			while ((length = zipInputStream.read(buffer)) > 0)
-				outputStream.write(buffer, 0, length);
+				while ((length = zipInputStream.read(buffer)) > 0)
+					outputStream.write(buffer, 0, length);
 
-			outputStream.flush();
-			outputStream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+				outputStream.flush();
+				outputStream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
