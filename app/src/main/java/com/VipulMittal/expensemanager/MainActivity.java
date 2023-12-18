@@ -979,12 +979,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	}
 
 	public long getDate(Calendar calendar) {
-		long a = calendar.getTimeInMillis() - calendar.get(Calendar.SECOND) * 1000 - calendar.get(Calendar.MINUTE) * 60000 - calendar.get(Calendar.MILLISECOND) - calendar.get(Calendar.HOUR_OF_DAY) * 3600000;
-		return a;
+		return calendar.getTimeInMillis() - calendar.get(Calendar.SECOND) * 1000 - calendar.get(Calendar.MINUTE) * 60000 - calendar.get(Calendar.MILLISECOND) - calendar.get(Calendar.HOUR_OF_DAY) * 3600000;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			menu.removeItem(R.id.action_backup);
 		getMenuInflater().inflate(R.menu.main, menu);
 		return menuShow;
 	}
