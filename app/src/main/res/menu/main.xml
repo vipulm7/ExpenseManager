@@ -9,11 +9,10 @@
 		android:title="Settings"
 		app:showAsAction="never" />
 
-	<!--    <item-->
-	<!--        android:id="@+id/action_backup"-->
-	<!--        android:orderInCategory="2"-->
-	<!--        app:showAsAction="never"-->
-	<!--        android:title="Backup And Restore"-->
-	<!--        />-->
+	<item
+		android:id="@+id/action_backup"
+		android:orderInCategory="2"
+		android:title="Backup And Restore"
+		app:showAsAction="never" />
 
 </menu>
