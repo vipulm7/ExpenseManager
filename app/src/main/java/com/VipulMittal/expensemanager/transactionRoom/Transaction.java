@@ -37,8 +37,6 @@ public class Transaction {
 		dateOfMonth = calendar.get(Calendar.DATE);
 		year = calendar.get(Calendar.YEAR);
 		week = calendar.get(Calendar.WEEK_OF_YEAR);
-
-//		Log.d(TAG, "Transaction:database m=" + month + " y=" + year);
 	}
 
 	public int getId() {

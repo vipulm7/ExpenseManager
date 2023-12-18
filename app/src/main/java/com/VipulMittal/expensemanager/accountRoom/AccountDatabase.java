@@ -1,7 +1,6 @@
 package com.VipulMittal.expensemanager.accountRoom;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -12,6 +11,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.VipulMittal.expensemanager.MainActivity;
 import com.VipulMittal.expensemanager.R;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Database(entities = Account.class, version = 2)
 public abstract class AccountDatabase extends RoomDatabase {
 
@@ -20,7 +22,13 @@ public abstract class AccountDatabase extends RoomDatabase {
 		@Override
 		public void onCreate(@NonNull SupportSQLiteDatabase db) {
 			super.onCreate(db);
-			new PopulateDBAsyncTask(instance).execute();
+			ExecutorService executorService = Executors.newSingleThreadExecutor();
+			AccountDAO accountDAO = instance.accountDAO();
+			executorService.execute(() -> {
+				accountDAO.Insert(new Account("Cash", 0, 0, R.drawable.ia_cash));
+				accountDAO.Insert(new Account("Debit Card", MainActivity.sum_amounts, 0, R.drawable.ia_visa));
+				accountDAO.Insert(new Account("Paytm", 0, 0, R.drawable.ia_paytm));
+			});
 		}
 	};
 
@@ -37,21 +45,4 @@ public abstract class AccountDatabase extends RoomDatabase {
 	}
 
 	public abstract AccountDAO accountDAO();
-
-	private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void> {
-		AccountDAO accountDAO;
-
-		private PopulateDBAsyncTask(AccountDatabase database) {
-			accountDAO = database.accountDAO();
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-
-			accountDAO.Insert(new Account("Cash", 0, 0, R.drawable.ia_cash));
-			accountDAO.Insert(new Account("Debit Card", MainActivity.sum_amounts, 0, R.drawable.ia_visa));
-			accountDAO.Insert(new Account("Paytm", 0, 0, R.drawable.ia_paytm));
-			return null;
-		}
-	}
 }

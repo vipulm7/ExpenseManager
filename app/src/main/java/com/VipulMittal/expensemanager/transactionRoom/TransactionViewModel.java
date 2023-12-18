@@ -11,7 +11,6 @@ import java.util.List;
 public class TransactionViewModel extends AndroidViewModel {
 
 	private final TransactionRepo repo;
-	private LiveData<List<Transaction>> transactions;
 
 	public TransactionViewModel(@NonNull Application application) {
 		super(application);

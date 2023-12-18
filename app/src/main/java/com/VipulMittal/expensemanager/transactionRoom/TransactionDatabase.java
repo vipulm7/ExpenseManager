@@ -1,7 +1,6 @@
 package com.VipulMittal.expensemanager.transactionRoom;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -12,6 +11,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.VipulMittal.expensemanager.MainActivity;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Database(entities = Transaction.class, version = 1)
 public abstract class TransactionDatabase extends RoomDatabase {
@@ -21,7 +22,26 @@ public abstract class TransactionDatabase extends RoomDatabase {
 		@Override
 		public void onCreate(@NonNull SupportSQLiteDatabase db) {
 			super.onCreate(db);
-			new PopulateDBAsyncTask(instance).execute();
+			ExecutorService executorService = Executors.newSingleThreadExecutor();
+			TransactionDAO transactionDAO = instance.transactionDAO();
+			executorService.execute(() -> {
+//				transactionDAO.Insert(new Transaction("Sample1", -100, 1, 4, 8, "Des", 2, getDate(Calendar.getInstance()), Calendar.getInstance().getTimeInMillis()));
+//				transactionDAO.Insert(new Transaction("Sample2", -302, 2, 7, 12, "Des", 2, getDate(Calendar.getInstance()), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L));
+//				transactionDAO.Insert(new Transaction("Sample3", -32, 3, 7, 12, "Des", 2, getDateBefore(Calendar.getInstance()), Calendar.getInstance().getTimeInMillis() - 86400000));
+//				transactionDAO.Insert(new Transaction("Sample4", -37, 2, 7, 12, "Des", 2, getDate(Calendar.getInstance()), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L));
+//				transactionDAO.Insert(new Transaction("Sample5", -500, 2, 7, 12, "Des", 2, getDate(Calendar.getInstance()), Calendar.getInstance().getTimeInMillis() - 86400000 * 3L));
+//				transactionDAO.Insert(new Transaction("Sample4", -37, 2, 7, 12, "Des", 2, getDate(Calendar.getInstance()), Calendar.getInstance().getTimeInMillis() - 86400000 * 4L));
+//				transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*5L));
+
+				int size = 1000;
+				Transaction[] transactions = new Transaction[size];
+				for (int i = -1; ++i < size; ) {
+					Calendar calendar = Calendar.getInstance();
+					calendar.add(Calendar.DATE, -2 * i);
+					transactions[i] = new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 13, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i);
+				}
+				transactionDAO.InsertTransactions(transactions);
+			});
 		}
 	};
 
@@ -31,6 +51,7 @@ public abstract class TransactionDatabase extends RoomDatabase {
 							TransactionDatabase.class, "trans_database")
 					.fallbackToDestructiveMigration()
 					.allowMainThreadQueries()
+					.setJournalMode(JournalMode.TRUNCATE)
 					.addCallback(roomCallback).build();
 
 		return instance;
@@ -41,43 +62,5 @@ public abstract class TransactionDatabase extends RoomDatabase {
 	}
 
 	public abstract TransactionDAO transactionDAO();
-
-	private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void> {
-		TransactionDAO transactionDAO;
-
-		private PopulateDBAsyncTask(TransactionDatabase database) {
-			transactionDAO = database.transactionDAO();
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-
-//            transactionDAO.Insert(new Transaction("Sample1", -100, 1,4,8,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()));
-//            transactionDAO.Insert(new Transaction("Sample2", -302, 2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*2L));
-//            transactionDAO.Insert(new Transaction("Sample3", -32, 3,7,12,"Des",2, getDateBefore(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000));
-//            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*2L));
-//            transactionDAO.Insert(new Transaction("Sample5", -500,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*3L));
-//            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*4L));
-//            transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*5L));
-
-			int size = 1000;
-			Transaction[] transactions = new Transaction[size];
-			for (int i = -1; ++i < size; ) {
-				Calendar calendar = Calendar.getInstance();
-				calendar.add(Calendar.DATE, -2 * i);
-				transactions[i] = new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 13, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i);
-			}
-			transactionDAO.InsertTransactions(transactions);
-
-
-//            for(int i=-1;++i<30;) {
-//                Calendar calendar=Calendar.getInstance();
-//                calendar.add(Calendar.DATE, 2*i+1);
-//                transactionDAO.Insert(new Transaction("Sample" + i, -(int) (Math.random() * 1000), 2, 7, 12, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() + 86400000L + 86400000 * 2L * i));
-//            }
-
-			return null;
-		}
-	}
 
 }

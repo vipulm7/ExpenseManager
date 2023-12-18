@@ -9,7 +9,6 @@ import java.util.List;
 
 public class TransactionRepo {
 	private final TransactionDAO transactionDAO;
-	private LiveData<List<Transaction>> transactions;
 
 	public TransactionRepo(Application application) {
 		TransactionDatabase transactionDatabase = TransactionDatabase.getInstance(application);
