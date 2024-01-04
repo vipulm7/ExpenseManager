@@ -32,7 +32,7 @@ public class Receiver extends BroadcastReceiver {
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
 			builder.setSmallIcon(R.drawable.ic_notifications)
 					.setContentTitle("Add today's records!")
-					.setContentText("Where did you transact today!")
+					.setContentText("Where did you transact today, Vipul!")
 					.setStyle(new NotificationCompat.BigTextStyle()
 							.bigText("Where did you transact today!"))
 					.setPriority(NotificationCompat.PRIORITY_MAX)
