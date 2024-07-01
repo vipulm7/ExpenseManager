@@ -33,11 +33,11 @@ public abstract class TransactionDatabase extends RoomDatabase {
 //				transactionDAO.Insert(new Transaction("Sample4", -37, 2, 7, 12, "Des", 2, getDate(Calendar.getInstance()), Calendar.getInstance().getTimeInMillis() - 86400000 * 4L));
 //				transactionDAO.Insert(new Transaction("Sample4", -37,2,7,12,"Des",2, getDate(Calendar.getInstance()),Calendar.getInstance().getTimeInMillis()-86400000*5L));
 
-				int size = 1000;
+				int size = 10;
 				Transaction[] transactions = new Transaction[size];
 				for (int i = -1; ++i < size; ) {
 					Calendar calendar = Calendar.getInstance();
-					calendar.add(Calendar.DATE, -2 * i);
+					calendar.add(Calendar.DATE, -1 * i);
 					transactions[i] = new Transaction("Sample" + i, MainActivity.amount[i], 2, 7, 13, "Des", 2, getDate(calendar), Calendar.getInstance().getTimeInMillis() - 86400000 * 2L * i);
 				}
 				transactionDAO.InsertTransactions(transactions);
