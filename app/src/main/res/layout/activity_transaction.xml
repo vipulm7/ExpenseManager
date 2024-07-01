@@ -297,7 +297,7 @@
 			android:layout_marginTop="14dp"
 			android:layout_marginEnd="10dp"
 			android:background="@drawable/rounded_corner_10"
-			android:hint="Enter description"
+			android:hint="Enter description (optional)"
 			android:paddingHorizontal="10dp"
 			android:paddingVertical="5dp"
 			app:layout_constraintStart_toStartOf="parent"
