@@ -33,9 +33,6 @@ android {
 			shrinkResources true
 		}
 	}
-	lintOptions{
-		checkReleaseBuilds false
-	}
 	compileOptions {
 		sourceCompatibility JavaVersion.VERSION_1_8
 		targetCompatibility JavaVersion.VERSION_1_8
@@ -43,21 +40,24 @@ android {
 	packagingOptions {
 		resources.excludes.add("META-INF/*")
 	}
+	lint {
+		checkReleaseBuilds false
+	}
 }
 
 dependencies {
 
 	implementation 'androidx.appcompat:appcompat:1.7.0'
 	implementation 'com.google.android.material:material:1.12.0'
-	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+	implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-	implementation 'androidx.constraintlayout:constraintlayout-core:1.0.4'
+	implementation 'androidx.constraintlayout:constraintlayout-core:1.1.0'
 	implementation 'androidx.gridlayout:gridlayout:1.0.0'
 	testImplementation 'junit:junit:4.13.2'
 	androidTestImplementation 'androidx.test.ext:junit:1.2.1'
 	androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-	implementation 'androidx.core:core:1.13.1'
-	implementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
+	implementation 'androidx.core:core:1.15.0'
+	implementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
 	implementation 'androidx.preference:preference:1.2.1'
 
 	implementation "androidx.room:room-runtime:2.6.1"
