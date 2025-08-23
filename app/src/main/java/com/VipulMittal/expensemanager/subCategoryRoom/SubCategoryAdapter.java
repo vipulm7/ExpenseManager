@@ -68,9 +68,9 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 				holder.amt.setText("\u20b9" + moneyToString(-subCategory.subCatAmount));
 
 			if (subCategory.type == 1)
-				holder.amt.setTextColor(Color.parseColor("#4fb85f"));//green
+				holder.amt.setTextColor(Color.parseColor("#38a169"));//green
 			else
-				holder.amt.setTextColor(Color.RED);
+				holder.amt.setTextColor(Color.parseColor("#e53e3e"));//red
 
 			holder.bgt.setText("\u20b9" + moneyToString(subCategory.subCatBudget));
 

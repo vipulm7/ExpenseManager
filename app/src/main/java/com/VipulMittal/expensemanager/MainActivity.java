@@ -757,10 +757,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		homeFragment.TVMainExpense.setText("\u20b9" + moneyToString(-expense));
 		if (income + expense >= 0) {
 			homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(income + expense));
-			homeFragment.TVMainTotal.setTextColor(Color.parseColor("#4fb85f"));//green
+			homeFragment.TVMainTotal.setTextColor(Color.parseColor("#38a169"));//green
 		} else {
 			homeFragment.TVMainTotal.setText("\u20b9" + moneyToString(-(income + expense)));
-			homeFragment.TVMainTotal.setTextColor(Color.RED);
+			homeFragment.TVMainTotal.setTextColor(Color.parseColor("#e53e3e"));//red
 		}
 
 		if (showTransactions.size() == 0)

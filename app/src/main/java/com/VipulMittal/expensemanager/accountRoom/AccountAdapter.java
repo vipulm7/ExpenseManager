@@ -54,10 +54,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 			}
 			holder.name.setText(accounts.get(position).name);
 			if (amt < 0) {
-				holder.amount.setTextColor(Color.RED);
+				holder.amount.setTextColor(Color.parseColor("#e53e3e"));//red
 				holder.amount.setText("- \u20b9" + moneyToString(-amt));
 			} else {
-				holder.amount.setTextColor(Color.parseColor("#4fb85f"));//green
+				holder.amount.setTextColor(Color.parseColor("#38a169"));//green
 				holder.amount.setText("  \u20b9" + moneyToString(amt));
 			}
 		} else {
@@ -65,10 +65,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccViewH
 //			holder.name.setBackgroundColor(Color.BLUE);
 
 			if (amt < 0) {
-				holder.amount.setTextColor(Color.RED);
+				holder.amount.setTextColor(Color.parseColor("#e53e3e"));//red
 				holder.amount.setText("- \u20b9 " + moneyToString(-amt));
 			} else {
-				holder.amount.setTextColor(Color.parseColor("#4fb85f"));//green
+				holder.amount.setTextColor(Color.parseColor("#38a169"));//green
 				holder.amount.setText("  \u20b9 " + moneyToString(amt));
 			}
 //			holder.amount.setText("\u20b91234567890123456789012345678901234567890");

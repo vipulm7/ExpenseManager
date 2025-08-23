@@ -84,13 +84,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 				holder.TVSubCat.setText("Income : \u20b9" + transactions.get(position).note);
 			else
 				holder.TVSubCat.setText("");
-			holder.TVSubCat.setTextColor(Color.parseColor("#4fb85f"));//green
+			holder.TVSubCat.setTextColor(Color.parseColor("#38a169"));//green
 
 			if (!transactions.get(position).description.equals("0"))
 				holder.TVAmount.setText("Expense : \u20b9" + transactions.get(position).description);
 			else
 				holder.TVAmount.setText("");
-			holder.TVAmount.setTextColor(Color.RED);
+			holder.TVAmount.setTextColor(Color.parseColor("#e53e3e"));//red
 
 			Log.d(TAG, "onBindViewHolder: Tnote = " + transaction.note);
 			Log.d(TAG, "onBindViewHolder: Ttime = " + transaction.date);
@@ -102,10 +102,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 			holder.TVNote.setText(transaction.note);
 			if (transaction.amount >= 0) {
 				holder.TVAmount.setText("\u20b9" + mainActivity.moneyToString(transaction.amount));
-				holder.TVAmount.setTextColor(Color.parseColor("#4fb85f"));//green
+				holder.TVAmount.setTextColor(Color.parseColor("#38a169"));//green
 			} else {
 				holder.TVAmount.setText("- \u20b9" + mainActivity.moneyToString(-transaction.amount));
-				holder.TVAmount.setTextColor(Color.RED);
+				holder.TVAmount.setTextColor(Color.parseColor("#e53e3e"));//red
 			}
 			Log.d(TAG, "onBindViewHolder: note = " + transaction.note);
 			Log.d(TAG, "onBindViewHolder: cat map = " + cat);
