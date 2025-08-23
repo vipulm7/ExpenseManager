@@ -903,7 +903,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			fragmentTransaction.replace(R.id.layoutForFragment, categoryFragment).commit();
 			Log.d(TAG, "showFragment: category");
 			systemTimeInMillies = 0;
-			setActionBarTitle("Categories ->");
+			setActionBarTitle("Categories");
 			FABAdd.setText("Add Category");
 		} else if (id == R.id.bn_accounts) {
 			accountsFragment = new AccountsFragment();
