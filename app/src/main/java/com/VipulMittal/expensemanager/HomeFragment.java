@@ -85,9 +85,6 @@ public class HomeFragment extends Fragment {
 
 		setDate();
 
-		TVAfter.setText(">");
-		TVBefore.setText("<");
-
 
 		TransactionAdapter.CLickListener listener = (viewHolder, view1) -> {
 			int position = viewHolder.getAdapterPosition();

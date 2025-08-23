@@ -127,9 +127,6 @@ public class AnalysisFragment extends Fragment {
 		dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_25);
 
 
-		TVAfter.setText(">");
-		TVBefore.setText("<");
-
 		TVAfter.setOnClickListener(v -> {
 			if (viewMode == R.id.RBM)
 				toShow.add(Calendar.MONTH, 1);
