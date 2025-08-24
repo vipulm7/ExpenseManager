@@ -419,7 +419,8 @@ public class TransactionActivity extends AppCompatActivity implements Serializab
 	}
 
 	public void saveSelectedCategoryWithName(int cID, String name, int imageID) {
-		if (cID == this.cID && this.sID == -1)
+		TextView x = (TextView) (TVCategory.getCurrentView());
+		if (cID == this.cID && this.sID == -1 && !x.getText().toString().equals("Category"))
 			return;
 
 		this.cID = cID;
