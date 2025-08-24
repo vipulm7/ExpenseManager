@@ -78,23 +78,12 @@ public class BsdCategoryFragment extends Fragment {
 		Log.d(TAG, "onCreateView: subCatSelectedID = " + sID);
 //		Log.d(TAG, "onCreateView: adapter before = "+categoryAdapter);
 
-		if (transactionActivity != null) {
-			if (type == 1) {
-				categoryAdapter = mainActivity.categoryAdapter;
-				categoryViewModel = mainActivity.categoryViewModel;
-			} else {
-				categoryAdapter = mainActivity.categoryAdapter2;
-				categoryViewModel = mainActivity.categoryViewModel2;
-			}
+		if (type == 1) {
+			categoryAdapter = mainActivity.categoryAdapter;
+			categoryViewModel = mainActivity.categoryViewModel;
 		} else {
-			categoryAdapter = new CategoryAdapter(mainActivity);
-			if (type == 1) {
-				categoryAdapter.categories = mainActivity.categoryAdapter.categories;
-				categoryViewModel = mainActivity.categoryViewModel;
-			} else {
-				categoryAdapter.categories = mainActivity.categoryAdapter2.categories;
-				categoryViewModel = mainActivity.categoryViewModel2;
-			}
+			categoryAdapter = mainActivity.categoryAdapter2;
+			categoryViewModel = mainActivity.categoryViewModel2;
 		}
 
 		categoryAdapter.who = 1;
