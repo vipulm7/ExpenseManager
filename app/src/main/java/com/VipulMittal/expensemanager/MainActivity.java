@@ -706,7 +706,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		} else {
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
 				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = " + (System.currentTimeMillis() - systemTimeInMillies));
-				if (System.currentTimeMillis() - systemTimeInMillies < 2000) {
+				if (true) {
 					super.onBackPressed();
 				} else {
 					systemTimeInMillies = System.currentTimeMillis();
