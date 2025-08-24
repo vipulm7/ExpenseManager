@@ -28,7 +28,8 @@
 			android:name=".TransactionActivity"
 			android:exported="false"
 			android:parentActivityName=".MainActivity"
-			android:screenOrientation="portrait" />
+			android:screenOrientation="portrait"
+			android:windowSoftInputMode="stateVisible" />
 
 		<receiver
 			android:name=".Receiver"
