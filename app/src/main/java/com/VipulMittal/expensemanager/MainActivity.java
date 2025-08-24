@@ -790,7 +790,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public void accountROOM() {
 
-		accountViewModel.getAllAccounts().observe(this, new Observer<List<Account>>() {
+		accountViewModel.getAllAccounts().observeForever(new Observer<List<Account>>() {
 			@Override
 			public void onChanged(List<Account> accounts) {
 				accountAdapter.setAccounts(accounts);
@@ -827,7 +827,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 	public void categoryROOM() {
 
-		categoryViewModel.getAllCategories(1).observe(this, new Observer<List<Category>>() {
+		categoryViewModel.getAllCategories(1).observeForever(new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
 //				int pos1 = posCat(categories, categoryAdapter.categories);
@@ -842,7 +842,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 			}
 		});
 
-		categoryViewModel.getAllCategories(2).observe(this, new Observer<List<Category>>() {
+		categoryViewModel.getAllCategories(2).observeForever(new Observer<List<Category>>() {
 			@Override
 			public void onChanged(List<Category> categories) {
 //				int pos1 = posCat(categories, categoryAdapter2.categories);
