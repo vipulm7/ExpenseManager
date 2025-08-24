@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 	boolean areNotifAllowed;
 	ActionBar actionBar;
 	int viewMode;
-	boolean exit, login, menuShow;
+	boolean login, menuShow;
 	SharedPreferences sharedPreferences;
 	SwitchPreference notifSwitchPreference;
 	SettingsFragment settingsFragment;
@@ -586,7 +586,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 				toast.show();
 
 				systemTimeInMillies = System.currentTimeMillis();
-				exit = true;
 				onBackPressed();
 			}
 
@@ -707,7 +706,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 		} else {
 			if (navigationBarView.getSelectedItemId() == R.id.bn_home) {
 				Log.d(TAG, "onBackPressed: System.currentTimeMillis() - systemTimeInMillies = " + (System.currentTimeMillis() - systemTimeInMillies));
-				if (exit || System.currentTimeMillis() - systemTimeInMillies < 2000) {
+				if (System.currentTimeMillis() - systemTimeInMillies < 2000) {
 					super.onBackPressed();
 				} else {
 					systemTimeInMillies = System.currentTimeMillis();
